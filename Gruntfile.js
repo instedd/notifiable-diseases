@@ -21,6 +21,9 @@ module.exports = function (grunt) {
     dist: require('./bower.json').distPath || 'dist'
   };
 
+  // Snippet for proxy configuration
+  var proxySnippet = require('grunt-connect-proxy/lib/utils').proxyRequest;
+
   // Define the configuration for all the tasks
   grunt.initConfig({
 
@@ -69,6 +72,11 @@ module.exports = function (grunt) {
         hostname: 'localhost',
         livereload: 35729
       },
+      proxies: [{
+        context: '/cdx',
+        host: 'localhost',
+        port: 3000
+      }],
       livereload: {
         options: {
           open: true,
@@ -79,7 +87,8 @@ module.exports = function (grunt) {
                 '/bower_components',
                 connect.static('./bower_components')
               ),
-              connect.static(appConfig.app)
+              connect.static(appConfig.app),
+              proxySnippet
             ];
           }
         }
@@ -419,6 +428,7 @@ module.exports = function (grunt) {
 
     grunt.task.run([
       'clean:server',
+      'configureProxies',
       'wiredep',
       'concurrent:server',
       'autoprefixer',
