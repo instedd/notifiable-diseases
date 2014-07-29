@@ -1,6 +1,47 @@
-<h1>Welcome to Notifiable Diseases</h1>
+<div id="filters" style="width:300px; float:left" ng-controller="FiltersCtrl">
+  <div class="well white out condensed">
+    <div class="row">
+      <div class="col-md-6">
+        <strong style="font-size:16px">Filters</strong>
+      </div>
+      <div class="col-md-6">
+        <a class="pull-right" href="#">
+          Clear all
+        </a>
+      </div>
+    </div>
+    <hr/>
+    <div>
+      <strong>All cases</strong>
+    </div>
+    <div ng-repeat="filter in filters">
+      <hr/>
+      <div class="row">
+        <div class="col-md-6">
+          <strong>{{ filter.description }}</strong>
+        </div>
+        <div class="col-md-6">
+          <a class="pull-right" href="javascript:void(0)" ng-click="$parent.removeFilterByIndex($index)">remove</a>
+        </div>
+      </div>
+      <div ng-include src="filterTemplateFor(filter)"></div>
+    </div>
+    <hr/>
+    <div>
+      <a href="javascript:void(0);" ng-click="addNewFilterIsCollapsed = !addNewFilterIsCollapsed">Add new filter</a>
+      <div collapse="addNewFilterIsCollapsed">
+        <ul>
+          <li><a href="javascript:void(0);" ng-click="addDateFilter()">Date</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
 
-<h3>Go to</h3>
-<ul>
-<li><a href="#/playground">CDxAPI Playground</a></li>
-</ul>
+<script type="text/ng-template" id="DateFilterTemplate">
+  <div ng-controller="DateFilterCtrl">
+    <input type="text" size="10" ng-model="filter.since" />
+    -
+    <input type="text" size="10" ng-model="filter.until" />
+  </div>
+</script>
