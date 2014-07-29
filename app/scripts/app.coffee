@@ -17,6 +17,7 @@ angular
     'ngSanitize',
     'ngTouch',
     'ui.bootstrap',
+    'googlechart'
   ])
   .config ($routeProvider) ->
     $routeProvider
@@ -26,6 +27,9 @@ angular
       .when '/playground',
         templateUrl: 'views/playground.html'
         controller: 'PlaygroundCtrl'
+      .when '/trendline',
+        templateUrl: 'views/trendline.html'
+        controller: 'TrendlineCtrl'
       .otherwise
         redirectTo: '/'
 
