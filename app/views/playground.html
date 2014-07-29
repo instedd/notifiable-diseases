@@ -1,0 +1,19 @@
+<h2>Query</h2>
+<div>
+  <form ng-submit="doQuery()" name="queryForm" novalidate>
+    <p>
+      <textarea rows="10" cols="60" ng-model="query"></textarea>
+    </p>
+    <button type="submit">Query</button>
+  </form>
+</div>
+
+<div ng-show="data.length > 0">
+  <h2>Response</h2>
+
+  <ul>
+    <li ng-repeat="record in data">
+      <span>{{ record }}</span>
+    </li>
+  </ul>
+</div>

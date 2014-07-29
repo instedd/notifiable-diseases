@@ -4,7 +4,7 @@
  # @ngdoc overview
  # @name ndApp
  # @description
- # # notifiableDiseasesApp
+ # # ndApp
  #
  # Main module of the application.
 ###
@@ -22,6 +22,9 @@ angular
       .when '/',
         templateUrl: 'views/main.html'
         controller: 'MainCtrl'
+      .when '/playground',
+        templateUrl: 'views/playground.html'
+        controller: 'PlaygroundCtrl'
       .otherwise
         redirectTo: '/'
 
