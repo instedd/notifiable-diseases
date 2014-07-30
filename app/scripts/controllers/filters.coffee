@@ -12,11 +12,11 @@ angular.module('ndApp')
       $scope.toggleAddNewFilter()
 
     $scope.addDateFilter = ->
-      $scope.addFilter
-        kind: "Date"
-        description: "Event date"
-        since: "2014-01-01"
-        until: "2014-06-01"
+      filter = new DateFilter
+      filter.description = "Event date"
+      filter.since = "2014-01-01"
+      filter.until = "2014-06-01"
+      $scope.addFilter filter
 
     $scope.filterTemplateFor = (filter) ->
       "#{filter.kind}FilterTemplate"

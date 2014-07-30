@@ -4,11 +4,7 @@ angular.module('ndApp')
 
     applyFilters = (query) ->
       for filter in $scope.filters
-        switch filter.kind
-          when "Date"
-            query.since = filter.since
-            query.until = filter.until
-
+        filter.applyTo(query)
       query
 
     $scope.doQuery = () ->
