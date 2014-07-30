@@ -9,8 +9,12 @@
 ###
 
 angular.module('ndApp')
-  .controller 'MainCtrl', ($scope, $http, $log, $routeParams, ReportsService) ->
+  .controller 'MainCtrl', ($scope, $http, $location, $log, $routeParams, ReportsService) ->
     $scope.reports = ReportsService.reports()
+
+    if $scope.reports.length == 0
+      $location.path "/reports/new"
+      return
 
     $scope.data = {
       series: []
@@ -34,3 +38,6 @@ angular.module('ndApp')
       $scope.currentReport = ReportsService.findById($routeParams.reportId)
       if $scope.currentReport
         $scope.$watch 'currentReport', onChange, true
+    else if $scope.reports.length > 0
+      $location.path "/reports/#{$scope.reports[0].id}"
+
