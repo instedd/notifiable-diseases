@@ -62,17 +62,6 @@
       </form>
     </div>
 
-    <div ng-show="data.length > 0">
-      <h2>Response</h2>
-
-      <ul>
-        <li ng-repeat="record in data">
-          <span>{{ record }}</span>
-        </li>
-      </ul>
-    </div>
-  </div>
+    <nd-trendline ng-show='data.length > 0' series='data' title='"Events"'>
   <!-- END: Playground -->
 </div>
-
-<nd-trendline series='data' title='"Events"'>
