@@ -8,7 +8,10 @@
 </script>
 <!-- END: Filters templates -->
 
-<div class="row">
+<nd-reports-navbar>
+</nd-reports-navbar>
+
+<div class="row" ng-show="currentReport">
   <!-- BEGIN: Filters panel -->
   <div id="filters" class="col-md-3" ng-controller="FiltersCtrl">
     <div class="well white out condensed">
@@ -26,7 +29,7 @@
       <div>
         <strong>All cases</strong>
       </div>
-      <div ng-repeat="filter in filters">
+      <div ng-repeat="filter in currentReport.filters">
         <hr/>
         <div class="row">
           <div class="col-md-6">
@@ -56,7 +59,7 @@
     <div>
       <form ng-submit="doQuery()" name="queryForm" novalidate>
         <p>
-          <textarea rows="5" cols="60" ng-model="query"></textarea>
+          <textarea rows="5" cols="60" ng-model="currentReport.query"></textarea>
         </p>
         <button type="submit">Query</button>
       </form>

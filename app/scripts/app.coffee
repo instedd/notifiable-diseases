@@ -27,6 +27,12 @@ angular
       .when '/playground',
         templateUrl: 'views/playground.html'
         controller: 'PlaygroundCtrl'
+      .when '/reports/new',
+        templateUrl: 'views/reports/new.html'
+        controller: 'ReportsCtrl'
+      .when '/reports/:reportId',
+        templateUrl: 'views/main.html'
+        controller: 'MainCtrl'
       .when '/trendline',
         templateUrl: 'views/trendline.html'
         controller: 'TrendlineCtrl'

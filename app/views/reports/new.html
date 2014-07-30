@@ -1,0 +1,22 @@
+<nd-reports-navbar>
+</nd-reports-navbar>
+
+<div class="row">
+  <div class="col-md-12">
+    <form ng-submit="createReport()">
+      <div>
+        <label for="name">Name</label>
+        <br/>
+        <input type="text" ng-model="name" />
+      </div>
+      <div>
+        <label for="description">Description</label>
+        <br/>
+        <textarea rows="3" cols="60" ng-model="description" />
+      </div>
+      <div>
+        <button type="submit" class="btn btn-primary">Create report</button>
+      </div>
+    </form>
+  </div>
+</div>

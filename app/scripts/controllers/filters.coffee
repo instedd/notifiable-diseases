@@ -8,7 +8,7 @@ angular.module('ndApp')
       $scope.addNewFilterIsCollapsed = !$scope.addNewFilterIsCollapsed
 
     $scope.addFilter = (filter) ->
-      $scope.filters.push filter
+      $scope.currentReport.filters.push filter
       $scope.toggleAddNewFilter()
 
     $scope.addDateFilter = ->
@@ -22,7 +22,7 @@ angular.module('ndApp')
       "#{filter.kind}FilterTemplate"
 
     $scope.removeFilterByIndex = (index) ->
-      $scope.filters.splice(index, 1)
+      $scope.currentReport.filters.splice(index, 1)
 
   .controller 'DateFilterCtrl', ($scope) ->
     1

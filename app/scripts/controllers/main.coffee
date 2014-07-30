@@ -9,12 +9,12 @@
 ###
 
 angular.module('ndApp')
-  .controller 'MainCtrl', ($log, $scope, $timeout) ->
+  .controller 'MainCtrl', ($scope, $routeParams, ReportsService) ->
+    $scope.reports = ReportsService.reports()
+
+    if $routeParams.reportId
+      $scope.currentReport = ReportsService.findById($routeParams.reportId)
 
     $scope.data = {
-        series: []
-      }    
-    
-    $scope.filters = []
-
-    true
+      series: []
+    }

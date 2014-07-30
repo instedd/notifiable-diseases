@@ -1,14 +1,14 @@
 angular.module('ndApp')
   .controller 'HomePlaygroundCtrl', ($scope, $http, $log) ->
-    $scope.query = '{"group_by": "year(created_at)"}'
+    $scope.data = []
 
     applyFilters = (query) ->
-      for filter in $scope.filters
+      for filter in $scope.currentReport.filters
         filter.applyTo(query)
       query
 
     $scope.doQuery = () ->
-      query = JSON.parse($scope.query)
+      query = JSON.parse($scope.currentReport.query)
       applyFilters(query)
 
       $http.post("/cdx/v1/events", query).success (data) ->

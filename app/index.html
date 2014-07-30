@@ -24,6 +24,7 @@
       <ul class="nav nav-pills pull-right">
         <li><a ng-href="#">Home</a></li>
         <li><a ng-href="#/playground">Playground</a></li>
+        <li><a href="#/trendline">Trendline test</a></li>
       </ul>
       <h3 class="text-muted">Notifiable Diseases</h3>
     </div>
@@ -77,15 +78,31 @@
     <!-- endbower -->
     <!-- endbuild -->
 
-        <!-- build:js({.tmp,app}) scripts/scripts.js -->
-        <script src="scripts/app.js"></script>
-        <script src="scripts/models/filter.js"></script>
-        <script src="scripts/controllers/main.js"></script>
-        <script src="scripts/controllers/filters.js"></script>
-        <script src="scripts/controllers/home_playground.js"></script>
-        <script src="scripts/controllers/playground.js"></script>
-        <script src="scripts/controllers/trendline.js"></script>
-        <script src="scripts/directives/trendline.js"></script>
-        <!-- endbuild -->
+    <!-- build:js({.tmp,app}) scripts/scripts.js -->
+    <script src="scripts/app.js"></script>
+    <script src="scripts/directives/reports_navbar.js"></script>
+    <script src="scripts/directives/trendline.js"></script>
+    <script src="scripts/models/filter.js"></script>
+    <script src="scripts/models/report.js"></script>
+    <script src="scripts/controllers/main.js"></script>
+    <script src="scripts/controllers/filters.js"></script>
+    <script src="scripts/controllers/home_playground.js"></script>
+    <script src="scripts/controllers/playground.js"></script>
+    <script src="scripts/controllers/reports.js"></script>
+    <script src="scripts/controllers/reports_navbar.js"></script>
+    <script src="scripts/controllers/trendline.js"></script>
+    <script src="scripts/services/reports_service.js"></script>
+    <!-- endbuild -->
+
+    <script type="text/ng-template" id="ReportsNavbar">
+      <div class="row">
+        <div class="col-md-12">
+          <ul class="nav nav-tabs" role="tablist" ng-controller="ReportsNavbarCtrl">
+            <li ng-repeat="report in reports" ng-class="{active: currentReport == report}"><a ng-href="#/reports/{{report.id}}">{{report.name}}</a></li>
+            <li ng-class="{active: reports.length == 0 || !currentReport}"><a href="#/reports/new">+ New report</a></li>
+          </ul>
+        </div>
+      </div>
+    </script>
 </body>
 </html>
