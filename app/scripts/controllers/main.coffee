@@ -25,7 +25,7 @@ angular.module('ndApp')
       if $scope.currentReport
         $scope.doQuery()
 
-    $scope.doQuery = () ->
+    $scope.doQuery = ->
       query = JSON.parse($scope.currentReport.query)
       for filter in $scope.currentReport.filters
         filter.applyTo(query)
@@ -33,6 +33,14 @@ angular.module('ndApp')
       $http.post("/cdx/v1/events", query).success (data) ->
         $log.debug("Received #{data}")
         $scope.data.series = data
+
+    $scope.deleteReport = ->
+      index = _.indexOf $scope.reports, $scope.currentReport
+      $scope.reports.splice(index, 1)
+      if $scope.reports.length == 0
+        $location.path "/reports/new"
+      else
+        $location.path "/reports/#{$scope.reports[0].id}"
 
     if $routeParams.reportId
       $scope.currentReport = ReportsService.findById($routeParams.reportId)
