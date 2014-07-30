@@ -3,10 +3,11 @@
 <div style="text-align: center; margin-top: 40px">
   <form ng-submit="doUpdate()" novalidate>
     <p>
-      <textarea rows="7" cols="60" ng-model="data"></textarea>
+      <textarea rows="7" cols="60" ng-model="data_str"></textarea>
     </p>
     <button type="submit">Update</button>
   </form>
 </div>
 
-<div google-chart chart="chart" style="{{chart.cssStyle}}"/>
+
+<nd-trendline series='data'/>

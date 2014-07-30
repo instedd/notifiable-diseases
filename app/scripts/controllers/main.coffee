@@ -9,8 +9,9 @@
 ###
 
 angular.module('ndApp')
-  .controller 'MainCtrl', ($scope) ->
-
+  .controller 'MainCtrl', ($log, $scope, $timeout) ->
+    
+    $scope.data = []
     $scope.filters = []
 
     true

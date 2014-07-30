@@ -1,6 +1,5 @@
 angular.module('ndApp')
   .controller 'HomePlaygroundCtrl', ($scope, $http, $log) ->
-    $scope.data = []
     $scope.query = '{"group_by": "year(created_at)"}'
 
     applyFilters = (query) ->
@@ -18,4 +17,5 @@ angular.module('ndApp')
 
       $http.post("/cdx/v1/events", query).success (data) ->
         $log.debug("Received #{data}")
-        $scope.data = data
+
+        $scope.data.splice.apply($scope.data, [0, $scope.data.length].concat(data))
