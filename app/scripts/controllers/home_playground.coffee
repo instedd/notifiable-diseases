@@ -1,7 +1,5 @@
 angular.module('ndApp')
   .controller 'HomePlaygroundCtrl', ($scope, $http, $log) ->
-    $scope.data = []
-
     applyFilters = (query) ->
       for filter in $scope.currentReport.filters
         filter.applyTo(query)

@@ -7,7 +7,6 @@ angular.module('ndApp')
         title: '='
       template: '<div google-chart chart="chart" class=\'nd-trendline\'/>'
       link: (scope, element, attrs) ->
-        debugger;
         scope.$watchCollection('series', () ->
           console.log scope.series
           scope.chart = chart_for(scope.series.series, scope.title)
@@ -19,7 +18,7 @@ format_for_chart = (result) =>
   _.map(result, (g) ->
     c: [
          { v: g.created_at },
-         { 
+         {
            v: g.count,
            f: g.count + " events"
          }
