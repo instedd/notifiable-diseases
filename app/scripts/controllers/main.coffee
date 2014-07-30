@@ -16,6 +16,11 @@ angular.module('ndApp')
       series: []
     }
 
+    onChange = ->
+      ReportsService.save()
+      if $scope.currentReport
+        $scope.doQuery()
+
     $scope.doQuery = () ->
       query = JSON.parse($scope.currentReport.query)
       for filter in $scope.currentReport.filters
@@ -28,5 +33,4 @@ angular.module('ndApp')
     if $routeParams.reportId
       $scope.currentReport = ReportsService.findById($routeParams.reportId)
       if $scope.currentReport
-        $scope.$watch 'currentReport.filters', $scope.doQuery, true
-        $scope.$watch 'currentReport.query', $scope.doQuery
+        $scope.$watch 'currentReport', onChange, true

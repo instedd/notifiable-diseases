@@ -17,7 +17,8 @@ angular
     'ngSanitize',
     'ngTouch',
     'ui.bootstrap',
-    'googlechart'
+    'googlechart',
+    'LocalStorageModule'
   ])
   .config ($routeProvider) ->
     $routeProvider

@@ -1,6 +1,11 @@
 angular.module('ndApp')
-  .service 'ReportsService', ->
-    reports = []
+  .service 'ReportsService', (localStorageService, Report) ->
+    reports = localStorageService.get("reports")
+    if reports
+      reports = _.map reports, (report) ->
+        Report.deserialize(report)
+    else
+      reports = []
 
     reports: ->
       reports
@@ -15,3 +20,6 @@ angular.module('ndApp')
       for report in reports
         return report if report.id == id
       null
+
+    save: ->
+      localStorageService.add "reports", reports

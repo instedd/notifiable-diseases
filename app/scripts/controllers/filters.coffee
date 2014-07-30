@@ -1,7 +1,7 @@
 'use strict'
 
 angular.module('ndApp')
-  .controller 'FiltersCtrl', ($scope) ->
+  .controller 'FiltersCtrl', ($scope, FiltersService) ->
     $scope.addNewFilterIsCollapsed = true
 
     $scope.toggleAddNewFilter = ->
@@ -12,14 +12,14 @@ angular.module('ndApp')
       $scope.toggleAddNewFilter()
 
     $scope.addDateFilter = ->
-      filter = new DateFilter
+      filter = FiltersService.create "DateFilter"
       filter.description = "Event date"
       filter.since = "2014-01-01"
       filter.until = "2014-06-01"
       $scope.addFilter filter
 
     $scope.filterTemplateFor = (filter) ->
-      "#{filter.kind}FilterTemplate"
+      "#{filter.kind}Template"
 
     $scope.removeFilterByIndex = (index) ->
       $scope.currentReport.filters.splice(index, 1)
