@@ -92,6 +92,18 @@ body {
 }
 
 .nd-trendline {
-  height:400px;
-  width:700px;
+
+  .controls {
+    float: right;
+
+    label {
+      display: block;
+    }
+  }
+
+  .nd-chart {
+    height:400px;
+    width:700px;
+  }
+
 }

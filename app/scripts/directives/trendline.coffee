@@ -5,7 +5,7 @@ angular.module('ndApp')
       scope:
         series: '='
         title: '='
-      template: '<div google-chart chart="chart" class=\'nd-trendline\'/>'
+      template: '<div google-chart chart="chart" class=\'nd-chart\'/>'
       link: (scope, element, attrs) ->
         scope.$watchCollection('series', () ->
           console.log scope.series

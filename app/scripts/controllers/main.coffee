@@ -22,17 +22,6 @@ angular.module('ndApp')
 
     onChange = ->
       ReportsService.save()
-      if $scope.currentReport
-        $scope.doQuery()
-
-    $scope.doQuery = ->
-      query = JSON.parse($scope.currentReport.query)
-      for filter in $scope.currentReport.filters
-        filter.applyTo(query)
-
-      $http.post("/cdx/v1/events", query).success (data) ->
-        $log.debug("Received #{data}")
-        $scope.data.series = data
 
     $scope.deleteReport = ->
       index = _.indexOf $scope.reports, $scope.currentReport
