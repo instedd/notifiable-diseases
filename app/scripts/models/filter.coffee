@@ -10,6 +10,7 @@ angular.module('ndApp')
 
       @deserialize: (data) ->
         filter = new DateFilter
+        filter.description = data.description
         filter.since = data.since
         filter.until = data.until
         filter
