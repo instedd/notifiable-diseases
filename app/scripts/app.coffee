@@ -18,6 +18,7 @@ angular
     'ngTouch',
     'ui.bootstrap',
     'googlechart',
+    'debounce',
     'LocalStorageModule'
   ])
   .config ($routeProvider) ->
