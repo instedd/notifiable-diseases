@@ -20,7 +20,7 @@
           <strong style="font-size:16px">Filters</strong>
         </div>
         <div class="col-md-6">
-          <a class="pull-right" href="#">
+          <a class="pull-right" href="javascript:void(0)" ng-click="clearFilters()" ng-show="currentReport.filters.length > 0">
             Clear all
           </a>
         </div>
@@ -56,14 +56,9 @@
 
   <!-- BEGIN: Query and trendline -->
   <div class="col-md-9">
-    <div>
-      <form ng-submit="doQuery()" name="queryForm" novalidate>
-        <p>
-          <textarea rows="5" cols="60" ng-model="currentReport.query"></textarea>
-        </p>
-        <button type="submit">Query</button>
-      </form>
-    </div>
+    <p>
+      <textarea rows="5" cols="60" ng-model="currentReport.query"></textarea>
+    </p>
 
     <nd-trendline series='data.series' title='"Events"'>
   </div>

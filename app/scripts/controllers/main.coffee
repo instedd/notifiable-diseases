@@ -28,4 +28,5 @@ angular.module('ndApp')
     if $routeParams.reportId
       $scope.currentReport = ReportsService.findById($routeParams.reportId)
       if $scope.currentReport
-        $scope.doQuery()
+        $scope.$watch 'currentReport.filters', $scope.doQuery, true
+        $scope.$watch 'currentReport.query', $scope.doQuery

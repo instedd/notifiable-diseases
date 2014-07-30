@@ -24,6 +24,9 @@ angular.module('ndApp')
     $scope.removeFilterByIndex = (index) ->
       $scope.currentReport.filters.splice(index, 1)
 
+    $scope.clearFilters = ->
+      $scope.currentReport.filters.splice(0, $scope.currentReport.filters.length)
+
   .controller 'DateFilterCtrl', ($scope) ->
     1
 
