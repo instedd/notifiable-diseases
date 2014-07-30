@@ -1,8 +1,7 @@
 'use strict'
 
 angular.module('ndApp')
-  .controller 'FiltersCtrl', ($scope, FiltersService) ->
-    $scope.filters = FiltersService.filters()
+  .controller 'FiltersCtrl', ($scope) ->
     $scope.addNewFilterIsCollapsed = true
 
     $scope.toggleAddNewFilter = ->

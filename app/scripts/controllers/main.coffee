@@ -10,4 +10,7 @@
 
 angular.module('ndApp')
   .controller 'MainCtrl', ($scope) ->
+
+    $scope.filters = []
+
     true
