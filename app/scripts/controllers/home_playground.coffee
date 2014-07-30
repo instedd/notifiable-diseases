@@ -17,5 +17,4 @@ angular.module('ndApp')
 
       $http.post("/cdx/v1/events", query).success (data) ->
         $log.debug("Received #{data}")
-
-        $scope.data.splice.apply($scope.data, [0, $scope.data.length].concat(data))
+        $scope.data.series = data

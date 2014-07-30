@@ -1,3 +1,20 @@
+angular.module('ndApp')
+  .directive 'ndTrendline', () ->
+    {
+      restrict: 'E'
+      scope:
+        series: '='
+        title: '='
+      template: '<div google-chart chart="chart" class=\'nd-trendline\'/>'
+      link: (scope, element, attrs) ->
+        debugger;
+        scope.$watchCollection('series', () ->
+          console.log scope.series
+          scope.chart = chart_for(scope.series.series, scope.title)
+        )
+    }
+
+
 format_for_chart = (result) =>
   _.map(result, (g) ->
     c: [
@@ -12,7 +29,6 @@ format_for_chart = (result) =>
 chart_for = (data_str, title) =>
   {
     type: "AreaChart"
-    cssStyle: "height:400px; width:700px;"
     data:
       cols: [
         { id: "year",  label: "Year",   type: "string", p: {} },
@@ -25,7 +41,7 @@ chart_for = (data_str, title) =>
       fill: 20
       displayExactValues: true
       vAxis:
-        title: "Sales unit"
+        title: "Event count"
         gridlines:
           count: 6
       hAxis:
@@ -33,17 +49,3 @@ chart_for = (data_str, title) =>
     formatters: {}
     displayed: true
   }
-
-angular.module('ndApp')
-  .directive 'ndTrendline', () ->
-    {
-      restrict: 'E'
-      scope:
-        series: '='
-        title: '='
-      template: '<div google-chart chart="chart" style="{{chart.cssStyle}}"/>'
-      link: (scope, element, attrs) ->
-        scope.$watchCollection('series', () ->
-          scope.chart = chart_for(scope.series, scope.title)
-        )
-    }

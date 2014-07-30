@@ -10,8 +10,11 @@
 
 angular.module('ndApp')
   .controller 'MainCtrl', ($log, $scope, $timeout) ->
+
+    $scope.data = {
+        series: []
+      }    
     
-    $scope.data = []
     $scope.filters = []
 
     true
