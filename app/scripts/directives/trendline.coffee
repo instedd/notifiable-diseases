@@ -9,13 +9,13 @@ angular.module('ndApp')
       link: (scope, element, attrs) ->
         scope.$watchCollection('series', () ->
           console.log scope.series
-          scope.chart = chart_for(scope.series.series, scope.title)
+          scope.chart = chart_for(scope.series, scope.title)
         )
     }
 
 
-format_for_chart = (result) =>
-  _.map(result, (g) ->
+format_for_chart = (series) =>
+  _.map(series, (g) ->
     c: [
          { v: g.created_at },
          {
@@ -25,7 +25,7 @@ format_for_chart = (result) =>
        ]
   )
 
-chart_for = (data_str, title) =>
+chart_for = (series, title) =>
   {
     type: "AreaChart"
     data:
@@ -33,7 +33,7 @@ chart_for = (data_str, title) =>
         { id: "year",  label: "Year",   type: "string", p: {} },
         { id: "count", label: "Events", type: "number", p: {} }
       ]
-      rows: format_for_chart(data_str)
+      rows: format_for_chart(series)
     options:
       title: title
       isStacked: "true"
