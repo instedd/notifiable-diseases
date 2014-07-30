@@ -9,7 +9,7 @@ format_for_chart = (result) =>
        ]
   )
 
-chart_for = (data_str) =>
+chart_for = (data_str, title) =>
   {
     type: "AreaChart"
     cssStyle: "height:400px; width:700px;"
@@ -20,7 +20,7 @@ chart_for = (data_str) =>
       ]
       rows: format_for_chart(data_str)
     options:
-      title: "Event count by year"
+      title: title
       isStacked: "true"
       fill: 20
       displayExactValues: true
@@ -40,9 +40,10 @@ angular.module('ndApp')
       restrict: 'E'
       scope:
         series: '='
+        title: '='
       template: '<div google-chart chart="chart" style="{{chart.cssStyle}}"/>'
       link: (scope, element, attrs) ->
         scope.$watchCollection('series', () ->
-          scope.chart = chart_for(scope.series)
+          scope.chart = chart_for(scope.series, scope.title)
         )
     }
