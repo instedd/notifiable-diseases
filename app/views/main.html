@@ -35,7 +35,7 @@
         <a href="javascript:void(0);" ng-click="addNewFilterIsCollapsed = !addNewFilterIsCollapsed">Add new filter</a>
         <div collapse="addNewFilterIsCollapsed">
           <ul>
-            <li><a href="javascript:void(0);" ng-click="addFilter('Date')">Date</a></li>
+            <li><a href="javascript:void(0);" ng-click="addFilter('DateFilter')">Date</a></li>
           </ul>
         </div>
       </div>
@@ -48,7 +48,22 @@
   <div class="col-md-7" ng-controller="ChartsCtrl">
     <div class="row" ng-repeat="chart in currentReport.charts">
       <div class='col-md-11'>
-        <div ng-include src="chartTemplateFor(chart)" ng-controller="ChartCtrl" ng-init="chart=chart;report=currentReport"></div>
+        <div class='nd-trendline well row' ng-controller="ChartCtrl" ng-init="chart=chart;report=currentReport" style="min-height:480px;max-height:480px">
+          <div ng-hide="inConfig">
+            <a class="pull-right" href="javascript:void(0)" ng-click="inConfig = true">
+              edit
+            </a>
+            <div ng-include src="chartTemplateFor(chart)"></div>
+          </div>
+          <div ng-show="inConfig">
+            <form>
+              <div ng-include src="chartConfigTemplateFor(chart)"></div>
+              <div>
+                <button class="btn btn-primary" ng-click="saveChanges()">Done</button>
+              </div>
+            </form>
+          </div>
+        </div>
       </div>
     </div>
     <div>

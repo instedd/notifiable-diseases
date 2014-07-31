@@ -21,6 +21,3 @@ angular.module('ndApp')
     $scope.clearFilters = ->
       $scope.currentReport.filters.splice(0, $scope.currentReport.filters.length)
 
-  .controller 'DateFilterCtrl', ($scope) ->
-    1
-

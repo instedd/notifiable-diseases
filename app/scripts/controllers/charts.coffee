@@ -14,3 +14,6 @@ angular.module('ndApp')
 
     $scope.chartTemplateFor = (chart) ->
       "views/charts/#{chart.kind}.html"
+
+    $scope.chartConfigTemplateFor = (chart) ->
+      "views/charts/#{chart.kind}Config.html"

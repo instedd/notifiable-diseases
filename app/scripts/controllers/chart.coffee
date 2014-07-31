@@ -2,7 +2,15 @@
 
 angular.module('ndApp')
   .controller 'ChartCtrl', ($scope, Cdx) ->
+    $scope.inConfig = false
+
+    $scope.saveChanges = ->
+      $scope.inConfig = false
+      render()
+
     render = ->
+      return if $scope.inConfig
+
       query = $scope.chart.getQuery()
       $scope.report.applyFiltersTo query
 
@@ -10,4 +18,3 @@ angular.module('ndApp')
         $scope.series = data
 
     $scope.$watch 'report.filters', render, true
-    $scope.$watch 'chart'         , render, true
