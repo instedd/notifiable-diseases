@@ -6,9 +6,8 @@ angular.module('ndApp')
         series: '='
         title: '='
       template: '<div google-chart chart="chart" class=\'nd-chart col-md-9\'/>'
-      link: (scope, element, attrs) -> 
+      link: (scope, element, attrs) ->
         scope.$watchCollection('series', () ->
-          console.log scope.series
           scope.chart = chart_for(scope.series, scope.title)
         )
     }

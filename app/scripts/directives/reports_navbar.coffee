@@ -1,4 +1,4 @@
 angular.module('ndApp')
   .directive 'ndReportsNavbar', ->
     restrict: 'E'
-    templateUrl: 'ReportsNavbar'
+    templateUrl: 'views/reports/navbar.html'

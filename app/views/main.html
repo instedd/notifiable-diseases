@@ -1,21 +1,4 @@
-<!-- BEGIN: Filters templates -->
-<script type="text/ng-template" id="DateFilterTemplate">
-  <div ng-controller="DateFilterCtrl">
-    <input type="text" size="10" ng-model="filter.since" debounce="700" />
-    -
-    <input type="text" size="10" ng-model="filter.until" debounce="700" />
-  </div>
-</script>
-<!-- END: Filters templates -->
-
-<!-- BEGIN: Charts templates -->
-<script type="text/ng-template" id="TrendlineTemplate">
-  <nd-trendline-viz report='currentReport' chart='chart' title='"Events"' class='col-md-11'>
-</script>
-<!-- END: Charts templates -->
-
-<nd-reports-navbar>
-</nd-reports-navbar>
+<nd-reports-navbar></nd-reports-navbar>
 
 <div class="row report" ng-show="currentReport">
   <!-- BEGIN: Filters panel -->
@@ -52,7 +35,7 @@
         <a href="javascript:void(0);" ng-click="addNewFilterIsCollapsed = !addNewFilterIsCollapsed">Add new filter</a>
         <div collapse="addNewFilterIsCollapsed">
           <ul>
-            <li><a href="javascript:void(0);" ng-click="addDateFilter()">Date</a></li>
+            <li><a href="javascript:void(0);" ng-click="addFilter('Date')">Date</a></li>
           </ul>
         </div>
       </div>
@@ -61,19 +44,21 @@
   </div>
   <!-- END: Filters panel -->
 
-  <!-- BEGIN: Query and trendline -->
+  <!-- BEGIN: Charts -->
   <div class="col-md-7" ng-controller="ChartsCtrl">
     <div class="row" ng-repeat="chart in currentReport.charts">
-      <div ng-include src="chartTemplateFor(chart)"></div>
+      <div class='col-md-11'>
+        <div ng-include src="chartTemplateFor(chart)" ng-controller="ChartCtrl" ng-init="chart=chart;report=currentReport"></div>
+      </div>
     </div>
     <div>
       <a href="javascript:void(0);" ng-click="addNewChartIsCollapsed = !addNewChartIsCollapsed">+ Add new visualization</a>
       <div collapse="addNewChartIsCollapsed">
         <ul>
-          <li><a href="javascript:void(0);" ng-click="addTrendline()">Trendline</a></li>
+          <li><a href="javascript:void(0);" ng-click="addChart('Trendline')">Trendline</a></li>
         </ul>
       </div>
     </div>
   </div>
-  <!-- END: Query and trendline -->
+  <!-- END: Charts -->
 </div>

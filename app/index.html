@@ -83,30 +83,20 @@
     <script src="scripts/app.js"></script>
     <script src="scripts/directives/reports_navbar.js"></script>
     <script src="scripts/directives/trendline.js"></script>
-    <script src="scripts/directives/trendline-viz.js"></script>
     <script src="scripts/models/filters_date.js"></script>
     <script src="scripts/models/charts_trendline.js"></script>
     <script src="scripts/models/report.js"></script>
     <script src="scripts/controllers/main.js"></script>
     <script src="scripts/controllers/filters.js"></script>
+    <script src="scripts/controllers/chart.js"></script>
     <script src="scripts/controllers/charts.js"></script>
     <script src="scripts/controllers/playground.js"></script>
     <script src="scripts/controllers/reports.js"></script>
     <script src="scripts/controllers/reports_navbar.js"></script>
-    <script src="scripts/services/filters_service.js"></script>
+    <script src="scripts/services/cdx_service.js"></script>
     <script src="scripts/services/charts_service.js"></script>
+    <script src="scripts/services/filters_service.js"></script>
     <script src="scripts/services/reports_service.js"></script>
     <!-- endbuild -->
-
-    <script type="text/ng-template" id="ReportsNavbar">
-      <div class="row">
-        <div class="col-md-12">
-          <ul class="nav nav-tabs" role="tablist" ng-controller="ReportsNavbarCtrl">
-            <li ng-repeat="report in reports" ng-class="{active: currentReport == report}"><a ng-href="#/reports/{{report.id}}">{{report.name}}</a></li>
-            <li ng-class="{active: reports.length == 0 || !currentReport}"><a href="#/reports/new">+ New report</a></li>
-          </ul>
-        </div>
-      </div>
-    </script>
 </body>
 </html>

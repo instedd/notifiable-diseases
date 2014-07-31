@@ -5,6 +5,11 @@ angular.module('ndApp')
         @filters = []
         @charts  = []
 
+      applyFiltersTo: (query) ->
+        for filter in @filters
+          filter.applyTo(query)
+        query
+
       @deserialize: (data) ->
         report = new Report(data.name, data.description)
         report.id = data.id

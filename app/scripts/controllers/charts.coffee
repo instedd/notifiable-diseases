@@ -7,14 +7,10 @@ angular.module('ndApp')
     $scope.toggleAddNewChart = ->
       $scope.addNewChartIsCollapsed = !$scope.addNewChartIsCollapsed
 
-    $scope.addChart = (chart) ->
+    $scope.addChart = (kind) ->
+      chart = ChartsService.create kind
       $scope.currentReport.charts.push chart
       $scope.toggleAddNewChart()
 
-    $scope.addTrendline = ->
-      chart = ChartsService.create "Trendline"
-      chart.grouping = "year"
-      $scope.addChart chart
-
     $scope.chartTemplateFor = (chart) ->
-      "#{chart.kind}Template"
+      "views/charts/#{chart.kind}.html"

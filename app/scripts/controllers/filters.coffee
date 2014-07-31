@@ -7,19 +7,13 @@ angular.module('ndApp')
     $scope.toggleAddNewFilter = ->
       $scope.addNewFilterIsCollapsed = !$scope.addNewFilterIsCollapsed
 
-    $scope.addFilter = (filter) ->
+    $scope.addFilter = (kind) ->
+      filter = FiltersService.create kind
       $scope.currentReport.filters.push filter
       $scope.toggleAddNewFilter()
 
-    $scope.addDateFilter = ->
-      filter = FiltersService.create "DateFilter"
-      filter.description = "Event date"
-      filter.since = "2014-01-01"
-      filter.until = "2014-06-01"
-      $scope.addFilter filter
-
     $scope.filterTemplateFor = (filter) ->
-      "#{filter.kind}Template"
+      "views/filters/#{filter.kind}.html"
 
     $scope.removeFilterByIndex = (index) ->
       $scope.currentReport.filters.splice(index, 1)

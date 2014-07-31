@@ -3,6 +3,9 @@ angular.module('ndApp')
     class DateFilter
       constructor: ->
         @kind = 'DateFilter'
+        @description = "Event date"
+        @since = "2014-01-01"
+        @until = "2014-06-01"
 
       applyTo: (query) ->
         query.since = @since
