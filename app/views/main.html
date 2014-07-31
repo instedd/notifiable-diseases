@@ -8,6 +8,12 @@
 </script>
 <!-- END: Filters templates -->
 
+<!-- BEGIN: Charts templates -->
+<script type="text/ng-template" id="TrendlineTemplate">
+  <nd-trendline-viz report='currentReport' chart='chart' title='"Events"' class='col-md-11'>
+</script>
+<!-- END: Charts templates -->
+
 <nd-reports-navbar>
 </nd-reports-navbar>
 
@@ -56,12 +62,18 @@
   <!-- END: Filters panel -->
 
   <!-- BEGIN: Query and trendline -->
-  <div class="col-md-7">
-
-    <div class="row">
-      <nd-trendline-viz report='currentReport' title='"Events"' class='col-md-11'>
+  <div class="col-md-7" ng-controller="ChartsCtrl">
+    <div class="row" ng-repeat="chart in currentReport.charts">
+      <div ng-include src="chartTemplateFor(chart)"></div>
     </div>
-
+    <div>
+      <a href="javascript:void(0);" ng-click="addNewChartIsCollapsed = !addNewChartIsCollapsed">+ Add new visualization</a>
+      <div collapse="addNewChartIsCollapsed">
+        <ul>
+          <li><a href="javascript:void(0);" ng-click="addTrendline()">Trendline</a></li>
+        </ul>
+      </div>
+    </div>
   </div>
   <!-- END: Query and trendline -->
 </div>

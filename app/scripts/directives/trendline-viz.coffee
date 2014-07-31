@@ -4,16 +4,16 @@ angular.module('ndApp')
       restrict: 'E'
       scope:
         report: '='
+        chart: '='
       templateUrl: 'views/charts/trendline-viz.html'
       link: (scope, element, attrs) ->
-        scope.$watch '[report, grouping]', (-> updateChart(scope, $http)), true
+        scope.$watch '[report.filters, chart]', (-> updateChart(scope, $http)), true
     }
 
 updateChart = (scope, $http) ->
-  if scope.report
-    query = { group_by : "#{scope.grouping}(created_at)" }
-    for filter in scope.report.filters
-      filter.applyTo(query)
+  query = { group_by : "#{scope.chart.grouping}(created_at)" }
+  for filter in scope.report.filters
+    filter.applyTo(query)
 
-    $http.post("/cdx/v1/events", query).success (data) ->
-      scope.series = data
+  $http.post("/cdx/v1/events", query).success (data) ->
+    scope.series = data

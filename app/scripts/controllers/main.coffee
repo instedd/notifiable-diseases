@@ -16,10 +16,6 @@ angular.module('ndApp')
       $location.path "/reports/new"
       return
 
-    $scope.data = {
-      series: []
-    }
-
     onChange = ->
       ReportsService.save()
 
@@ -33,8 +29,7 @@ angular.module('ndApp')
 
     if $routeParams.reportId
       $scope.currentReport = ReportsService.findById($routeParams.reportId)
-      if $scope.currentReport
-        $scope.$watch 'currentReport', onChange, true
     else if $scope.reports.length > 0
       $location.path "/reports/#{$scope.reports[0].id}"
 
+    $scope.$watch 'reports', onChange, true

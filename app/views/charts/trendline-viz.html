@@ -3,17 +3,19 @@
    <nd-trendline series="series" title="'Events'"></nd-trendline>
  </div>
  <div class="controls col-md-2">
-    <label for="year">
-      <input type="radio" name="group_by" id="year" ng-model="grouping" value="year" checked="checked">
-      Year
-    </label>
-    <label for="month">
-      <input type="radio" name="group_by" id="month" ng-model="grouping" value="month">
-      Month
-    </label>
-    <label for="day">
-      <input type="radio" name="group_by" id="day" ng-model="grouping" value="day">
-      Day
-    </label>
+    <form>
+      <label>
+        <input type="radio" name="group_by" ng-model="chart.grouping" value="year" checked="checked">
+        Year
+      </label>
+      <label>
+        <input type="radio" name="group_by" ng-model="chart.grouping" value="month">
+        Month
+      </label>
+      <label>
+        <input type="radio" name="group_by" ng-model="chart.grouping" value="day">
+        Day
+      </label>
+    </form>
   </div>
 </div>
