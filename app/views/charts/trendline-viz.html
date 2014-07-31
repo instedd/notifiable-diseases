@@ -1,5 +1,8 @@
-<div class='nd-trendline'>
-  <div class="controls">
+<div class='nd-trendline well row'>
+ <div class='col-md-10'>
+   <nd-trendline series="series" title="'Events'"></nd-trendline>
+ </div>
+ <div class="controls col-md-2">
     <label for="year">
       <input type="radio" name="group_by" id="year" ng-model="grouping" value="year" checked="checked">
       Year
@@ -13,6 +16,4 @@
       Day
     </label>
   </div>
- 
- <nd-trendline series="series" title="'Events'">
 </div>

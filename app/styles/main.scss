@@ -93,17 +93,17 @@ body {
 
 .nd-trendline {
 
-  .controls {
-    float: right;
+  .nd-chart {
+    padding: 10px;
+    height: 400px;
+    width: 100%;
+  }
 
+  .controls {
+    padding-top: 30px;
     label {
       display: block;
     }
-  }
-
-  .nd-chart {
-    height:400px;
-    width:700px;
   }
 
 }
