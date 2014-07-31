@@ -2,14 +2,17 @@
 
 angular.module('ndApp')
   .controller 'ChartCtrl', ($scope, Cdx) ->
-    $scope.inConfig = false
+    $scope.editingChart = false
+
+    $scope.edit = ->
+      $scope.editingChart = true
 
     $scope.saveChanges = ->
-      $scope.inConfig = false
+      $scope.editingChart = false
       render()
 
     render = ->
-      return if $scope.inConfig
+      return if $scope.editingChart
 
       query = $scope.chart.getQuery()
       $scope.report.applyFiltersTo query

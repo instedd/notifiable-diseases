@@ -49,13 +49,13 @@
     <div class="row" ng-repeat="chart in currentReport.charts">
       <div class='col-md-11'>
         <div class='nd-trendline well row' ng-controller="ChartCtrl" ng-init="chart=chart;report=currentReport" style="min-height:480px;max-height:480px">
-          <div ng-hide="inConfig">
-            <a class="pull-right" href="javascript:void(0)" ng-click="inConfig = true">
+          <div ng-hide="editingChart">
+            <a class="pull-right" href="javascript:void(0)" ng-click="edit()">
               edit
             </a>
             <div ng-include src="chartTemplateFor(chart)"></div>
           </div>
-          <div ng-show="inConfig">
+          <div ng-show="editingChart">
             <form>
               <div ng-include src="chartConfigTemplateFor(chart)"></div>
               <div>
