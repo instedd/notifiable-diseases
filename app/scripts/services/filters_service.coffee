@@ -1,4 +1,4 @@
-filters = ["DateFilter"]
+filters = ["DateFilter", "GenderFilter"]
 
 angular.module('ndApp')
   .service 'FiltersService', [filters..., (args...)->
