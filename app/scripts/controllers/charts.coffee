@@ -12,6 +12,9 @@ angular.module('ndApp')
       $scope.currentReport.charts.push chart
       $scope.toggleAddNewChart()
 
+    $scope.removeChartByIndex = (index) ->
+      $scope.currentReport.charts.splice(index, 1)
+
     $scope.chartTemplateFor = (chart) ->
       "views/charts/#{chart.kind}.html"
 
