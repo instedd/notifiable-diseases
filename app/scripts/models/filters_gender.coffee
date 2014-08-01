@@ -4,12 +4,12 @@ angular.module('ndApp')
       constructor: ->
         @kind = 'GenderFilter'
         @description = "Gender"
-        @value = "male"
+        @values = []
 
       applyTo: (query) ->
-        query.gender = @value.toLowerCase()
+        query.gender = @values
 
       @deserialize: (data) ->
         filter = new GenderFilter
-        filter.value = data.value
+        filter.values = data.values
         filter

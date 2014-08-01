@@ -10,26 +10,32 @@
 
 angular.module('ndApp')
   .controller 'MainCtrl', ($scope, $http, $location, $log, $routeParams, ReportsService) ->
-    $scope.reports = ReportsService.reports()
+    ReportsService.reportsDescriptions().then (reportsDescriptions) ->
+      $scope.reportsDescriptions = reportsDescriptions
 
-    if $scope.reports.length == 0
-      $location.path "/reports/new"
-      return
-
-    onChange = ->
-      ReportsService.save()
-
-    $scope.deleteReport = ->
-      index = _.indexOf $scope.reports, $scope.currentReport
-      $scope.reports.splice(index, 1)
-      if $scope.reports.length == 0
+      if $scope.reportsDescriptions.length == 0
         $location.path "/reports/new"
-      else
-        $location.path "/reports/#{$scope.reports[0].id}"
+        return
 
-    if $routeParams.reportId
-      $scope.currentReport = ReportsService.findById($routeParams.reportId)
-    else if $scope.reports.length > 0
-      $location.path "/reports/#{$scope.reports[0].id}"
+      firstSaveCurrentReport = true
+      saveCurrentReport = (newValue, oldValue) ->
+        if $scope.currentReport
+          unless firstSaveCurrentReport
+            if newValue.version == oldValue.version
+              ReportsService.save($scope.currentReport)
+          firstSaveCurrentReport = false
 
-    $scope.$watch 'reports', onChange, true
+      $scope.deleteReport = ->
+        ReportsService.delete($scope.currentReport).then (descs) ->
+          if descs.length == 0
+            $location.path "/reports/new"
+          else
+            $location.path "/reports/#{descs[0].id}"
+
+      if $routeParams.reportId
+        ReportsService.findById($routeParams.reportId).then (report) ->
+          $scope.currentReport = report
+          $scope.$watch 'currentReport', saveCurrentReport, true
+      else if $scope.reportsDescriptions.length > 0
+        $location.path "/reports/#{$scope.reportsDescriptions[0].id}"
+

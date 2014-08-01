@@ -72,11 +72,18 @@ module.exports = function (grunt) {
         hostname: 'localhost',
         livereload: 35729
       },
-      proxies: [{
-        context: '/cdx',
-        host: 'localhost',
-        port: 3000
-      }],
+      proxies: [
+        {
+          context: '/cdx',
+          host: 'localhost',
+          port: 3000
+        },
+        {
+          context: '/store',
+          host: 'localhost',
+          port: 3000
+        },
+      ],
       livereload: {
         options: {
           open: true,

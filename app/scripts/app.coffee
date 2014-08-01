@@ -19,7 +19,9 @@ angular
     'ui.bootstrap',
     'googlechart',
     'debounce',
-    'LocalStorageModule'
+    'LocalStorageModule',
+    'checklist-model',
+    'uuid'
   ])
   .config ($routeProvider) ->
     $routeProvider
