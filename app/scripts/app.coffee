@@ -21,7 +21,8 @@ angular
     'debounce',
     'LocalStorageModule',
     'checklist-model',
-    'uuid'
+    'uuid',
+    'xeditable',
   ])
   .config ($routeProvider) ->
     $routeProvider
@@ -42,4 +43,6 @@ angular
         controller: 'TrendlineCtrl'
       .otherwise
         redirectTo: '/'
+  .run (editableOptions) ->
+    editableOptions.theme = 'bs3'
 

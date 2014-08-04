@@ -1,6 +1,15 @@
 <nd-reports-navbar></nd-reports-navbar>
 
 <div class="row report" ng-show="currentReport">
+  <div class="col-md-12" style="margin-bottom:20px">
+    <h3 style="margin-top:0">
+      <a href="#" editable-text="currentReport.name">{{currentReport.name}}</a>
+    </h3>
+    <div>
+      <a href="#" editable-textarea="currentReport.description" e-rows="4" e-cols="60">{{currentReport.description || 'No description'}}</a>
+    </div>
+  </div>
+
   <!-- BEGIN: Filters panel -->
   <div id="filters" class="col-md-3" ng-controller="FiltersCtrl">
     <div class="well white out condensed">

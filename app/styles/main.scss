@@ -93,22 +93,23 @@ body {
 
 .report {
   padding: 15px 0px 0px 15px;
-
   .nd-trendline {
-
     .nd-chart {
       padding: 10px;
       height: 400px;
       width: 100%;
     }
-
     .controls {
       padding-top: 30px;
       label {
         display: block;
       }
     }
-
   }
+}
 
+a.editable-click {
+  color: black !important;
+  text-decoration: none !important;
+  border-bottom: 0px !important;
 }
