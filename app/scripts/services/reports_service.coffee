@@ -122,6 +122,14 @@ else
       save: (report) ->
         q = $q.defer()
 
+        # When saving a report we must update the corresponding
+        # report description if the name changed.
+        for reportDescription in reportsDescriptions
+          if reportDescription.id == report.id && reportDescription.name != report.name
+            reportDescription.name = report.name
+            saveReportsDescriptions()
+            break
+
         KeyValueStore.put(reportKey(report.id), JSON.stringify(report), report.version).success (data) ->
           report.version = data.version
           q.resolve(report)
