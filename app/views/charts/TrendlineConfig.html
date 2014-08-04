@@ -1,24 +1,7 @@
-<div>
-  <label>
-    <input type="radio" name="group_by" ng-model="chart.grouping" value="year">
-    Year
-  </label>
-</div>
-<div>
-  <label>
-    <input type="radio" name="group_by" ng-model="chart.grouping" value="month">
-    Month
-  </label>
-</div>
-<div>
-  <label>
-    <input type="radio" name="group_by" ng-model="chart.grouping" value="week">
-    Week
-  </label>
-</div>
-<div>
-  <label>
-    <input type="radio" name="group_by" ng-model="chart.grouping" value="day">
-    Day
-  </label>
+Period:
+<div class="btn-group">
+  <button type="button" class="btn btn-default" ng-class="{active: chart.grouping == 'day'}" ng-click="chart.grouping = 'day'">Day</button>
+  <button type="button" class="btn btn-default" ng-class="{active: chart.grouping == 'week'}" ng-click="chart.grouping = 'week'">Week</button>
+  <button type="button" class="btn btn-default" ng-class="{active: chart.grouping == 'month'}" ng-click="chart.grouping = 'month'">Month</button>
+  <button type="button" class="btn btn-default" ng-class="{active: chart.grouping == 'year'}" ng-click="chart.grouping = 'year'">Year</button>
 </div>

@@ -60,9 +60,9 @@
             <div ng-include src="chartTemplateFor(chart)"></div>
           </div>
           <div ng-show="editingChart">
-            <form>
+            <form ng-submit="saveChanges()">
               <div ng-include src="chartConfigTemplateFor(chart)"></div>
-              <div>
+              <div style="margin-top:20px">
                 <button class="btn btn-primary" ng-click="saveChanges()">Done</button>
               </div>
             </form>
