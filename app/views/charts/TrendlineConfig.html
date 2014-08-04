@@ -1,7 +1,31 @@
-Period:
-<div class="btn-group">
-  <button type="button" class="btn btn-default" ng-class="{active: chart.grouping == 'day'}" ng-click="chart.grouping = 'day'">Day</button>
-  <button type="button" class="btn btn-default" ng-class="{active: chart.grouping == 'week'}" ng-click="chart.grouping = 'week'">Week</button>
-  <button type="button" class="btn btn-default" ng-class="{active: chart.grouping == 'month'}" ng-click="chart.grouping = 'month'">Month</button>
-  <button type="button" class="btn btn-default" ng-class="{active: chart.grouping == 'year'}" ng-click="chart.grouping = 'year'">Year</button>
+<div class="row">
+  <div class="col-md-1">
+    Display:
+  </div>
+  <div class="col-md-11">
+    <label>
+      <input type="radio" name="display" ng-model="chart.display" value="simple"> Simple
+    </label>
+    <br/>
+    <label>
+      <input type="radio" name="display" ng-model="chart.display" value="split"> Split by
+    </label>
+    <select ng-disabled="chart.display != 'split'" ng-model="chart.splitField">
+      <option value="gender">Gender</option>
+    </select>
+  </div>
+</div>
+<br/>
+<div class="row">
+  <div class="col-md-1">
+    Period:
+  </div>
+  <div class="col-md-11">
+    <div class="btn-group">
+      <button type="button" class="btn btn-default" ng-class="{active: chart.grouping == 'day'}" ng-click="chart.grouping = 'day'">Day</button>
+      <button type="button" class="btn btn-default" ng-class="{active: chart.grouping == 'week'}" ng-click="chart.grouping = 'week'">Week</button>
+      <button type="button" class="btn btn-default" ng-class="{active: chart.grouping == 'month'}" ng-click="chart.grouping = 'month'">Month</button>
+      <button type="button" class="btn btn-default" ng-class="{active: chart.grouping == 'year'}" ng-click="chart.grouping = 'year'">Year</button>
+    </div>
+  </div>
 </div>
