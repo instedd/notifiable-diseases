@@ -16,3 +16,6 @@ angular.module('ndApp')
 
     optionsFor: (field) ->
       Options[field]
+
+    valuesFor: (field) ->
+      _.map Options[field], (option) -> option.value

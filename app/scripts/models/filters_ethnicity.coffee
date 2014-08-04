@@ -4,7 +4,7 @@ angular.module('ndApp')
       constructor: ->
         @kind = 'EthnicityFilter'
         @description = "Ethnicity"
-        @values = []
+        @values = FieldsService.valuesFor("ethnicity")
 
       options: ->
         FieldsService.optionsFor("ethnicity")
