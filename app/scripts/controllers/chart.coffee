@@ -17,7 +17,10 @@ angular.module('ndApp')
       query = $scope.chart.getQuery()
       $scope.report.applyFiltersTo query
 
-      Cdx.events(query).success (data) ->
-        $scope.series = $scope.chart.getSeries(data)
+      if query.empty
+        $scope.series = $scope.chart.getSeries([])
+      else
+        Cdx.events(query).success (data) ->
+          $scope.series = $scope.chart.getSeries(data)
 
     $scope.$watch 'report.filters', render, true

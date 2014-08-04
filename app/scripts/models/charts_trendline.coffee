@@ -1,8 +1,5 @@
 angular.module('ndApp')
-  .factory 'Trendline', (Cdx) ->
-    SplitFieldValues =
-      gender: ["female", "male"]
-
+  .factory 'Trendline', (Cdx, FieldsService) ->
     class Trendline
       constructor: ->
         @kind = 'Trendline'
@@ -39,7 +36,11 @@ angular.module('ndApp')
       getSplitSeries: (data) ->
         @sortData data
 
-        cols = SplitFieldValues[@splitField]
+        options = FieldsService.optionsFor(@splitField)
+
+        cols = _.map options, (option) -> option.label
+        allValues = _.map options, (option) -> option.value
+
         rows = []
 
         i = 0
@@ -59,7 +60,7 @@ angular.module('ndApp')
             if other_date != date
               break
 
-            index = _.indexOf cols, other_item[@splitField]
+            index = _.indexOf allValues, other_item[@splitField]
             row[index + 1] = other_item.count
             j += 1
 
