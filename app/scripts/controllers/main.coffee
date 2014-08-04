@@ -25,12 +25,18 @@ angular.module('ndApp')
               ReportsService.save($scope.currentReport)
           firstSaveCurrentReport = false
 
+      $scope.duplicateReport = ->
+        dupReport = $scope.currentReport.duplicate()
+        ReportsService.create(dupReport).then ->
+          $location.path "/reports/#{dupReport.id}"
+
       $scope.deleteReport = ->
-        ReportsService.delete($scope.currentReport).then (descs) ->
-          if descs.length == 0
-            $location.path "/reports/new"
-          else
-            $location.path "/reports/#{descs[0].id}"
+        if confirm("Are you sure you want to delete the report '#{$scope.currentReport.name}'")
+          ReportsService.delete($scope.currentReport).then (descs) ->
+            if descs.length == 0
+              $location.path "/reports/new"
+            else
+              $location.path "/reports/#{descs[0].id}"
 
       if $routeParams.reportId
         ReportsService.findById($routeParams.reportId).then (report) ->

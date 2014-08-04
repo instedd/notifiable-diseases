@@ -10,6 +10,12 @@ angular.module('ndApp')
           filter.applyTo(query)
         query
 
+      duplicate: ->
+        dup = new Report("#{@name} (duplicate)", @description)
+        dup.filters = @filters
+        dup.charts = @charts
+        dup
+
       @deserialize: (data) ->
         report = new Report(data.name, data.description)
         report.id = data.id
