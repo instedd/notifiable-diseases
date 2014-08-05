@@ -10,10 +10,36 @@ $icon-font-path: "../bower_components/bootstrap-sass-official/assets/fonts/boots
   padding: 0.2em 0;
 }
 
-/* Space out content a bit */
+/* Bootstrap redefined styles */
 body {
-  padding-top: 20px;
-  padding-bottom: 20px;
+  background: #eaeaea;
+}
+.navbar {
+  background: #ffffff;
+}
+.nav-tabs {
+  border-bottom: 1px solid #c6c6c6;
+}
+
+.navbar-toggle .icon-bar {
+  background: #2A6498;
+}
+
+.nav-tabs > li.active > a,
+.nav-tabs > li.active > a:hover,
+.nav-tabs > li.active > a:focus {
+  @include box-shadow(0 -1px 1px 1px rgba(0, 0, 0, 0.1));
+  background-color: #eaeaea;
+}
+
+.nav > li > a {
+  position: relative;
+  display: block;
+  padding: 5px 15px;
+}
+
+.well {
+  background-color: #ffffff;
 }
 
 /* Everything but the jumbotron gets side spacing for mobile first views */
