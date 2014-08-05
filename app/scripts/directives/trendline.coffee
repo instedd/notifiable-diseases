@@ -29,8 +29,6 @@ angular.module('ndApp')
             animation:
               duration: 1000
               easing: 'out'
-          formatters: {}
-          displayed: true
 
         scope.$watchCollection('series', () ->
           if scope.series
@@ -56,7 +54,7 @@ updateChart = (chart, series, title) =>
           v: value
           f: "#{value} events"
       else
-        c.push v: undefined
+        c.push v: 0
       i += 1
 
     rows.push c: c
