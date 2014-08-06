@@ -13,7 +13,7 @@
 
 <div class="row">
   <!-- BEGIN: Filters panel -->
-  <div id="filters" class="col-xs-6 col-md-3" ng-controller="FiltersCtrl">
+  <div id="filters" class="col-xs-5 col-sm-4 col-md-3" ng-controller="FiltersCtrl">
     <div class="well">
       <div class="row">
         <div class="col-md-6">
@@ -72,10 +72,10 @@
 
 
   <!-- BEGIN: Charts -->
-  <div class="col-xs-6 col-md-9" ng-controller="ChartsCtrl">
+  <div class="col-xs-7 col-sm-8 col-md-9" ng-controller="ChartsCtrl">
     <div class="row">
-      <div class="col-md-6 " ng-repeat="chart in currentReport.charts">
-        <div class='nd-trendline well' ng-controller="ChartCtrl" ng-init="chart=chart;report=currentReport" style="min-height:280px;max-height:280px">
+      <div class="col-md-6" ng-repeat="chart in currentReport.charts">
+        <div class='nd-trendline well' ng-controller="ChartCtrl" ng-init="chart=chart;report=currentReport" style="min-height:480px;max-height:480px">
           <div ng-hide="editingChart">
             <div>
               <span ng-show="chart.isConfigurable()">
@@ -99,13 +99,17 @@
           </div>
         </div>
       </div>
-      <div>
-        <a href="javascript:void(0);" ng-click="addNewChartIsCollapsed = !addNewChartIsCollapsed">+ Add new visualization</a>
-        <div collapse="addNewChartIsCollapsed">
-          <ul>
-            <li><a href="javascript:void(0);" ng-click="addChart('PopulationPyramid')">Population pyramid</a></li>
-            <li><a href="javascript:void(0);" ng-click="addChart('Trendline')">Trendline</a></li>
-          </ul>
+      <div class="col-md-6">
+        <div class="add-new-visualization">
+          <a href="javascript:void(0);" ng-click="addNewChartIsCollapsed = !addNewChartIsCollapsed" class="add_new"></a>
+          <div collapse="addNewChartIsCollapsed" class="chart_type">
+              <div>
+                <p>Select a chart type</p>
+                <a href="javascript:void(0);" ng-click="addChart('Trendline')"><img src="images/ic-trendline.png"></a>
+                <a href="javascript:void(0);" ng-click="addChart('PopulationPyramid')"><img src="images/ic-pyramid.png"></a>
+
+              </div>
+          </div>
         </div>
       </div>
     </div>
