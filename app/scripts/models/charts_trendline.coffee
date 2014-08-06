@@ -95,14 +95,14 @@ angular.module('ndApp')
         for row in rows
           newRow = []
           newRow.push row[0]
-          for index of foundIndices
-            newRow.push row[parseInt(index) + 1]
+          for index in foundIndices
+            newRow.push row[index + 1]
           newRows.push newRow
 
         # The same goes for the cols
         newCols = []
-        for index of foundIndices
-          newCols.push cols[parseInt(index)]
+        for index in foundIndices
+          newCols.push cols[index]
 
         cols: newCols, rows: newRows
 
