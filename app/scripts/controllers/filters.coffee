@@ -62,6 +62,11 @@ angular.module('ndApp')
       while i <= index
         filter = $scope.currentReport.filters[i]
         filter.applyTo query
+
+        if query.empty
+          $scope.counts[index] = 0
+          return
+
         i += 1
 
       Cdx.events(query).success (data) ->
