@@ -1,7 +1,7 @@
 'use strict'
 
 angular.module('ndApp')
-  .controller 'ChartCtrl', ($scope, Cdx) ->
+  .controller 'ChartCtrl', ($scope, $filter, Cdx) ->
     $scope.editingChart = false
 
     $scope.edit = ->
@@ -10,6 +10,13 @@ angular.module('ndApp')
     $scope.saveChanges = ->
       $scope.editingChart = false
       render()
+
+    $scope.getCSV = ->
+      $scope.chart.getCSV($scope.series)
+
+    $scope.getCSVFilename = ->
+      date = $filter("date")(new Date(), "yyyyMMddHMMss")
+      "#{$scope.currentReport.name}_#{$scope.chart.kind}_#{date}".replace(/[^a-zA-Z0-9_]/g, "_")
 
     render = ->
       return if $scope.editingChart

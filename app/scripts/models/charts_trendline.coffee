@@ -106,6 +106,13 @@ angular.module('ndApp')
 
         cols: newCols, rows: newRows
 
+      getCSV: (series) ->
+        rows = []
+        rows.push ["Date"].concat(series.cols)
+        for row in series.rows
+          rows.push _.map row, (v) -> if v then v else 0
+        rows
+
       sortData: (data) ->
         data.sort (x, y) =>
           if x.created_at < y.created_at

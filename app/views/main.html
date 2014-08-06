@@ -75,10 +75,14 @@
   <div class="col-xs-6 col-md-9" ng-controller="ChartsCtrl">
     <div class="row">
       <div class="col-md-6 " ng-repeat="chart in currentReport.charts">
-        <div class='nd-trendline well' ng-controller="ChartCtrl" ng-init="chart=chart;report=currentReport" style="min-height:480px;max-height:480px">
+        <div class='nd-trendline well' ng-controller="ChartCtrl" ng-init="chart=chart;report=currentReport" style="min-height:280px;max-height:280px">
           <div ng-hide="editingChart">
-            <div ng-show="chart.isConfigurable()">
-              <a href="javascript:void(0)" ng-click="edit()">edit</a>
+            <div>
+              <span ng-show="chart.isConfigurable()">
+                <a href="javascript:void(0)" ng-click="edit()">edit</a>
+                |
+              </span>
+              <a href="javascript:void(0)" ng-csv="getCSV()" filename="{{getCSVFilename()}}">download csv</a>
             </div>
             <div>
               <a href="javascript:void(0)" ng-click="$parent.removeChartByIndex($index)">remove</a>

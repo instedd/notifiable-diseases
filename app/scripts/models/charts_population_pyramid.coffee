@@ -42,6 +42,13 @@ angular.module('ndApp')
 
         series
 
+      getCSV: (series) ->
+        rows = []
+        rows.push ["Age", "Male", "Female"]
+        for serie in series
+          rows.push [serie.age, serie.male, serie.female]
+        rows
+
       sortData: (data) ->
         data.sort (x, y) =>
           if x.age_group < y.age_group

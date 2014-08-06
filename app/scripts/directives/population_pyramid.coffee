@@ -5,7 +5,7 @@ angular.module('ndApp')
       scope:
         series: '='
         title: '='
-      template: '<div google-chart chart="chart" class="nd-chart col-md-9"></div>'
+      template: '<div google-chart chart="chart" class="nd-chart"></div>'
       link: (scope, element, attrs) ->
         scope.chart =
           type: "BarChart"

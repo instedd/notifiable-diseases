@@ -23,6 +23,7 @@ angular
     'checklist-model',
     'uuid',
     'xeditable',
+    'ngCsv',
   ])
   .config ($routeProvider) ->
     $routeProvider
