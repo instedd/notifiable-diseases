@@ -26,7 +26,7 @@ angular.module('ndApp')
             vAxis:
               direction: -1
             animation:
-              duration: 1000
+              duration: 600
               easing: 'out'
 
         scope.$watchCollection('series', () ->
