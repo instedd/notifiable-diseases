@@ -17,9 +17,7 @@ angular.module('ndApp')
             rows: []
           options:
             title: scope.title
-            isStacked: "true"
-            fill: 20
-            displayExactValues: true
+            isStacked: true
             vAxis:
               title: "Event count"
               gridlines:

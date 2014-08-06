@@ -71,14 +71,18 @@
   <!-- BEGIN: Charts -->
   <div class="col-md-7" ng-controller="ChartsCtrl">
     <div class="row" ng-repeat="chart in currentReport.charts">
-      <div class='col-md-11'>
+      <div class="col-md-11">
         <div class='nd-trendline well row' ng-controller="ChartCtrl" ng-init="chart=chart;report=currentReport" style="min-height:480px;max-height:480px">
           <div ng-hide="editingChart">
-            <div class="pull-left">
-              <a href="javascript:void(0)" ng-click="edit()">edit</a>
-            </div>
-            <div class="pull-right">
-              <a href="javascript:void(0)" ng-click="$parent.removeChartByIndex($index)">remove</a>
+            <div class="row">
+              <div class="col-md-12">
+                <div class="pull-left" ng-show="chart.isConfigurable()">
+                  <a href="javascript:void(0)" ng-click="edit()">edit</a>
+                </div>
+                <div class="pull-right">
+                  <a href="javascript:void(0)" ng-click="$parent.removeChartByIndex($index)">remove</a>
+                </div>
+              </div>
             </div>
             <div ng-include src="chartTemplateFor(chart)"></div>
           </div>
@@ -97,6 +101,7 @@
       <a href="javascript:void(0);" ng-click="addNewChartIsCollapsed = !addNewChartIsCollapsed">+ Add new visualization</a>
       <div collapse="addNewChartIsCollapsed">
         <ul>
+          <li><a href="javascript:void(0);" ng-click="addChart('PopulationPyramid')">Population pyramid</a></li>
           <li><a href="javascript:void(0);" ng-click="addChart('Trendline')">Trendline</a></li>
         </ul>
       </div>

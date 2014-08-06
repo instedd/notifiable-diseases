@@ -38,9 +38,6 @@ angular
       .when '/reports/:reportId',
         templateUrl: 'views/main.html'
         controller: 'MainCtrl'
-      .when '/trendline',
-        templateUrl: 'views/trendline.html'
-        controller: 'TrendlineCtrl'
       .otherwise
         redirectTo: '/'
   .run (editableOptions) ->

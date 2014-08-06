@@ -7,6 +7,16 @@ angular.module('ndApp')
         @splitField = 'gender'
         @grouping = 'year'
 
+      @deserialize: (data) ->
+        chart = new Trendline
+        chart.display = data.display
+        chart.splitField = data.splitField
+        chart.grouping = data.grouping
+        chart
+
+      isConfigurable: ->
+        true
+
       getQuery: ->
         date_grouping = "#{@grouping}(created_at)"
         switch @display
@@ -108,10 +118,3 @@ angular.module('ndApp')
             1
           else
             0
-
-      @deserialize: (data) ->
-        chart = new Trendline
-        chart.display = data.display
-        chart.splitField = data.splitField
-        chart.grouping = data.grouping
-        chart
