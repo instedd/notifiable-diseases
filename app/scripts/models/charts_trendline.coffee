@@ -42,6 +42,11 @@ angular.module('ndApp')
         cols = _.map options, (option) -> option.label
         allValues = _.map options, (option) -> option.value
 
+        # Check which column indices we found: this basically tells
+        # us which columns have values in the results, so later we
+        # can discard those that have no values.
+        foundIndices = []
+
         rows = []
 
         i = 0
@@ -62,13 +67,34 @@ angular.module('ndApp')
               break
 
             index = _.indexOf allValues, other_item[@splitField]
+            foundIndices[index] = true
             row[index + 1] = other_item.count
             j += 1
 
           rows.push row
           i = j
 
-        cols: cols, rows: rows
+        # Convert the indices to numbers (the keys of an object are strings)
+        indices = []
+        for index of foundIndices
+          indices.push parseInt(index)
+        foundIndices = indices
+
+        # Build new rows with only indices for the found indices
+        newRows = []
+        for row in rows
+          newRow = []
+          newRow.push row[0]
+          for index of foundIndices
+            newRow.push row[parseInt(index) + 1]
+          newRows.push newRow
+
+        # The same goes for the cols
+        newCols = []
+        for index of foundIndices
+          newCols.push cols[parseInt(index)]
+
+        cols: newCols, rows: newRows
 
       sortData: (data) ->
         data.sort (x, y) =>
