@@ -118,7 +118,7 @@ body {
 }
 
 .report {
-  padding: 15px 0px 0px 15px;
+  /*padding: 15px 0px 0px 15px;*/
   .nd-trendline {
     .nd-chart {
       padding: 10px;
@@ -138,4 +138,9 @@ a.editable-click {
   color: black !important;
   text-decoration: none !important;
   border-bottom: 0px !important;
+}
+
+.new-report {
+  @extend .pull-right;
+  margin-top: -25px;
 }

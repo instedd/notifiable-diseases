@@ -2,7 +2,8 @@
   <div class="col-md-12">
     <ul class="nav nav-tabs" role="tablist">
       <li ng-repeat="report in reportsDescriptions" ng-class="{active: currentReport.id == report.id}"><a ng-href="#/reports/{{report.id}}">{{report.name}}</a></li>
-      <li ng-class="{active: reports.length == 0 || !currentReport}"><a href="#/reports/new">+ New report</a></li>
+      <!-- <li ng-class="{active: reports.length == 0 || !currentReport}"><a href="#/reports/new">+ New report</a></li> -->
     </ul>
+    <a href="#/reports/new" class="new-report">+ New report</a>
   </div>
 </div>
