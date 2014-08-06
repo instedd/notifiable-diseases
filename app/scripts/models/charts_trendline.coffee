@@ -18,6 +18,7 @@ angular.module('ndApp')
             throw "Uknknown display: #{@display}"
 
       getSeries: (data) ->
+        data = data.events
         switch @display
           when 'simple'
             @getSimpleSeries(data)

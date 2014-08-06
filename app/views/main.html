@@ -24,26 +24,37 @@
         </div>
       </div>
       <hr/>
-      <div>
-        <strong>All cases</strong>
+      <div class="row">
+        <div class="col-md-12">
+          <strong>All cases</strong>
+          <span ng-show="hasCount(-1)">({{counts[-1]}})</span>
+          <span ng-hide="hasCount(-1)">(...)</span>
+        </div>
       </div>
       <div ng-repeat="filter in currentReport.filters">
         <hr/>
         <div class="row">
-          <div class="col-md-6">
-            <strong>{{ filter.description }}</strong>
-          </div>
-          <div class="col-md-6">
-            <a class="pull-right" href="javascript:void(0)" ng-click="$parent.removeFilterByIndex($index)">remove</a>
+          <div class="col-md-12">
+            <div style="padding-bottom:8px">
+              <strong>{{ filter.description }}</strong>
+              <span ng-show="hasCount($index)">({{counts[$index]}})</span>
+              <span ng-hide="hasCount($index)">(...)</span>
+              <a class="pull-right" href="javascript:void(0)" ng-click="$parent.removeFilterByIndex($index)">remove</a>
+            </div>
           </div>
         </div>
-        <div ng-include src="filterTemplateFor(filter)"></div>
+        <div class="row">
+          <div class="col-md-12">
+            <div ng-include src="filterTemplateFor(filter)"></div>
+          </div>
+        </div>
       </div>
       <hr/>
       <div>
         <a href="javascript:void(0);" ng-click="addNewFilterIsCollapsed = !addNewFilterIsCollapsed">Add new filter</a>
         <div collapse="addNewFilterIsCollapsed">
           <ul>
+            <li><a href="javascript:void(0);" ng-click="addFilter('AgeGroupFilter')">Age group</a></li>
             <li><a href="javascript:void(0);" ng-click="addFilter('DateFilter')">Date</a></li>
             <li><a href="javascript:void(0);" ng-click="addFilter('EthnicityFilter')">Ethnicity</a></li>
             <li><a href="javascript:void(0);" ng-click="addFilter('GenderFilter')">Gender</a></li>
