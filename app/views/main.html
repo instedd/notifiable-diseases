@@ -83,6 +83,7 @@
                 |
               </span>
               <a href="javascript:void(0)" ng-csv="getCSV()" filename="{{getCSVFilename()}}">download csv</a>
+              <span ng-show="loadingChart">...</span>
             </div>
             <div>
               <a href="javascript:void(0)" ng-click="$parent.removeChartByIndex($index)">remove</a>

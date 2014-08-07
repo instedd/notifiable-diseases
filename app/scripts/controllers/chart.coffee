@@ -3,6 +3,7 @@
 angular.module('ndApp')
   .controller 'ChartCtrl', ($scope, $filter, Cdx) ->
     $scope.editingChart = false
+    $scope.loadingChart = false
 
     $scope.edit = ->
       $scope.editingChart = true
@@ -27,7 +28,9 @@ angular.module('ndApp')
       if query.empty
         $scope.series = $scope.chart.getSeries([])
       else
+        $scope.loadingChart = true
         Cdx.events(query).success (data) ->
           $scope.series = $scope.chart.getSeries(data)
+          $scope.loadingChart = false
 
     $scope.$watch 'report.filters', render, true
