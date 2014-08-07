@@ -32,6 +32,10 @@ module.exports = function (grunt) {
 
     // Watches files for changes and runs tasks based on the changed files
     watch: {
+      settings: {
+        files: ['conf/settings.json'],
+        tasks: ['ngconstant']
+      },
       bower: {
         files: ['bower.json'],
         tasks: ['wiredep']
@@ -424,13 +428,39 @@ module.exports = function (grunt) {
         configFile: 'test/karma.conf.coffee',
         singleRun: true
       }
-    }
+    },
+
+    ngconstant: {
+      options: {
+        name: 'config',
+        dest: 'app/scripts/config.js',
+        constants: {
+          // default settings
+          settings : grunt.file.readJSON('conf/settings.json')
+        }
+      },
+      // merge settings specific for production environment
+      overrides: {
+        constants: {
+          settings: (function() {
+            var customSettings = grunt.option('settings');
+            if (customSettings) {
+              return grunt.file.readJSON(customSettings);
+            }
+            return {}
+          })()
+        }
+      }
+    },
   });
 
+  grunt.loadNpmTasks('grunt-ng-constant');
 
   grunt.registerTask('serve', 'Compile then start a connect web server', function (target) {
     if (target === 'dist') {
       return grunt.task.run(['build', 'connect:dist:keepalive']);
+    } else {
+      grunt.task.run(['ngconstant'])
     }
 
     grunt.task.run([
@@ -459,6 +489,7 @@ module.exports = function (grunt) {
 
   grunt.registerTask('build', [
     'clean:dist',
+    'ngconstant',
     'wiredep',
     'useminPrepare',
     'concurrent:dist',

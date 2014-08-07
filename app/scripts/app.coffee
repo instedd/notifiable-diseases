@@ -24,6 +24,7 @@ angular
     'uuid',
     'xeditable',
     'ngCsv',
+    'config'
   ])
   .config ($routeProvider) ->
     $routeProvider
