@@ -9,9 +9,14 @@ angular.module('ndApp')
     $scope.toggleAddNewFilter = ->
       $scope.addNewFilterIsCollapsed = !$scope.addNewFilterIsCollapsed
 
-    $scope.addFilter = (type) ->
-      filter = FiltersService.create type
-      $scope.currentReport.filters.push filter
+    $scope.addFilter = (name) ->
+      existingFilter = _.find $scope.currentReport.filters, (filter) -> filter.name == name
+      if existingFilter
+        existingFilter.collapsed = false
+      else
+        filter = FiltersService.create name
+        $scope.currentReport.filters.push filter
+
       $scope.toggleAddNewFilter()
 
     $scope.removeFilterByIndex = (index) ->
@@ -52,7 +57,8 @@ angular.module('ndApp')
       for i in [0 ... oldFilters.length]
         oldFilter = oldFilters[i]
         newFilter = newFilters[i]
-        unless angular.equals(oldFilter, newFilter)
+
+        unless newFilter.equals(oldFilter)
           return i
 
       $scope.currentReport.filters.length

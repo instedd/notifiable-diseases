@@ -12,6 +12,9 @@ angular.module('ndApp')
         query.since = @since
         query.until = @until
 
+      equals: (other) ->
+        @since == other.since && @until == other.until
+
       @deserialize: (data) ->
         filter = new DateFilter(data.name)
         filter.since = data.since

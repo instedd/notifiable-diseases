@@ -16,6 +16,9 @@ angular.module('ndApp')
         if @values.length == 0
           query.empty = true
 
+      equals: (other) ->
+        angular.equals(@values, other.values)
+
       @deserialize: (data) ->
         filter = new EnumFilter(data.name)
         filter.values = data.values

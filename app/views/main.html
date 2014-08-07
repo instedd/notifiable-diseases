@@ -35,7 +35,7 @@
       </div>
       <div ng-repeat="filter in currentReport.filters">
         <hr/>
-        <div class="row">
+        <div class="row" ng-click="filter.collapsed = !filter.collapsed" style="cursor:pointer">
           <div class="col-md-12">
             <div style="padding-bottom:8px">
               <strong>{{ filter.label() }}</strong>
@@ -45,7 +45,7 @@
             </div>
           </div>
         </div>
-        <div class="row">
+        <div class="row" collapse="filter.collapsed">
           <div class="col-md-12">
             <div ng-include src="filterTemplateFor(filter)"></div>
           </div>
