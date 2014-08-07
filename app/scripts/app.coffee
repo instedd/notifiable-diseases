@@ -44,4 +44,6 @@ angular
         redirectTo: '/'
   .run (editableOptions) ->
     editableOptions.theme = 'bs3'
+  .run ($rootScope, settings) ->
+    $rootScope.settings = settings
 
