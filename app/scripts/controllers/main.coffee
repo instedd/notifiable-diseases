@@ -9,8 +9,9 @@
 ###
 
 angular.module('ndApp')
-  .controller 'MainCtrl', ($scope, $http, $location, $log, $routeParams, ReportsService) ->
+  .controller 'MainCtrl', ($scope, $http, $location, $log, $routeParams, ReportsService, FieldsService) ->
     ReportsService.reportsDescriptions().then (reportsDescriptions) ->
+      $scope.enumFields = FieldsService.allEnum()
       $scope.reportsDescriptions = reportsDescriptions
 
       if $scope.reportsDescriptions.length == 0

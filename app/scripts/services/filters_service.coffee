@@ -1,14 +1,19 @@
-filters = ["AgeGroupFilter", "DateFilter", "EthnicityFilter", "GenderFilter"]
-
 angular.module('ndApp')
-  .service 'FiltersService', [filters..., (args...)->
-    klasses = {}
-    _.map _.zip(filters, args), (element) ->
-      klasses[element[0]] = element[1]
+  .service 'FiltersService', (EnumFilter, DateFilter, FieldsService) ->
+    service =
+      create: (name) ->
+        klass = service.findClass(name)
+        new klass(name)
 
-    create: (klass) ->
-      new klasses[klass]
+      deserialize: (data) ->
+        service.findClass(data.name).deserialize(data)
 
-    deserialize: (filter) ->
-      klasses[filter.kind].deserialize(filter)
-  ]
+      findClass: (name) ->
+        field = FieldsService.find(name)
+        switch field.type
+          when "enum"
+            EnumFilter
+          when "date"
+            DateFilter
+          else
+            throw "Unknown field type: #{field.type}"

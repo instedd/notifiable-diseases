@@ -11,9 +11,7 @@
       <input type="radio" name="display" ng-model="chart.display" value="split"> Split by
     </label>
     <select ng-disabled="chart.display != 'split'" ng-model="chart.splitField">
-      <option value="age_group">Age group</option>
-      <option value="ethnicity">Ethnicity</option>
-      <option value="gender">Gender</option>
+      <option ng-repeat="enumField in enumFields" value="{{enumField.name}}">{{enumField.label}}</option>
     </select>
   </div>
 </div>

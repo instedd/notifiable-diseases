@@ -4,8 +4,8 @@ angular.module('ndApp')
       constructor: ->
         @kind = 'Trendline'
         @display = 'simple'
-        @splitField = 'gender'
         @grouping = 'year'
+        @splitField = FieldsService.allEnum()[0].name
 
       @deserialize: (data) ->
         chart = new Trendline

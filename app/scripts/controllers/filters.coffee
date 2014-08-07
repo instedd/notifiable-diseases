@@ -1,15 +1,16 @@
 'use strict'
 
 angular.module('ndApp')
-  .controller 'FiltersCtrl', ($scope, $q, Cdx, FiltersService) ->
+  .controller 'FiltersCtrl', ($scope, $q, Cdx, FiltersService, FieldsService) ->
     $scope.addNewFilterIsCollapsed = true
     $scope.counts = []
+    $scope.fields = FieldsService.all()
 
     $scope.toggleAddNewFilter = ->
       $scope.addNewFilterIsCollapsed = !$scope.addNewFilterIsCollapsed
 
-    $scope.addFilter = (kind) ->
-      filter = FiltersService.create kind
+    $scope.addFilter = (type) ->
+      filter = FiltersService.create type
       $scope.currentReport.filters.push filter
       $scope.toggleAddNewFilter()
 
@@ -17,7 +18,7 @@ angular.module('ndApp')
       $scope.currentReport.filters.splice(index, 1)
 
     $scope.filterTemplateFor = (filter) ->
-      "views/filters/#{filter.kind}.html"
+      "views/filters/#{FieldsService.typeFor(filter.name)}.html"
 
     $scope.clearFilters = ->
       $scope.currentReport.filters.splice(0, $scope.currentReport.filters.length)
