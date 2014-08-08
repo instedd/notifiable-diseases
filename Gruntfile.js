@@ -9,18 +9,25 @@
 
 module.exports = function (grunt) {
 
-  var merge = require('merge');
-
   // Load grunt tasks automatically
   require('load-grunt-tasks')(grunt);
 
   // Time how long tasks take. Can help when optimizing build times
   require('time-grunt')(grunt);
 
+  // Manually load settings files and merge them
+  var merge = require('merge');
+  var settings = merge(
+    grunt.file.readJSON('conf/settings.json'),
+    grunt.file.readJSON('conf/settings.local.json'),
+    grunt.option('settings') ? grunt.file.readJSON(grunt.option('settings')) : {}
+  );
+
   // Configurable paths for the application
   var appConfig = {
     app: require('./bower.json').appPath || 'app',
-    dist: require('./bower.json').distPath || 'dist'
+    dist: require('./bower.json').distPath || 'dist',
+    settings: settings
   };
 
   // Snippet for proxy configuration
@@ -80,12 +87,12 @@ module.exports = function (grunt) {
       },
       proxies: [
         {
-          context: '/cdx',
+          context: '<%= yeoman.settings.api %>',
           host: 'localhost',
           port: 3000
         },
         {
-          context: '/store',
+          context: '<%= yeoman.settings.store %>',
           host: 'localhost',
           port: 3000
         },
@@ -437,20 +444,7 @@ module.exports = function (grunt) {
         name: 'config',
         dest: 'app/scripts/config.js',
         constants: {
-          // default settings
-          settings : grunt.file.readJSON('conf/settings.json')
-        }
-      },
-      // merge settings specific for production environment
-      overrides: {
-        constants: {
-          settings: (function() {
-            var customSettings = grunt.option('settings');
-            if (customSettings) {
-              return grunt.file.readJSON(customSettings);
-            }
-            return {}
-          })()
+          settings : settings
         }
       }
     },
@@ -462,7 +456,7 @@ module.exports = function (grunt) {
     if (target === 'dist') {
       return grunt.task.run(['build', 'connect:dist:keepalive']);
     }
-    
+
     grunt.task.run([
       'ngconstant',
       'clean:server',

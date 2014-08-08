@@ -1,3 +1,5 @@
 {
-  "brand": "Notifiable Diseases"
+  "brand": "Notifiable Diseases",
+  "api": "/cdx",
+  "store": "/store"
 }
