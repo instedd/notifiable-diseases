@@ -15,3 +15,11 @@ To install generators as well:
 * Install generator angular `npm install -g generator-angular`
 
 Ruby and compass are also required dependencies, so run `gem install compass` in the context of a Ruby interpreter.
+
+## Configuration
+
+Application settings are configured in `conf/settings.json`; these settings are merged with the contents of `conf/settings.local.json`, and are further merged with the contens of a file specified as `--settings=PATH` when running `grunt`.
+
+See `conf/settings.json` for a list of available settings and their default values.
+
+

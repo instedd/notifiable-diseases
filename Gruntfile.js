@@ -17,17 +17,19 @@ module.exports = function (grunt) {
 
   // Manually load settings files and merge them
   var merge = require('merge');
-  var settings = merge(
-    grunt.file.readJSON('conf/settings.json'),
-    grunt.file.exists('conf/settings.local.json') ? grunt.file.readJSON('conf/settings.local.json') : {},
-    grunt.option('settings') ? grunt.file.readJSON(grunt.option('settings')) : {}
-  );
+  var settings = function() {
+    return merge(
+      grunt.file.readJSON('conf/settings.json'),
+      grunt.file.exists('conf/settings.local.json') ? grunt.file.readJSON('conf/settings.local.json') : {},
+      grunt.option('settings') ? grunt.file.readJSON(grunt.option('settings')) : {}
+    );
+  };
 
   // Configurable paths for the application
   var appConfig = {
     app: require('./bower.json').appPath || 'app',
     dist: require('./bower.json').distPath || 'dist',
-    settings: settings
+    settings: settings()
   };
 
   // Snippet for proxy configuration
@@ -42,7 +44,7 @@ module.exports = function (grunt) {
     // Watches files for changes and runs tasks based on the changed files
     watch: {
       settings: {
-        files: ['conf/settings.json'],
+        files: ['conf/*.json'],
         tasks: ['ngconstant']
       },
       bower: {
@@ -444,9 +446,10 @@ module.exports = function (grunt) {
         name: 'config',
         dest: 'app/scripts/config.js',
         constants: {
-          settings : settings
+          settings : settings()
         }
-      }
+      },
+      build: {}
     },
   });
 
