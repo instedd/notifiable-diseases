@@ -29,6 +29,9 @@ module.exports = function (grunt) {
   var appConfig = {
     app: require('./bower.json').appPath || 'app',
     dist: require('./bower.json').distPath || 'dist',
+
+    customStyles: grunt.option('custom-styles'),
+    sassDir: '.tmp/.build/styles',
     settings: settings()
   };
 
@@ -43,6 +46,10 @@ module.exports = function (grunt) {
 
     // Watches files for changes and runs tasks based on the changed files
     watch: {
+      sassTemplates: {
+        files: ['<%= yeoman.app %>/styles/{,*/}*.scss.ejs'],
+        tasks: ['copy:styleTemplates']
+      },
       settings: {
         files: ['conf/*.json'],
         tasks: ['ngconstant']
@@ -60,7 +67,7 @@ module.exports = function (grunt) {
         tasks: ['newer:coffee:test', 'karma']
       },
       compass: {
-        files: ['<%= yeoman.app %>/styles/{,*/}*.{scss,sass}'],
+        files: ['<%= yeoman.sassDir %>/{,*/}*.{scss,sass}'],
         tasks: ['compass:server', 'autoprefixer']
       },
       gruntfile: {
@@ -226,8 +233,8 @@ module.exports = function (grunt) {
     // Compiles Sass to CSS and generates necessary files if requested
     compass: {
       options: {
-        sassDir: '<%= yeoman.app %>/styles',
-        cssDir: '.tmp/styles',
+        sassDir: '<%= yeoman.sassDir %>',  // .scss.ejs -> .scss
+        cssDir: '.tmp/styles',              // .scss -> css
         generatedImagesDir: '.tmp/images/generated',
         imagesDir: '<%= yeoman.app %>/images',
         javascriptsDir: '<%= yeoman.app %>/scripts',
@@ -275,7 +282,7 @@ module.exports = function (grunt) {
           html: {
             steps: {
               js: ['concat', 'uglifyjs'],
-              css: ['cssmin']
+              css: ['concat', 'cssmin']
             },
             post: {}
           }
@@ -381,6 +388,15 @@ module.exports = function (grunt) {
 
     // Copies remaining files to places other tasks can use
     copy: {
+      styleTemplates: {
+        src: 'app/styles/main.scss.ejs',
+        dest: '<%= yeoman.sassDir %>/main.scss',
+        options: {
+            process: function(content, path) {
+                return grunt.template.process(content);
+            }
+        }
+      },
       dist: {
         files: [{
           expand: true,
@@ -444,7 +460,7 @@ module.exports = function (grunt) {
     ngconstant: {
       options: {
         name: 'config',
-        dest: 'app/scripts/config.js',
+        dest: '.tmp/scripts/config.js',
         constants: {
           settings : settings()
         }
@@ -461,8 +477,9 @@ module.exports = function (grunt) {
     }
 
     grunt.task.run([
-      'ngconstant',
       'clean:server',
+      'copy:styleTemplates',
+      'ngconstant',
       'configureProxies',
       'wiredep',
       'concurrent:server',
@@ -487,6 +504,7 @@ module.exports = function (grunt) {
 
   grunt.registerTask('build', [
     'clean:dist',
+    'copy:styleTemplates',
     'ngconstant',
     'wiredep',
     'useminPrepare',
