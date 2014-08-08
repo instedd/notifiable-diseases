@@ -19,7 +19,7 @@ module.exports = function (grunt) {
   var merge = require('merge');
   var settings = merge(
     grunt.file.readJSON('conf/settings.json'),
-    grunt.file.readJSON('conf/settings.local.json'),
+    grunt.file.exists('conf/settings.local.json') ? grunt.file.readJSON('conf/settings.local.json') : {},
     grunt.option('settings') ? grunt.file.readJSON(grunt.option('settings')) : {}
   );
 
