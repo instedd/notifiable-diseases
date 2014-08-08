@@ -9,6 +9,8 @@
 
 module.exports = function (grunt) {
 
+  var merge = require('merge');
+
   // Load grunt tasks automatically
   require('load-grunt-tasks')(grunt);
 
