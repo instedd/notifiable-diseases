@@ -1,5 +1,6 @@
 {
   "brand": "Notifiable Diseases",
   "api": "/cdx",
-  "store": "/store"
+  "store": "/store",
+  "useLocalStorage": false
 }
