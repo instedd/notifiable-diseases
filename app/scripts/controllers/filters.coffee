@@ -12,7 +12,8 @@ angular.module('ndApp')
     $scope.addFilter = (name) ->
       existingFilter = _.find $scope.currentReport.filters, (filter) -> filter.name == name
       if existingFilter
-        existingFilter.collapsed = false
+        existingFilter.expanded = false
+        $scope.toggleFilter(existingFilter)
       else
         filter = FiltersService.create name
         $scope.currentReport.filters.push filter
@@ -24,6 +25,12 @@ angular.module('ndApp')
 
     $scope.filterTemplateFor = (filter) ->
       "views/filters/#{FieldsService.typeFor(filter.name)}.html"
+
+    $scope.toggleFilter = (filter) ->
+      newExpanded = !filter.expanded
+      for otherFilter in $scope.currentReport.filters
+        otherFilter.expanded = false
+      filter.expanded = newExpanded
 
     $scope.clearFilters = ->
       $scope.currentReport.filters.splice(0, $scope.currentReport.filters.length)

@@ -14,41 +14,30 @@
 <div class="row">
   <!-- BEGIN: Filters panel -->
   <div id="filters" class="col-xs-5 col-sm-4 col-md-3" ng-controller="FiltersCtrl">
-    <div class="well">
-      <div class="row">
-        <div class="col-md-6">
-          <strong style="font-size:16px">Filters</strong>
-        </div>
-        <div class="col-md-6">
-          <a class="pull-right" href="javascript:void(0)" ng-click="clearFilters()" ng-show="currentReport.filters.length > 0">
-            Clear all
-          </a>
-        </div>
+    <div class="filters-list">
+      <div class="">
+        <strong>Filters</strong>
+        <a class="pull-right" href="javascript:void(0)" ng-click="clearFilters()" ng-show="currentReport.filters.length > 0">
+          Clear all
+        </a>
       </div>
-      <hr/>
-      <div class="row">
-        <div class="col-md-12">
+      <div class="filter first">
+        <div class="filter-title">
+          <img src="/images/f_all.png" alt="">
           <strong>All cases</strong>
-          <span ng-show="hasCount(-1)">({{counts[-1]}})</span>
+          <span ng-show="hasCount(-1)">{{counts[-1]}}</span>
           <span ng-hide="hasCount(-1)">(...)</span>
         </div>
       </div>
-      <div ng-repeat="filter in currentReport.filters">
-        <hr/>
-        <div class="row" ng-click="filter.collapsed = !filter.collapsed" style="cursor:pointer">
-          <div class="col-md-12">
-            <div style="padding-bottom:8px">
-              <strong>{{ filter.label() }}</strong>
-              <span ng-show="hasCount($index)">({{counts[$index]}})</span>
-              <span ng-hide="hasCount($index)">(...)</span>
-              <a class="pull-right" href="javascript:void(0)" ng-click="$parent.removeFilterByIndex($index)">remove</a>
-            </div>
-          </div>
+      <div class="filter" ng-repeat="filter in currentReport.filters" ng-class="{expanded: filter.expanded}">
+        <div class="filter-title" ng-click="toggleFilter(filter)">
+            <strong>{{ filter.label() }}</strong>
+            <span ng-show="hasCount($index)">{{counts[$index]}}</span>
+            <span ng-hide="hasCount($index)">(...)</span>
+            <a class="close" href="javascript:void(0)" ng-click="$parent.removeFilterByIndex($index)" title="remove">x</a>
         </div>
-        <div class="row" collapse="filter.collapsed">
-          <div class="col-md-12">
+        <div collapse="!filter.expanded">
             <div ng-include src="filterTemplateFor(filter)"></div>
-          </div>
         </div>
       </div>
       <hr/>
