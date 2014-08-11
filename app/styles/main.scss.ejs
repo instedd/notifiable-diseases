@@ -247,7 +247,8 @@ a.editable-click {
       padding-bottom: 20px;
 
       .filter-title span {
-        display: none;
+        border: none;
+        color: #333333;
       }
     }
 
@@ -280,7 +281,23 @@ a.editable-click {
   }
 }
 
+.close {
+  border-radius: 50%;
+  background: #666666;
+  font-size: 12px;
+  color: #ffffff !important;
+  font-weight: normal;
+  width: 15px;
+  height: 15px;
+  text-align: center;
+  line-height: 15px;
+  opacity:.85;
+  text-shadow: none !important;
 
+  &:hover{
+    opacity:1;
+  }
+}
 
 
 <% if(yeoman.customStyles) { %>
