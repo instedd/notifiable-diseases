@@ -222,8 +222,22 @@ a.editable-click {
       position: relative;
       cursor: pointer;
       strong {
-        background: url("../images/f_date.png") no-repeat;
         padding: 5px 0 5px 30px ;
+        &.all {
+          background: url("../images/f_all.png") no-repeat;
+        }
+        &.date {
+          background: url("../images/f_date.png") no-repeat;
+        }
+        &.age_group {
+          background: url("../images/f_age.png") no-repeat;
+        }
+        &.gender {
+          background: url("../images/f_condition.png") no-repeat;
+        }
+        &.ethnicity {
+          background: url("../images/f_condition.png") no-repeat;
+        }
       }
       span {
         @include box-sizing(border-box);
@@ -257,10 +271,6 @@ a.editable-click {
 
       .filter-title {
         cursor: default;
-        strong {
-          background-image: none;
-          padding: 0;
-        }
         span {
           @include border-top-radius(4px);
           line-height: 30px;
