@@ -38,6 +38,9 @@ angular.module('ndApp')
     $scope.hasCount = (index) ->
       $scope.counts[index]?
 
+    $scope.isLastFilter = ($index) ->
+      $scope.currentReport.filters.length == $index + 1
+
     firstChange = true
     $scope.$watch 'currentReport.filters', ((newFilters, oldFilters) ->
       if $scope.currentReport
