@@ -241,7 +241,6 @@ a.editable-click {
       }
       span {
         @include box-sizing(border-box);
-        /*background: url("../images/back_filter_amount.png") no-repeat center -20px;*/
         font-size: 11px;
         line-height: 50px;
         color: #999999;
@@ -254,6 +253,8 @@ a.editable-click {
         position: absolute;
         right: 20px;
         top: 1px;
+        overflow: hidden;
+        text-overflow: ellipsis;
       }
     }
     &.expanded {
@@ -263,6 +264,10 @@ a.editable-click {
       .filter-title span {
         border: none;
         color: #333333;
+      }
+
+      & + .filter {
+        background: url("../images/f_arrow_sep02.png") no-repeat right top;
       }
     }
 
@@ -279,15 +284,6 @@ a.editable-click {
         }
       }
     }
-
-    &:last-child {
-
-      .filter-title span {
-        @include border-bottom-radius(4px);
-        border-bottom: 1px solid #cdcdcd;
-      }
-    }
-
   }
 }
 
