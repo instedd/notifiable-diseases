@@ -23,6 +23,8 @@ angular.module('ndApp')
             legend:
               position: 'bottom'
               alignment: 'center'
+            hAxis:
+              format: '#,###;#,###'
             vAxis:
               direction: -1
             animation:
