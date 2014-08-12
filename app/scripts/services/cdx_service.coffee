@@ -1,5 +1,5 @@
 angular.module('ndApp')
-  .service 'Cdx', ($http) ->
+  .service 'Cdx', ($http, settings) ->
     events: (query) ->
-      $http.post("/cdx/v1/events", query)
+      $http.post("#{settings.api}/events", query)
 
