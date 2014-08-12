@@ -24,6 +24,7 @@ angular.module('ndApp')
 
       query = $scope.chart.getQuery()
       $scope.report.applyFiltersTo query
+      $scope.chart.prepareQuery?(query)
 
       if query.empty
         $scope.series = $scope.chart.getSeries([])
