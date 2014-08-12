@@ -104,7 +104,7 @@ angular.module('ndApp')
         for index in foundIndices
           newCols.push cols[index]
 
-        cols: newCols, rows: newRows
+        cols: newCols, rows: newRows, indices: foundIndices
 
       getCSV: (series) ->
         rows = []

@@ -34,6 +34,8 @@ angular.module('ndApp')
         )
     }
 
+COLORS = ["#3266CC", "#DC3918", "#FD9927", "#149618", "#991499", "#1899C6", "#DD4477", "#66AA1E", "#B82E2E", "#316395", "#994399", "#22AA99", "#ABAA22", "#6633CC"]
+
 updateChart = (chart, series, title) =>
   cols = []
   cols.push id: "date", label: "Date", type: "string"
@@ -57,4 +59,10 @@ updateChart = (chart, series, title) =>
 
     rows.push c: c
 
-  chart.data = cols: cols, rows: rows
+  colors = []
+  for index in series.indices
+    colors.push COLORS[index]
+
+  chart.data.cols = cols
+  chart.data.rows = rows
+  chart.options.colors = colors
