@@ -79,17 +79,21 @@ angular.module('ndApp')
               break
 
             index = _.indexOf allValues, other_item[@splitField]
-            foundIndices[index] = true
-            row[index + 1] = other_item.count
+
+            # This is a sanity check: the index shouldn't be -1 if all data is correct
+            if index != -1
+              foundIndices[index] = true
+              row[index + 1] = other_item.count
+
             j += 1
 
           rows.push row
           i = j
 
-        # Convert the indices to numbers (the keys of an object are strings)
+        # Convert the indices to numbers
         indices = []
-        for index of foundIndices
-          indices.push parseInt(index)
+        for i in [0 ... foundIndices.length]
+          indices.push i if foundIndices[i]
         foundIndices = indices
 
         # Build new rows with only indices for the found indices
