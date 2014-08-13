@@ -1,18 +1,25 @@
 angular.module('ndApp')
-  .controller 'ReportsCtrl', ($scope, $location, Report, ReportsService, AssaysService) ->
+  .controller 'ReportsCtrl', ($scope, $location, Report, ReportsService, AssaysService, Cdx) ->
     ReportsService.reportsDescriptions().then (reportsDescriptions) ->
       $scope.reportsDescriptions = reportsDescriptions
       $scope.currentReport = null
       $scope.assays = AssaysService.all()
-      $scope.assay = $scope.assays[0].name
+      $scope.report = new Report
+      $scope.report.assay = $scope.assays[0].name
+      $scope.events = "..."
+
+      computeCount = ->
+        query = $scope.report.newQuery()
+        $scope.report.closeQuery(query)
+
+        Cdx.events(query).success (data) ->
+          $scope.events = data.total_count
+
+      $scope.$watch 'report.assay', computeCount
 
       $scope.createReport = ->
-        if $.trim($scope.name).length == 0
+        if $.trim($scope.report.name).length == 0
           return
 
-        report = new Report
-        report.name = $scope.name
-        report.description = $scope.description
-        report.assay = $scope.assay
-        ReportsService.create(report).then ->
-          $location.path "/reports/#{report.id}"
+        ReportsService.create($scope.report).then ->
+          $location.path "/reports/#{$scope.report.id}"
