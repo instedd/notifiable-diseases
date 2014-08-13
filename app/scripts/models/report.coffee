@@ -1,9 +1,15 @@
 angular.module('ndApp')
-  .factory 'Report', (FiltersService, ChartsService) ->
+  .factory 'Report', (FiltersService, ChartsService, AssaysService) ->
     class Report
-      constructor: (@name, @description) ->
+      constructor: ->
         @filters = []
         @charts  = []
+
+      createFilter: (name) ->
+        filter = FiltersService.create name
+        filter.setReport?(this)
+        @filters.push filter
+        filter
 
       applyFiltersTo: (query) ->
         for filter in @filters
@@ -11,14 +17,20 @@ angular.module('ndApp')
         query
 
       duplicate: ->
-        dup = new Report("#{@name} (duplicate)", @description)
+        dup = new Report
+        dup.name = "#{@name} (duplicate)"
+        dup.description = @description
+        dup.assay = @assay
         dup.filters = @filters
         dup.charts = @charts
         dup
 
       @deserialize: (data) ->
-        report = new Report(data.name, data.description)
+        report = new Report
         report.id = data.id
+        report.name = data.name
+        report.description = data.description
+        report.assay = data.assay
         report.filters = _.map data.filters, (filter) ->
           FiltersService.deserialize(filter)
         report.charts = _.map data.charts, (chart) ->

@@ -6,13 +6,21 @@
       <div>
         <label for="name">Name</label>
         <br/>
-        <input type="text" ng-model="name" />
+        <input type="text" id="name" ng-model="name" />
       </div>
       <div>
         <label for="description">Description</label>
         <br/>
-        <textarea rows="3" cols="60" ng-model="description"></textarea>
+        <textarea id="description" rows="3" cols="60" ng-model="description"></textarea>
       </div>
+      <div>
+        <label for="assay">Assay</label>
+        <br/>
+        <select id="assay" ng-model="assay">
+          <option ng-repeat="assay in assays" value="{{assay.name}}">{{assay.label}}</option>
+        </select>
+      </div>
+      <br/>
       <div>
         <button type="submit" class="btn btn-primary">Create report</button>
       </div>

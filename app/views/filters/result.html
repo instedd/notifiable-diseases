@@ -1,0 +1,5 @@
+<div ng-repeat="option in filter.options(currentReport)">
+  <label>
+    <input checklist-model="filter.values" checklist-value="option.value" type="checkbox"> {{option.label}}
+  </label>
+</div>

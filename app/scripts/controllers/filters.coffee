@@ -1,7 +1,7 @@
 'use strict'
 
 angular.module('ndApp')
-  .controller 'FiltersCtrl', ($scope, $q, Cdx, FiltersService, FieldsService) ->
+  .controller 'FiltersCtrl', ($scope, $q, Cdx, FieldsService) ->
     $scope.addNewFilterIsCollapsed = true
     $scope.counts = []
     $scope.fields = FieldsService.all()
@@ -14,8 +14,7 @@ angular.module('ndApp')
       if filter
         filter.expanded = false
       else
-        filter = FiltersService.create name
-        $scope.currentReport.filters.push filter
+        filter = $scope.currentReport.createFilter name
 
       $scope.toggleFilter(filter)
       $scope.toggleAddNewFilter()

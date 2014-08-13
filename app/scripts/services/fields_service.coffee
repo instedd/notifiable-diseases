@@ -46,6 +46,11 @@ angular.module('ndApp')
             {value: "male", label: "Male"},
           ]
       },
+      {
+        name: "result",
+        label: "Result",
+        type: "result",
+      }
     ]
 
     service =
