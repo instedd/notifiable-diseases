@@ -29,13 +29,15 @@ angular.module('ndApp')
 
       getSeries: (data) ->
         data = data.events
-        switch @display
-          when 'simple'
-            @getSimpleSeries(data)
-          when 'split'
-            @getSplitSeries(data)
-          else
-            throw "Uknknown display: #{@display}"
+        series = switch @display
+                 when 'simple'
+                   @getSimpleSeries(data)
+                 when 'split'
+                   @getSplitSeries(data)
+                 else
+                   throw "Uknknown display: #{@display}"
+        series.interval = @grouping
+        series
 
       getSimpleSeries: (data) ->
         cols:

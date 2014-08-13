@@ -1,1 +1,15 @@
-<nd-trendline series="series" title="'Events'"></nd-trendline>
+<div ng-controller="TrendlineCtrl">
+  <div google-chart chart="chart" class="nd-chart"></div>
+
+  <a href="javascript:void(0)" ng-click="moveOffset(10)" ng-show="canMoveOffset(10)">&lt;&lt;</a>
+  <span ng-hide="canMoveOffset(10)">&lt;&lt;</span>
+
+  <a href="javascript:void(0)" ng-click="moveOffset(1)" ng-show="canMoveOffset(1)">&lt;</a>
+  <span ng-hide="canMoveOffset(1)">&lt;</span>
+
+  <a href="javascript:void(0)" ng-click="moveOffset(-1)" ng-show="canMoveOffset(-1)">&gt;</a>
+  <span ng-hide="canMoveOffset(-1)">&gt;</span>
+
+  <a href="javascript:void(0)" ng-click="moveOffset(-10)" ng-show="canMoveOffset(-10)">&gt;&gt;</a>
+  <span ng-hide="canMoveOffset(-10)">&gt;&gt;</span>
+</div>
