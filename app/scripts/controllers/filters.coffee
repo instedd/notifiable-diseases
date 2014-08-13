@@ -73,7 +73,8 @@ angular.module('ndApp')
       $scope.currentReport.filters.length
 
     updateCount = (index, query) ->
-      query = page_size: 0
+      query = $scope.currentReport.newQuery()
+
       i = 0
       while i <= index
         filter = $scope.currentReport.filters[i]
@@ -84,6 +85,8 @@ angular.module('ndApp')
           return
 
         i += 1
+
+      $scope.currentReport.closeQuery(query)
 
       Cdx.events(query).success (data) ->
         $scope.counts[index] = data.total_count

@@ -1,20 +1,20 @@
 angular.module('ndApp')
   .factory 'ResultFilter', (FieldsService, AssaysService) ->
     class ResultFilter
-      constructor: (name) ->
+      constructor: (@name) ->
         true
 
       setReport: (report) ->
         @values = AssaysService.valuesFor(report.assay)
 
       label: ->
-        FieldsService.labelFor('result')
+        FieldsService.labelFor(@name)
 
       options: (report) ->
         AssaysService.optionsFor(report.assay)
 
       applyTo: (query) ->
-        query.result = @values
+        query[@name] = @values
 
         if @values.length == 0
           query.empty = true
@@ -23,6 +23,6 @@ angular.module('ndApp')
         angular.equals(@values, other.values)
 
       @deserialize: (data) ->
-        filter = new ResultFilter('result')
+        filter = new ResultFilter(data.name)
         filter.values = data.values
         filter

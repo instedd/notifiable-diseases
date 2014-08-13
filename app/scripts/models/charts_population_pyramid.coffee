@@ -10,14 +10,11 @@ angular.module('ndApp')
       isConfigurable: ->
         false
 
-      getQuery: ->
-        group_by: ['age_group', 'gender']
-        gender: ['male', 'female']
+      applyToQuery: (query) ->
+        query.group_by = ['age_group', 'gender']
+        query.gender = ['male', 'female']
 
-      prepareQuery: (query) ->
-        delete query.gender
-
-      getSeries: (data) ->
+      getSeries: (report, data) ->
         data = data.events
 
         @sortData data

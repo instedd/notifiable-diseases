@@ -17,23 +17,23 @@ angular.module('ndApp')
       isConfigurable: ->
         true
 
-      getQuery: ->
+      applyToQuery: (query) ->
         date_grouping = "#{@grouping}(created_at)"
         switch @display
           when 'simple'
-            group_by: date_grouping
+            query.group_by = date_grouping
           when 'split'
-            group_by: [date_grouping, @splitField]
+            query.group_by = [date_grouping, @splitField]
           else
             throw "Uknknown display: #{@display}"
 
-      getSeries: (data) ->
+      getSeries: (report, data) ->
         data = data.events
         series = switch @display
                  when 'simple'
                    @getSimpleSeries(data)
                  when 'split'
-                   @getSplitSeries(data)
+                   @getSplitSeries(report, data)
                  else
                    throw "Uknknown display: #{@display}"
         series.interval = @grouping
@@ -46,10 +46,10 @@ angular.module('ndApp')
           _.map data, (value) ->
             [value.created_at, value.count]
 
-      getSplitSeries: (data) ->
+      getSplitSeries: (report, data) ->
         @sortData data
 
-        options = FieldsService.optionsFor(@splitField)
+        options = report.fieldOptionsFor(@splitField)
 
         cols = _.map options, (option) -> option.label
         allValues = _.map options, (option) -> option.value
