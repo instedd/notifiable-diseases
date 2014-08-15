@@ -2,5 +2,6 @@
   "brand": "Notifiable Diseases",
   "api": "/cdx/v1",
   "store": "/store",
-  "useLocalStorage": false
+  "useLocalStorage": false,
+  "parentURL": "http://localhost:3000/dashboard/nndd"
 }

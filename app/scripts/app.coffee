@@ -47,3 +47,7 @@ angular
   .run ($rootScope, settings) ->
     $rootScope.settings = settings
 
+    # If we have a parentURL and we are not embedded in it, redirect to it
+    if settings.parentURL && window.parent == window
+      newLocation = "#{settings.parentURL}/#{window.location.hash}"
+      window.location = newLocation
