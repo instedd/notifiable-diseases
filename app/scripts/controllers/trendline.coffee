@@ -65,6 +65,14 @@ compute = (series) =>
 
   cols = []
   cols.push id: "date", label: "Date", type: "string"
+
+  # If there are no rows (so, no cols), we return an empty set to avoid
+  # getting an error from Google
+  if series.cols.length == 0
+    cols.push id: "count", label: "Count", type: "number"
+
+    return cols: cols, rows: [], colors: COLORS, total: 0
+
   for col in series.cols
     cols.push id: col, label: col, type: "number"
 
