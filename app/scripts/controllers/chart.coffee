@@ -28,7 +28,7 @@ angular.module('ndApp')
       $scope.currentReport.closeQuery(query)
 
       if query.empty
-        $scope.series = $scope.chart.getSeries($scope.currentReport, [])
+        $scope.series = $scope.chart.getSeries($scope.currentReport, {events: [], total_count: 0})
       else
         $scope.loadingChart = true
         Cdx.events(query).success (data) ->
