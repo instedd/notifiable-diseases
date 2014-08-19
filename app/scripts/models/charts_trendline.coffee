@@ -17,6 +17,12 @@ angular.module('ndApp')
       isConfigurable: ->
         true
 
+      description: ->
+        desc = "Events grouped by #{@grouping}"
+        if @display == 'split'
+          desc += ", split by #{FieldsService.labelFor(@splitField).toLowerCase()}"
+        desc
+
       applyToQuery: (query) ->
         date_grouping = "#{@grouping}(created_at)"
         switch @display
@@ -40,6 +46,8 @@ angular.module('ndApp')
         series
 
       getSimpleSeries: (data) ->
+        @sortData data
+
         cols:
           ["Events"]
         rows:
@@ -47,7 +55,7 @@ angular.module('ndApp')
             [value.created_at, value.count]
 
       getSplitSeries: (report, data) ->
-        @sortData data
+        @sortSplitData data
 
         options = report.fieldOptionsFor(@splitField)
 
@@ -125,9 +133,19 @@ angular.module('ndApp')
             -1
           else if x.created_at > y.created_at
             1
+          else
+            0
+
+      sortSplitData: (data) ->
+        data.sort (x, y) =>
+          if x.created_at < y.created_at
+            -1
+          else if x.created_at > y.created_at
+            1
           else if x[@splitField] < y[@splitField]
             -1
           else if x[@splitField] > y[@splitField]
             1
           else
             0
+        debugger
