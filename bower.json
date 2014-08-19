@@ -21,7 +21,8 @@
     "angular-uuid-service": "0.0.1",
     "angular-xeditable": "0.1.8",
     "ng-csv": "0.2.3",
-    "moment": "2.8.1"
+    "moment": "2.8.1",
+    "angular-daterangepicker": "0.1.8"
   },
   "devDependencies": {
     "angular-mocks": "1.2.16",
@@ -30,6 +31,6 @@
   "appPath": "app",
   "distPath": "dist/nndd",
   "resolutions": {
-    "angular": "1.2.16"
+    "angular": "~1.2.17"
   }
 }

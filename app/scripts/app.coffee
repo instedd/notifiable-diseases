@@ -24,7 +24,8 @@ angular
     'uuid',
     'xeditable',
     'ngCsv',
-    'config'
+    'config',
+    'daterangepicker',
   ])
   .config ($routeProvider) ->
     $routeProvider
