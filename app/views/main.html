@@ -43,11 +43,7 @@
       <div class="add-new-filter">
         <a href="javascript:void(0);" ng-click="addNewFilterIsCollapsed = !addNewFilterIsCollapsed"><span>+</span> Add new filter</a>
         <div collapse="addNewFilterIsCollapsed">
-          <ul>
-            <li ng-repeat="field in fields">
-              <a href="javascript:void(0);" ng-click="addFilter(field.name)">{{field.label}}</a>
-            </li>
-          </ul>
+          <a ng-class="field.name" title="{{field.label}}" ng-repeat="field in fields" href="javascript:void(0);" ng-click="addFilter(field.name)">{{field.label}}</a>
         </div>
       </div>
     </div>

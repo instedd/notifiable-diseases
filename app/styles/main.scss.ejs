@@ -1,3 +1,6 @@
+/* Bootstrap redefined variables */
+$screen-sm:                  730px;
+
 $icon-font-path: "../bower_components/bootstrap-sass-official/assets/fonts/bootstrap/";
 // bower:scss
 @import "bootstrap-sass-official/assets/stylesheets/bootstrap.scss";
@@ -12,6 +15,7 @@ $icon-font-path: "../bower_components/bootstrap-sass-official/assets/fonts/boots
 }
 
 /* Bootstrap redefined styles */
+
 body {
   background: #eaeaea;
 }
@@ -43,6 +47,7 @@ body {
   background-color: #ffffff;
   @include box-shadow(0 1px 1px 1px rgba(0, 0, 0, 0.1));
 }
+
 
 /* Everything but the jumbotron gets side spacing for mobile first views */
 .header,
@@ -215,7 +220,6 @@ a.editable-click {
   background: #ffffff;
   border-radius: 5px;
   margin-bottom: 15px;
-  min-width: 250px;
 
   .filters-header {
     padding: 10px 15px;
@@ -224,7 +228,6 @@ a.editable-click {
     a {
       font-size: 12px;
       line-height: 20px;
-      color: #555555;
     }
 
     &:after {
@@ -260,9 +263,12 @@ a.editable-click {
           background: url("../images/f_age.png") no-repeat;
         }
         &.gender {
-          background: url("../images/f_condition.png") no-repeat;
+          background: url("../images/f_gender.png") no-repeat;
         }
         &.ethnicity {
+          background: url("../images/f_ethnicity.png") no-repeat;
+        }
+        &.condition {
           background: url("../images/f_condition.png") no-repeat;
         }
       }
@@ -351,8 +357,42 @@ a.editable-click {
     font-weight: bold;
     padding: 0 15px 10px 15px;
 
-    a span {
-      font-size: 20px;
+    a {
+      /*color: #999999;*/
+      text-decoration: none !important;
+      span {
+        font-size: 20px;
+      }
+    }
+
+    div {
+      padding-top: 5px;
+      a {
+        text-indent: -999em;
+        display: inline-block;
+        margin-right: 10px;
+        width: 40px;
+        height: 40px;
+        border-radius: 4px;
+        border: 1px solid #eaeaea;
+        overflow: hidden;
+
+        &.date {
+          background: url("../images/f_date.png") no-repeat center;
+        }
+        &.age_group {
+          background: url("../images/f_age.png") no-repeat center
+        }
+        &.gender {
+          background: url("../images/f_gender.png") no-repeat center;
+        }
+        &.ethnicity {
+          background: url("../images/f_ethnicity.png") no-repeat center;
+        }
+        &.condition {
+          background: url("../images/f_condition.png") no-repeat;
+        }
+      }
     }
   }
 }
