@@ -1,4 +1,4 @@
-charts = ["PopulationPyramid", "Trendline"]
+charts = ["PopulationPyramid", "Trendline", "Map"]
 
 angular.module('ndApp')
   .service 'ChartsService', [charts..., (args...)->
