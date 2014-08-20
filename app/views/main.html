@@ -33,7 +33,7 @@
           <strong ng-class="filter.name">{{filter.label()}}</strong>
           <span ng-show="hasCount($index)">{{counts[$index]}}</span>
           <span ng-hide="hasCount($index)">(...)</span>
-          <a class="close" href="javascript:void(0)" ng-click="$parent.removeFilterByIndex($index)" title="remove">x</a>
+          <a class="remove" href="javascript:void(0)" ng-click="$parent.removeFilterByIndex($index)" title="Remove filter"></a>
         </div>
         <div collapse="!filter.expanded">
             <div ng-include src="filterTemplateFor(filter)"></div>
@@ -48,8 +48,8 @@
       </div>
     </div>
     <div class="bottom-actions">
-      <a href="javascript:void(0);" ng-click="duplicateReport()"><img src="images/ic-duplicate.png">Duplicate this report</a>
-      <a href="javascript:void(0);" ng-click="deleteReport()"><img src="images/ic-delete.png">Delete this report</a>
+      <a href="javascript:void(0);" ng-click="duplicateReport()"><img src="images/ic-duplicate-black.png">Duplicate this report</a>
+      <a href="javascript:void(0);" ng-click="deleteReport()"><img src="images/ic-delete-black.png">Delete this report</a>
     </div>
   </div>
   <!-- END: Filters panel -->

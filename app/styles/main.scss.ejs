@@ -312,10 +312,25 @@ a.editable-click {
         width: 60px;
         height: 49px;
         position: absolute;
-        right: 25px;
+        right: 5px;
         top: 1px;
         overflow: hidden;
         text-overflow: ellipsis;
+      }
+      .remove {
+        @include border-right-radius(3px);
+        @include box-shadow(1px 1px 1px 0px rgba(0, 0, 0, 0.1));
+        background: url("../images/ic-delete-black.png") no-repeat center #ffffff;
+        width: 32px;
+        height: 30px;
+        display: none;
+        position: absolute;
+        right: -30px;
+        top: 6px;
+
+        &:hover {
+          display:block;
+        }
       }
     }
     &.expanded {
@@ -351,6 +366,13 @@ a.editable-click {
       &.last {
         margin-bottom: -10px;
       }
+      .remove {
+        background-color: #cccccc;
+      }
+    }
+
+    &:hover .remove {
+      display: block;
     }
 
     &.first {
@@ -430,6 +452,7 @@ a.editable-click {
 .bottom-actions {
   padding-left: 12px;
   a {
+    color: #555555;
     display: block;
     line-height: 24px;
     text-decoration: none !important;
