@@ -19,6 +19,16 @@ angular.module('ndApp')
       equals: (other) ->
         angular.equals(@values, other.values)
 
+      selectedDescription: (report) ->
+        if @values.length == 0
+          "none"
+        else if @values.length == AssaysService.valuesFor(report.assay).length
+          "all"
+        else if @values.length == 1
+          AssaysService.optionLabelFor(report.assay, @values[0])
+        else
+          "#{@values.length} selected"
+
       @deserialize: (data) ->
         filter = new ResultFilter(data.name)
         filter.values = data.values

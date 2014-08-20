@@ -24,15 +24,16 @@
       <div class="filter first">
         <div class="filter-title">
           <strong class="all">All cases</strong>
-          <span ng-show="hasCount(-1)">{{counts[-1]}}</span>
-          <span ng-hide="hasCount(-1)">(...)</span>
+          <span class="count" ng-show="hasCount(-1)">{{counts[-1]}}</span>
+          <span class="count" ng-hide="hasCount(-1)">(...)</span>
         </div>
       </div>
       <div class="filter" ng-repeat="filter in currentReport.filters" ng-class="{expanded: filter.expanded, last: isLastFilter($index)}">
         <div class="filter-title" ng-click="toggleFilter(filter)">
-          <strong ng-class="filter.name">{{labelFor(filter)}}</strong>
-          <span ng-show="hasCount($index)">{{counts[$index]}}</span>
-          <span ng-hide="hasCount($index)">(...)</span>
+          <strong ng-class="filter.name">{{labelFor(filter)}}:</strong>
+          <span class="selected-desc">{{filter.selectedDescription(currentReport)}}</span>
+          <span class="count" ng-show="hasCount($index)">{{counts[$index]}}</span>
+          <span class="count" ng-hide="hasCount($index)">(...)</span>
           <a class="remove" href="javascript:void(0)" ng-click="$parent.removeFilterByIndex($index)" title="Remove filter"></a>
         </div>
         <div collapse="!filter.expanded">

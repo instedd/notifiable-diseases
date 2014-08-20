@@ -84,5 +84,9 @@ angular.module('ndApp')
       optionsFor: (name) ->
         service.find(name).valid_values.options
 
+      optionLabelFor: (name, option) ->
+        options = service.optionsFor(name)
+        _.find(options, (o) -> o.value == option).label
+
       valuesFor: (field) ->
         _.map service.optionsFor(field), (option) -> option.value

@@ -12,6 +12,9 @@ angular.module('ndApp')
       equals: (other) ->
         @since == other.since && @until == other.until
 
+      selectedDescription: (report) ->
+        "#{@since} to #{@until}"
+
       @deserialize: (data) ->
         filter = new DateFilter(data.name)
         filter.since = data.since

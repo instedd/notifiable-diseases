@@ -300,7 +300,7 @@ a.editable-click {
           background: url("../images/f_location.png") no-repeat;
         }
       }
-      span {
+      .count {
         @include box-sizing(border-box);
         font-size: 11px;
         line-height: 50px;
@@ -332,6 +332,15 @@ a.editable-click {
           display:block;
         }
       }
+      .selected-desc {
+        font-size: 11px;
+        display: inline-block;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        width: 127px;
+        white-space: nowrap;
+        vertical-align: middle;
+      }
     }
     &.expanded {
       background-color: #cccccc;
@@ -340,7 +349,7 @@ a.editable-click {
       .filter-title {
         position: relative;
         margin-bottom: 15px;
-        span {
+        .count {
           border: none;
           color: #333333;
         }
@@ -394,7 +403,7 @@ a.editable-click {
     }
 
     &.last {
-      .filter-title span {
+      .filter-title .count {
           @include border-bottom-radius(4px);
           border-bottom: 1px solid #cdcdcd;
       }
