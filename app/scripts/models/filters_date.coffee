@@ -5,9 +5,6 @@ angular.module('ndApp')
         @since = "2014-01-01"
         @until = "2014-06-01"
 
-      label: ->
-        FieldsService.labelFor(@name)
-
       applyTo: (query) ->
         query.since = @since
         query.until = @until

@@ -20,3 +20,11 @@ angular.module('ndApp')
 
     $scope.chartConfigTemplateFor = (chart) ->
       "views/charts/#{chart.kind}Config.html"
+
+    $scope.hasData = ->
+      query = $scope.currentReport.newQuery()
+      $scope.currentReport.applyFiltersTo(query)
+      $scope.currentReport.closeQuery(query)
+
+      !query.empty
+

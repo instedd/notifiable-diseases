@@ -30,13 +30,14 @@
       </div>
       <div class="filter" ng-repeat="filter in currentReport.filters" ng-class="{expanded: filter.expanded, last: isLastFilter($index)}">
         <div class="filter-title" ng-click="toggleFilter(filter)">
-          <strong ng-class="filter.name">{{filter.label()}}</strong>
+          <strong ng-class="filter.name">{{labelFor(filter)}}</strong>
           <span ng-show="hasCount($index)">{{counts[$index]}}</span>
           <span ng-hide="hasCount($index)">(...)</span>
           <a class="remove" href="javascript:void(0)" ng-click="$parent.removeFilterByIndex($index)" title="Remove filter"></a>
         </div>
         <div collapse="!filter.expanded">
-            <div ng-include src="filterTemplateFor(filter)"></div>
+          <div class="instructions">{{instructionsFor(filter)}}</div>
+          <div ng-include src="filterTemplateFor(filter)"></div>
         </div>
       </div>
       <hr/>

@@ -7,9 +7,6 @@ angular.module('ndApp')
       setReport: (report) ->
         @values = AssaysService.valuesFor(report.assay)
 
-      label: ->
-        FieldsService.labelFor(@name)
-
       options: (report) ->
         AssaysService.optionsFor(report.assay)
 

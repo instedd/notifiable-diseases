@@ -4,9 +4,6 @@ angular.module('ndApp')
       constructor: (@name) ->
         @values = FieldsService.valuesFor(@name)
 
-      label: ->
-        FieldsService.labelFor(@name)
-
       options: ->
         FieldsService.optionsFor(@name)
 

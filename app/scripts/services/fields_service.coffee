@@ -4,6 +4,7 @@ angular.module('ndApp')
       {
         name: "age_group",
         label: "Age group",
+        instructions: "Select the age groups of the events you want to filter",
         type: "enum",
         valid_values:
           options: [
@@ -19,11 +20,13 @@ angular.module('ndApp')
       {
         name: "date",
         label: "Date",
+        instructions: "Select the date range of the events you want to filter"
         type: "date",
       },
       {
         name: "ethnicity",
         label: "Ethnicity",
+        instructions: "Select the ethnicities of the events you want to filter"
         type: "enum",
         valid_values:
           options: [
@@ -39,6 +42,7 @@ angular.module('ndApp')
       {
         name: "gender",
         label: "Gender",
+        instructions: "Select the genders of the events you want to filter"
         type: "enum",
         valid_values:
           options: [
@@ -49,6 +53,7 @@ angular.module('ndApp')
       {
         name: "result",
         label: "Result",
+        instructions: "Select the results of the events you want to filter"
         type: "result",
       }
     ]
@@ -72,6 +77,9 @@ angular.module('ndApp')
 
       labelFor: (name) ->
         service.find(name).label
+
+      instructionsFor: (name) ->
+        service.find(name).instructions
 
       optionsFor: (name) ->
         service.find(name).valid_values.options
