@@ -12,6 +12,9 @@ angular.module('ndApp')
       equals: (other) ->
         @since == other.since && @until == other.until
 
+      empty: ->
+        false
+
       selectedDescription: (report) ->
         "#{@since} to #{@until}"
 

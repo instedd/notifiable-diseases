@@ -40,6 +40,53 @@ angular.module('ndApp')
         dup.charts = @charts
         dup
 
+      fullDescription: ->
+        if @filters.length == 0
+          return "All cases"
+
+        # TODO: other filters is always empty for now, so it's not used
+        otherFilters = []
+
+        for filter in @filters when !filter.empty()
+          switch filter.name
+            when "age_group" then ageFilter = filter
+            when "date"      then dateFilter = filter
+            when "ethnicity" then ethnicityFilter = filter
+            when "gender"    then genderFilter = filter
+            when "result"    then resultFilter = filter
+            else                  otherFilters.push filter
+
+        str = ""
+
+        if ageFilter
+          str += ageFilter.shortDescription()
+
+        if genderFilter
+          str += ", " unless str.length == 0
+          str += genderFilter.shortDescription()
+
+        if ethnicityFilter
+          str += ", " unless str.length == 0
+          str += ethnicityFilter.shortDescription()
+
+        if str.length == 0
+          str += "Cases "
+        else
+          str += " cases "
+
+        if resultFilter
+          str += " of "
+          str += resultFilter.shortDescription(this)
+          str += " "
+
+        if dateFilter
+          str += "occurred between #{dateFilter.since} and #{dateFilter.until}"
+
+        str
+
+      findFilter: (name) ->
+        _.find @filters, (filter) -> filter.name == name
+
       @deserialize: (data) ->
         report = new Report
         report.id = data.id

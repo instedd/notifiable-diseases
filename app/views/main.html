@@ -1,6 +1,6 @@
 <nd-reports-navbar></nd-reports-navbar>
 
-<div class="row report" ng-show="currentReport">
+<div class="row report">
   <div class="col-md-12">
     <h3>
       <a href="#" editable-text="currentReport.name">{{currentReport.name}}</a>
@@ -8,6 +8,13 @@
     <p>
       <a href="#" editable-textarea="currentReport.description" e-rows="4" e-cols="60">{{currentReport.description || 'No description'}}</a>
     </p>
+  </div>
+</div>
+
+<div class="row report">
+  <div class="col-md-3"></div>
+  <div class="col-md-9">
+    {{currentReport.fullDescription()}}
   </div>
 </div>
 
