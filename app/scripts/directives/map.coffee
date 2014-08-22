@@ -29,13 +29,21 @@ create_map = (element) =>
     attributionControl: false,
     zoomControl: false,
     minZoom:3,
-    dragging: false,
     touchZoom: false,
     doubleClickZoom: false,
     scrollWheelZoom: false
   })
          
   map.setView([35.981250, -96.148398], 3)
+  map.setMaxBounds map.getBounds()
+
+  map.dragging._draggable.on('predrag', () -> 
+    currentTopLeft = map._initialTopLeftPoint.subtract(@._newPos);
+    currentBounds = new L.Bounds(currentTopLeft, currentTopLeft.add(map.getSize()));
+    limitedOffset = map._getBoundsOffset(currentBounds, map.options.maxBounds);
+    @_newPos = @._newPos.subtract(limitedOffset);
+  )
+
   L.tileLayer('http://a{s}.acetate.geoiq.com/tiles/acetate-base/{z}/{x}/{y}.png').addTo(map);
 
   map
