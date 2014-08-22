@@ -67,7 +67,11 @@ build_polygons = (full_topojson, results) ->
 draw_results = (map, polygons) ->
   on_each_feature = (feature, layer) ->
     layer.on {
-      mouseover: () -> console.log("#{feature.properties.NAME}: #{feature.properties.event_count}")
+      click: () ->
+        L.popup({closeButton : false, autoPan: false})
+         .setLatLng(layer.getBounds().getCenter())
+         .setContent("<b>#{feature.properties.NAME}</b> <br> Event count: <em>#{feature.properties.event_count}</em>")
+         .openOn(map);
     }
 
   layout_options =
