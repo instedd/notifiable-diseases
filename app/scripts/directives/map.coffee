@@ -14,7 +14,6 @@ angular.module('ndApp')
         map.touchZoom.disable()
         map.doubleClickZoom.disable()
         map.scrollWheelZoom.disable()
-        map.setMaxBounds(bounds)
 
         L.tileLayer('http://a{s}.acetate.geoiq.com/tiles/acetate-base/{z}/{x}/{y}.png').addTo(map);
         
