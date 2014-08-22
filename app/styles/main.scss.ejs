@@ -240,7 +240,20 @@ a.editable-click {
       text-align: center;
       background: #eaeaea;
       font-weight: bold;
+
+      .chart_button {
+        background-image: url('../images/chart_icons.png');
+        background-repeat: no-repeat;
+        display: inline-block;
+        width: 58px;
+        height: 54px;
+
+        &.trendline          { background-position: 0px 0px }
+        &.population_pyramid { background-position: -119px 0px }
+        &.map                { background-position: -239px 0px }
+      }
     }
+
   }
 }
 

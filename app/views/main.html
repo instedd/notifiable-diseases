@@ -86,9 +86,15 @@
           <div collapse="addNewChartIsCollapsed" class="chart_type">
               <div>
                 <p>Select a chart type</p>
-                <a href="javascript:void(0);" ng-click="addChart('Trendline')"><img src="images/ic-trendline.png"></a>
-                <a href="javascript:void(0);" ng-click="addChart('PopulationPyramid')"><img src="images/ic-pyramid.png"></a>
-                <a href="javascript:void(0);" ng-click="addChart('Map')"><img src="images/f_location.png"></a>
+                <a href="javascript:void(0);" ng-click="addChart('Trendline')">
+                  <div class="chart_button trendline"></div>
+                </a>
+                <a href="javascript:void(0);" ng-click="addChart('PopulationPyramid')">
+                  <div class="chart_button population_pyramid"></div>
+                </a>
+                <a href="javascript:void(0);" ng-click="addChart('Map')">
+                  <div class="chart_button map"></div>
+                </a>
 
               </div>
           </div>
