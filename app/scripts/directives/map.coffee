@@ -2,22 +2,12 @@ angular.module('ndApp')
   .directive 'ndMap', () ->
     {
       restrict: 'E'
-      # scope:
-      #   series: '='
-      #   title: '='
       template: '<div class="nd-map"></div>',
       link: (scope, element, attrs) ->
-        map = L.map(element[0].children[0], { attributionControl: false, zoomControl: false, minZoom:3})
-               
-        map.setView([35.981250, -96.148398], 3)
-        map.dragging.disable()
-        map.touchZoom.disable()
-        map.doubleClickZoom.disable()
-        map.scrollWheelZoom.disable()
-
-        L.tileLayer('http://a{s}.acetate.geoiq.com/tiles/acetate-base/{z}/{x}/{y}.png').addTo(map);
         
-        polygons_by_level = {
+        @map = create_map(element[0].children[0])
+
+        @polygons_by_level = {
           0: NNDD.us_outline_topo
           1: NNDD.us_states_topo
           2: NNDD.us_counties_topo
@@ -29,11 +19,30 @@ angular.module('ndApp')
         admin_level = 2
 
         # retrieved via API
-        data = sample_data[admin_level]
+        results = sample_data[admin_level]
         
-        polygons = build_polygons(polygons_by_level[admin_level], data)
-        draw_results(map, polygons)
+        draw_results(admin_level, results)
     }
+
+create_map = (element) =>
+  map = L.map(element, { 
+    attributionControl: false,
+    zoomControl: false,
+    minZoom:3,
+    dragging: false,
+    touchZoom: false,
+    doubleClickZoom: false,
+    scrollWheelZoom: false
+  })
+         
+  map.setView([35.981250, -96.148398], 3)
+  L.tileLayer('http://a{s}.acetate.geoiq.com/tiles/acetate-base/{z}/{x}/{y}.png').addTo(map);
+
+  map
+
+draw_results = (admin_level, results) =>
+  polygons = build_polygons(@polygons_by_level[admin_level], results)
+  draw_polygons(polygons)
 
 build_polygons = (full_topojson, results) ->
   result_count_by_id = _.object(_.map(results.events, (e) -> [e.location_id, e.count]))
@@ -63,17 +72,21 @@ build_polygons = (full_topojson, results) ->
   }
   omnivore.topojson.parse(filtered_topojson)
 
+on_each_feature = (feature, layer) =>
+  popup_content = "
+  <b>#{feature.properties.NAME}</b>
+  <br>
+  Event count: <em>#{feature.properties.event_count}</em>
+  "
+  layer.on {
+    click: () =>
+      L.popup({closeButton : false, autoPan: false})
+       .setLatLng(layer.getBounds().getCenter())
+       .setContent(popup_content)
+       .openOn(@map);
+  }
 
-draw_results = (map, polygons) ->
-  on_each_feature = (feature, layer) ->
-    layer.on {
-      click: () ->
-        L.popup({closeButton : false, autoPan: false})
-         .setLatLng(layer.getBounds().getCenter())
-         .setContent("<b>#{feature.properties.NAME}</b> <br> Event count: <em>#{feature.properties.event_count}</em>")
-         .openOn(map);
-    }
-
+draw_polygons = (polygons) =>
   layout_options =
     style:
        weight: 1,
@@ -81,8 +94,8 @@ draw_results = (map, polygons) ->
     onEachFeature: on_each_feature
 
   polygonLayer = L.geoJson(polygons, layout_options)
-  map.fitBounds polygonLayer.getBounds()
-  polygonLayer.addTo map
+  @map.fitBounds polygonLayer.getBounds()
+  polygonLayer.addTo @map
 
 
 
