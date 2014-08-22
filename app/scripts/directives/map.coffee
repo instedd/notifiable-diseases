@@ -87,15 +87,18 @@ on_each_feature = (feature, layer) =>
   }
 
 draw_polygons = (polygons) =>
+  @map.removeLayer(@polygonLayer) if @polygonLayer
+
   layout_options =
     style:
        weight: 1,
        fillOpacity: 0.1
     onEachFeature: on_each_feature
 
-  polygonLayer = L.geoJson(polygons, layout_options)
-  @map.fitBounds polygonLayer.getBounds()
-  polygonLayer.addTo @map
+  @polygonLayer = L.geoJson(polygons, layout_options)
+  
+  @map.fitBounds @polygonLayer.getBounds()
+  @polygonLayer.addTo @map
 
 
 
