@@ -7,5 +7,3 @@ angular.module('ndApp')
       formatResultCssClass: (element) ->
         level = $(element.element[0]).data("level");
         if level then "depth#{level}" else ""
-
-

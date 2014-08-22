@@ -8,14 +8,15 @@ angular.module('ndApp')
         1
 
       equals: (other) ->
-        true
+        @location_id == other.location_id
 
       empty: ->
-        false
+        @location_id.toString().length == 0
 
       selectedDescription: ->
         ""
 
       @deserialize: (data) ->
         filter = new LocationFilter(data.name)
+        filter.location_id = data.location_id
         filter
