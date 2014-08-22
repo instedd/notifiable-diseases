@@ -41,18 +41,30 @@ angular.module('ndApp').service 'RemoteReportsService', (KeyValueStore, $q, rfc4
       desc.then ->
         service.save(report)
 
+    # This returns a JSON-encoded report. You must then invoke
+    # deserialize to get the deserialized version.
+    #
+    # You also have getAssay, which allows you to get a report's assay
+    # without fully deserializing it into an object.
     findById: (id) ->
       q = $q.defer()
 
       KeyValueStore.get(reportKey(id)).success (data) ->
         if data.found
-          report = Report.deserialize(JSON.parse(data.value))
-          report.version = data.version
+          report = data
         else
           report = null
         q.resolve(report)
 
       q.promise
+
+    getAssay: (data) ->
+      JSON.parse(data.value).assay
+
+    deserialize: (data) ->
+      report = Report.deserialize(JSON.parse(data.value))
+      report.version = data.version
+      report
 
     delete: (report) ->
       q = $q.defer()

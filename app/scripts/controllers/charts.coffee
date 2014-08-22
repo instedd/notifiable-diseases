@@ -9,6 +9,7 @@ angular.module('ndApp')
 
     $scope.addChart = (kind) ->
       chart = ChartsService.create kind
+      chart.initializeNew?()
       $scope.currentReport.charts.push chart
       $scope.toggleAddNewChart()
 

@@ -1,5 +1,5 @@
 angular.module('ndApp')
-  .service 'FiltersService', (EnumFilter, DateFilter, ResultFilter, FieldsService) ->
+  .service 'FiltersService', (EnumFilter, DateFilter, FieldsService) ->
     service =
       create: (name) ->
         klass = service.findClass(name)
@@ -15,7 +15,5 @@ angular.module('ndApp')
             EnumFilter
           when "date"
             DateFilter
-          when "result"
-            ResultFilter
           else
             throw "Unknown field type: #{field.type}"

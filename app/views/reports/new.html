@@ -17,7 +17,7 @@
         <label for="assay">Assay</label>
         <br/>
         <select id="assay" ng-model="report.assay">
-          <option ng-repeat="assay in assays" value="{{assay.name}}">{{assay.label}}</option>
+          <option ng-repeat="assay in assays" value="{{assay.value}}">{{assay.label}}</option>
         </select>
         (Events: {{events}})
       </div>

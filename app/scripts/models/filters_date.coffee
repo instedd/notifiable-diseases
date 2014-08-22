@@ -15,7 +15,7 @@ angular.module('ndApp')
       empty: ->
         false
 
-      selectedDescription: (report) ->
+      selectedDescription: ->
         "#{@since} to #{@until}"
 
       @deserialize: (data) ->

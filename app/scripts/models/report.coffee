@@ -1,5 +1,5 @@
 angular.module('ndApp')
-  .factory 'Report', (FiltersService, FieldsService, ChartsService, AssaysService) ->
+  .factory 'Report', (FiltersService, FieldsService, ChartsService) ->
     class Report
       constructor: ->
         @filters = []
@@ -18,18 +18,14 @@ angular.module('ndApp')
 
       newQuery: ->
         page_size: 0
-        condition: @assay
+        assay_name: @assay
 
       closeQuery: (query) ->
         # If there's no result specified, restrict result to the valid values
-        query.result ?= AssaysService.valuesFor(@assay)
+        query.result ?= FieldsService.valuesFor("result")
 
       fieldOptionsFor: (fieldName) ->
-        type = FieldsService.typeFor(fieldName)
-        if type == 'result'
-          AssaysService.optionsFor(@assay)
-        else
-          FieldsService.optionsFor(fieldName)
+        FieldsService.optionsFor(fieldName)
 
       duplicate: ->
         dup = new Report
@@ -76,7 +72,7 @@ angular.module('ndApp')
 
         if resultFilter
           str += " of "
-          str += resultFilter.shortDescription(this)
+          str += resultFilter.shortDescription()
           str += " "
 
         if dateFilter

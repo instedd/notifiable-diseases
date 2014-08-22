@@ -4,7 +4,6 @@ angular.module('ndApp')
   .controller 'FiltersCtrl', ($scope, $q, Cdx, FieldsService) ->
     $scope.addNewFilterIsCollapsed = true
     $scope.counts = []
-    $scope.fields = FieldsService.all()
 
     $scope.toggleAddNewFilter = ->
       $scope.addNewFilterIsCollapsed = !$scope.addNewFilterIsCollapsed

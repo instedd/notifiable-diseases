@@ -5,6 +5,8 @@ angular.module('ndApp')
         @kind = 'Trendline'
         @display = 'simple'
         @grouping = 'year'
+
+      initializeNew: ->
         @splitField = FieldsService.allEnum()[0].name
 
       @deserialize: (data) ->

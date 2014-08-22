@@ -19,7 +19,7 @@ angular.module('ndApp')
       empty: ->
         @values.length == 0
 
-      selectedDescription: (report) ->
+      selectedDescription: ->
         if @values.length == 0
           "none"
         else if @values.length == FieldsService.valuesFor(@name).length
@@ -29,7 +29,7 @@ angular.module('ndApp')
         else
           "#{@values.length} selected"
 
-      shortDescription: (report) ->
+      shortDescription: ->
         labels = _.map(@values, (value) => "\"#{FieldsService.optionLabelFor(@name, value)}\"")
         StringService.toSentence(labels, ", ", " or ")
 
