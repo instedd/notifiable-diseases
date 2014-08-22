@@ -2,6 +2,13 @@ angular.module('ndApp')
   .service 'FieldsService', (Cdx, $q) ->
     Fields = null
 
+    appendFlattenedLocations = (locations, all) ->
+      locations = _.sortBy locations, (location) -> location.name.toLowerCase()
+      for location in locations
+        all.push location
+        appendFlattenedLocations location.children, all
+      all
+
     service =
       init: (context = {}) ->
         q = $q.defer()
@@ -47,3 +54,7 @@ angular.module('ndApp')
 
       valuesFor: (field) ->
         _.map service.optionsFor(field), (option) -> option.value
+
+      flattenedLocations: (name) ->
+        roots = service.find(name).valid_values.locations
+        appendFlattenedLocations roots, []

@@ -26,6 +26,7 @@ angular
     'ngCsv',
     'config',
     'daterangepicker',
+    'ui.select2',
   ])
   .config ($routeProvider) ->
     $routeProvider
