@@ -26,7 +26,7 @@ angular.module('ndApp')
         # --- draw sample data
 
         # configured in chart settings
-        admin_level = 1
+        admin_level = 2
 
         # retrieved via API
         data = sample_data[admin_level]
@@ -76,7 +76,9 @@ draw_results = (map, polygons) ->
        fillOpacity: 0.1
     onEachFeature: on_each_feature
 
-  L.geoJson(polygons, layout_options).addTo(map)
+  polygonLayer = L.geoJson(polygons, layout_options)
+  map.fitBounds polygonLayer.getBounds()
+  polygonLayer.addTo map
 
 
 
@@ -87,7 +89,6 @@ sample_data = {
     events: [
       { location_id: "0400000US04", count: 73 },
       { location_id: "0400000US06", count: 66 },
-      { location_id: "0400000US36", count: 64 }
     ],
     total_count: 203
   2:
