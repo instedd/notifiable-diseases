@@ -9,6 +9,16 @@ angular.module('ndApp')
         appendFlattenedLocations location.children, all
       all
 
+    findLocationIn = (locations, id) ->
+      for location in locations
+        if location.id.toString() == id
+          return location
+
+        match = findLocationIn location.children, id
+        return match if match
+
+      null
+
     service =
       init: (context = {}) ->
         q = $q.defer()
@@ -58,3 +68,7 @@ angular.module('ndApp')
       flattenedLocations: (name) ->
         roots = service.find(name).valid_values.locations
         appendFlattenedLocations roots, []
+
+      locationLabelFor: (name, id) ->
+        id = id.toString()
+        findLocationIn(service.find(name).valid_values.locations, id).name

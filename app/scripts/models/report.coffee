@@ -50,6 +50,7 @@ angular.module('ndApp')
             when "ethnicity" then ethnicityFilter = filter
             when "gender"    then genderFilter = filter
             when "result"    then resultFilter = filter
+            when "location"  then locationFilter = filter
             else                  otherFilters.push filter
 
         str = ""
@@ -75,8 +76,13 @@ angular.module('ndApp')
           str += resultFilter.shortDescription()
           str += " "
 
+        if locationFilter
+          str += " in "
+          str += locationFilter.shortDescription()
+          str += " "
+
         if dateFilter
-          str += "occurred between #{dateFilter.since} and #{dateFilter.until}"
+          str += " occurred between #{dateFilter.since} and #{dateFilter.until}"
 
         str
 

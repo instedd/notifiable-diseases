@@ -14,7 +14,13 @@ angular.module('ndApp')
         @location_id.toString().length == 0
 
       selectedDescription: ->
-        ""
+        if @empty()
+          "All"
+        else
+          FieldsService.locationLabelFor(@name, @location_id)
+
+      shortDescription: ->
+        @selectedDescription()
 
       @deserialize: (data) ->
         filter = new LocationFilter(data.name)
