@@ -7,14 +7,15 @@ angular.module('ndApp')
       #   title: '='
       template: '<div class="nd-map"></div>',
       link: (scope, element, attrs) ->
-        # bounds need to be slightly wider than initial zoom to avoid automatic zoom in
-        bounds = L.latLngBounds(L.latLng([9.387811882056695,-139.42734375]),
-                                L.latLng([56.67911044801047,-56.69734375]));
-
-        map = L.map(element[0].children[0], { attributionControl: false, minZoom:3})
-               .setView([35.981250, -96.148398], 3)
-
+        map = L.map(element[0].children[0], { attributionControl: false, zoomControl: false, minZoom:3})
+               
+        map.setView([35.981250, -96.148398], 3)
+        map.dragging.disable()
+        map.touchZoom.disable()
+        map.doubleClickZoom.disable()
+        map.scrollWheelZoom.disable()
         map.setMaxBounds(bounds)
+
         L.tileLayer('http://a{s}.acetate.geoiq.com/tiles/acetate-base/{z}/{x}/{y}.png').addTo(map);
         
         polygons_by_level = {
