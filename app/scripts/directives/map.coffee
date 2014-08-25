@@ -79,18 +79,21 @@ build_polygons = (full_topojson, results) ->
   omnivore.topojson.parse(filtered_topojson)
 
 on_each_feature = (feature, layer) =>
+  layer_center = layer.getBounds().getCenter()
+  
   popup_content = "
   <b>#{feature.properties.NAME}</b>
   <br>
   Event count: <em>#{feature.properties.event_count}</em>
   "
-  layer.on {
-    click: () =>
-      L.popup({closeButton : false, autoPan: false})
-       .setLatLng(layer.getBounds().getCenter())
-       .setContent(popup_content)
-       .openOn(@map)
-  }
+  
+  popup = L.popup({closeButton : false, autoPan: false})
+           .setLatLng(layer_center)
+           .setContent(popup_content)
+
+  L.marker(layer_center)
+   .addTo @map
+   .bindPopup popup
 
 draw_polygons = (polygons) =>
   @map.removeLayer(@polygonLayer) if @polygonLayer
