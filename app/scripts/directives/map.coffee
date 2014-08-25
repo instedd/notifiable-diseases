@@ -38,13 +38,13 @@ create_map = (element) =>
   map.setMaxBounds map.getBounds()
 
   map.dragging._draggable.on('predrag', () -> 
-    currentTopLeft = map._initialTopLeftPoint.subtract(@._newPos);
-    currentBounds = new L.Bounds(currentTopLeft, currentTopLeft.add(map.getSize()));
-    limitedOffset = map._getBoundsOffset(currentBounds, map.options.maxBounds);
-    @_newPos = @._newPos.subtract(limitedOffset);
+    currentTopLeft = map._initialTopLeftPoint.subtract(@._newPos)
+    currentBounds = new L.Bounds(currentTopLeft, currentTopLeft.add(map.getSize()))
+    limitedOffset = map._getBoundsOffset(currentBounds, map.options.maxBounds)
+    @_newPos = @._newPos.subtract(limitedOffset)
   )
 
-  L.tileLayer('http://a{s}.acetate.geoiq.com/tiles/acetate-base/{z}/{x}/{y}.png').addTo(map);
+  L.tileLayer('http://a{s}.acetate.geoiq.com/tiles/acetate-base/{z}/{x}/{y}.png').addTo map
 
   map
 
@@ -61,23 +61,21 @@ build_polygons = (full_topojson, results) ->
                                     count_for_location = result_count_by_id[o.properties.GEO_ID]
                                     if count_for_location
                                       clone = $.extend(true, {}, o)
-                                      clone.properties.event_count = count_for_location;
+                                      clone.properties.event_count = count_for_location
                                       r.push clone
                                     r
                                   [])
 
   # TODO: consider keeping only arcs needed by filtered geometries
-  filtered_topojson = {
-    "type": "Topology",
-    "objects": {
-      "locations": {
-        "type": "GeometryCollection",
-        "geometries": filtered_geometries
-      }
-    }
-    "arcs" : full_topojson.arcs,
-    "transform": full_topojson.transform
-  }
+  filtered_topojson =
+    type: "Topology",
+    objects:
+      locations:
+        type: "GeometryCollection",
+        geometries: filtered_geometries
+    arcs: full_topojson.arcs,
+    transform: full_topojson.transform
+
   omnivore.topojson.parse(filtered_topojson)
 
 on_each_feature = (feature, layer) =>
@@ -91,7 +89,7 @@ on_each_feature = (feature, layer) =>
       L.popup({closeButton : false, autoPan: false})
        .setLatLng(layer.getBounds().getCenter())
        .setContent(popup_content)
-       .openOn(@map);
+       .openOn(@map)
   }
 
 draw_polygons = (polygons) =>
