@@ -25,6 +25,11 @@ angular.module('ndApp')
         Cdx.fields(context).success (data) ->
           Fields = data
 
+          # Keep only positive results
+          resultField = _.find Fields, (field) -> field.name == "result"
+          if resultField
+            resultField.valid_values.options = _.select resultField.valid_values.options, (option) -> option.kind == "positive"
+
           service.find("age_group")?.instructions = "Select the age groups of the events you want to filter"
           service.find("date")?.instructions = "Select the date range of the events you want to filter"
           service.find("ethnicity")?.instructions = "Select the ethnicities of the events you want to filter"
