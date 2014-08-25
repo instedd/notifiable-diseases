@@ -1,6 +1,6 @@
 <nd-reports-navbar></nd-reports-navbar>
 
-<div class="row report" ng-show="currentReport">
+<div class="row report">
   <div class="col-md-12">
     <h3>
       <a href="#" editable-text="currentReport.name">{{currentReport.name}}</a>
@@ -8,6 +8,13 @@
     <p>
       <a href="#" editable-textarea="currentReport.description" e-rows="4" e-cols="60">{{currentReport.description || 'No description'}}</a>
     </p>
+  </div>
+</div>
+
+<div class="row report">
+  <div class="col-md-3"></div>
+  <div class="col-md-9">
+    {{currentReport.fullDescription()}}
   </div>
 </div>
 
@@ -24,19 +31,21 @@
       <div class="filter first">
         <div class="filter-title">
           <strong class="all">All cases</strong>
-          <span ng-show="hasCount(-1)">{{counts[-1]}}</span>
-          <span ng-hide="hasCount(-1)">(...)</span>
+          <span class="count" ng-show="hasCount(-1)">{{counts[-1]}}</span>
+          <span class="count" ng-hide="hasCount(-1)">(...)</span>
         </div>
       </div>
       <div class="filter" ng-repeat="filter in currentReport.filters" ng-class="{expanded: filter.expanded, last: isLastFilter($index)}">
         <div class="filter-title" ng-click="toggleFilter(filter)">
-          <strong ng-class="filter.name">{{filter.label()}}</strong>
-          <span ng-show="hasCount($index)">{{counts[$index]}}</span>
-          <span ng-hide="hasCount($index)">(...)</span>
-          <a class="close" href="javascript:void(0)" ng-click="$parent.removeFilterByIndex($index)" title="remove">x</a>
+          <strong ng-class="filter.name">{{labelFor(filter)}}:</strong>
+          <span class="selected-desc">{{filter.selectedDescription()}}</span>
+          <span class="count" ng-show="hasCount($index)">{{counts[$index]}}</span>
+          <span class="count" ng-hide="hasCount($index)">(...)</span>
+          <a class="remove" href="javascript:void(0)" ng-click="$parent.removeFilterByIndex($index)" title="Remove filter"></a>
         </div>
         <div collapse="!filter.expanded">
-            <div ng-include src="filterTemplateFor(filter)"></div>
+          <div class="instructions">{{instructionsFor(filter)}}</div>
+          <div ng-include src="filterTemplateFor(filter)"></div>
         </div>
       </div>
       <hr/>
@@ -47,9 +56,10 @@
         </div>
       </div>
     </div>
-    <a href="javascript:void(0);" ng-click="duplicateReport()">Duplicate this report</a>
-    <br/>
-    <a href="javascript:void(0);" ng-click="deleteReport()">Delete this report</a>
+    <div class="bottom-actions">
+      <a href="javascript:void(0);" ng-click="duplicateReport()"><img src="images/ic-duplicate-black.png">Duplicate this report</a>
+      <a href="javascript:void(0);" ng-click="deleteReport()"><img src="images/ic-delete-black.png">Delete this report</a>
+    </div>
   </div>
   <!-- END: Filters panel -->
 

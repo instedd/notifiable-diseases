@@ -5,15 +5,18 @@ angular.module('ndApp')
         @since = "2014-01-01"
         @until = "2014-06-01"
 
-      label: ->
-        FieldsService.labelFor(@name)
-
       applyTo: (query) ->
         query.since = @since
         query.until = @until
 
       equals: (other) ->
         @since == other.since && @until == other.until
+
+      empty: ->
+        false
+
+      selectedDescription: ->
+        "#{@since} to #{@until}"
 
       @deserialize: (data) ->
         filter = new DateFilter(data.name)

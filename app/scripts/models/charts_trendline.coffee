@@ -5,6 +5,8 @@ angular.module('ndApp')
         @kind = 'Trendline'
         @display = 'simple'
         @grouping = 'year'
+
+      initializeNew: ->
         @splitField = FieldsService.allEnum()[0].name
 
       @deserialize: (data) ->
@@ -17,8 +19,14 @@ angular.module('ndApp')
       isConfigurable: ->
         true
 
+      description: ->
+        desc = "Events grouped by #{@grouping}"
+        if @display == 'split'
+          desc += ", split by #{FieldsService.labelFor(@splitField).toLowerCase()}"
+        desc
+
       applyToQuery: (query) ->
-        date_grouping = "#{@grouping}(created_at)"
+        date_grouping = "#{@grouping}(started_at)"
         switch @display
           when 'simple'
             query.group_by = date_grouping
@@ -40,14 +48,16 @@ angular.module('ndApp')
         series
 
       getSimpleSeries: (data) ->
+        @sortData data
+
         cols:
           ["Events"]
         rows:
           _.map data, (value) ->
-            [value.created_at, value.count]
+            [value.started_at, value.count]
 
       getSplitSeries: (report, data) ->
-        @sortData data
+        @sortSplitData data
 
         options = report.fieldOptionsFor(@splitField)
 
@@ -66,7 +76,7 @@ angular.module('ndApp')
         while i < len
           item = data[i]
 
-          date = item.created_at
+          date = item.started_at
           row = [date]
 
           # Traverse all items that follow (including this one) as long
@@ -74,7 +84,7 @@ angular.module('ndApp')
           j = i
           while j < len
             other_item = data[j]
-            other_date = other_item.created_at
+            other_date = other_item.started_at
             if other_date != date
               break
 
@@ -121,9 +131,18 @@ angular.module('ndApp')
 
       sortData: (data) ->
         data.sort (x, y) =>
-          if x.created_at < y.created_at
+          if x.started_at < y.started_at
             -1
-          else if x.created_at > y.created_at
+          else if x.started_at > y.started_at
+            1
+          else
+            0
+
+      sortSplitData: (data) ->
+        data.sort (x, y) =>
+          if x.started_at < y.started_at
+            -1
+          else if x.started_at > y.started_at
             1
           else if x[@splitField] < y[@splitField]
             -1

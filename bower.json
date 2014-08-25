@@ -23,6 +23,7 @@
     "ng-csv": "0.2.3",
     "moment": "2.8.1",
     "angular-daterangepicker": "0.1.8",
+    "angular-ui-select2": "0.0.5",
     "leaflet": "Leaflet/Leaflet#8a5fdfc6e3db2807b8f0dd617474e4ab2949142b",
     "leaflet-omnivore": "mapbox/leaflet-omnivore#2d67abe67c2284ab550a9e40b6131681312bfff1"
   },

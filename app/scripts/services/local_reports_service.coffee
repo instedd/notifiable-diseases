@@ -46,3 +46,9 @@ angular.module('ndApp').service 'LocalReportsService', (localStorageService, Rep
             callback(report)
             return
         callback(null)
+
+    getAssay: (data) ->
+      data.assay
+
+    deserialize: (data) ->
+      data

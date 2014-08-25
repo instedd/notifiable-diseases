@@ -2,6 +2,7 @@
 
 <div class="row report">
   <div class="col-md-12">
+    <h3>New report</h3>
     <form ng-submit="createReport()">
       <div>
         <label for="name">Name</label>
@@ -17,7 +18,7 @@
         <label for="assay">Assay</label>
         <br/>
         <select id="assay" ng-model="report.assay">
-          <option ng-repeat="assay in assays" value="{{assay.name}}">{{assay.label}}</option>
+          <option ng-repeat="assay in assays" value="{{assay.value}}">{{assay.label}}</option>
         </select>
         (Events: {{events}})
       </div>

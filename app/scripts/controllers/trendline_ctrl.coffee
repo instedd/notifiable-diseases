@@ -3,7 +3,7 @@
 angular.module('ndApp')
   .controller 'TrendlineCtrl', ($scope) ->
     $scope.offset = 0
-    $scope.chart =
+    $scope.viz =
       type: "AreaChart"
       data:
         cols: [
@@ -12,7 +12,7 @@ angular.module('ndApp')
         ]
         rows: []
       options:
-        title: "Events"
+        title: $scope.chart.description()
         isStacked: true
         vAxis:
           title: "Event count"
@@ -46,17 +46,19 @@ angular.module('ndApp')
         false
 
     render = ->
-      $scope.chart.data.rows = sliceRows($scope.computedInfo.rows, $scope.offset)
+      $scope.viz.data.rows = sliceRows($scope.computedInfo.rows, $scope.offset)
 
     computeAndRender = ->
       if $scope.series
         $scope.offset = 0
         $scope.computedInfo = compute $scope.series
-        $scope.chart.options.colors = $scope.computedInfo.colors
-        $scope.chart.data.cols = $scope.computedInfo.cols
+        $scope.viz.options.colors = $scope.computedInfo.colors
+        $scope.viz.data.cols = $scope.computedInfo.cols
         render()
 
     $scope.$watchCollection('series', computeAndRender)
+    $scope.$watch 'chart.description()', ->
+      $scope.viz.options.title = $scope.chart.description()
 
 COLORS = ["#3266CC", "#DC3918", "#FD9927", "#149618", "#991499", "#1899C6", "#DD4477", "#66AA1E", "#B82E2E", "#316395", "#994399", "#22AA99", "#ABAA22", "#6633CC"]
 
@@ -134,7 +136,7 @@ fillGaps = (rows, interval, cols_num) ->
 
     while true
       nextValue = nextDate(nextValue, interval)
-      if nextValue == nextRow
+      if nextValue >= nextRow
         break
       else
         emptyRow = [nextValue]

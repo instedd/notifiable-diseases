@@ -4,7 +4,6 @@ angular.module('ndApp')
   .controller 'FiltersCtrl', ($scope, $q, Cdx, FieldsService) ->
     $scope.addNewFilterIsCollapsed = true
     $scope.counts = []
-    $scope.fields = FieldsService.all()
 
     $scope.toggleAddNewFilter = ->
       $scope.addNewFilterIsCollapsed = !$scope.addNewFilterIsCollapsed
@@ -39,6 +38,12 @@ angular.module('ndApp')
 
     $scope.isLastFilter = ($index) ->
       $scope.currentReport.filters.length == $index + 1
+
+    $scope.labelFor = (filter) ->
+      FieldsService.labelFor(filter.name)
+
+    $scope.instructionsFor = (filter) ->
+      FieldsService.instructionsFor(filter.name)
 
     firstChange = true
     $scope.$watch 'currentReport.filters', ((newFilters, oldFilters) ->

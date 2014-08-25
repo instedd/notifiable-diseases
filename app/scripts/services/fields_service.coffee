@@ -1,65 +1,44 @@
 angular.module('ndApp')
-  .service 'FieldsService', ->
-    Fields = [
-      {
-        name: "age_group",
-        label: "Age group",
-        type: "enum",
-        valid_values:
-          options: [
-            {value:  "0-10", label:  "0-10"},
-            {value: "10-20", label: "10-20"},
-            {value: "20-30", label: "20-30"},
-            {value: "30-40", label: "30-40"},
-            {value: "40-50", label: "40-50"},
-            {value: "50-60", label: "50-60"},
-            {value:   "60+", label:   "60+"},
-          ]
-      },
-      {
-        name: "date",
-        label: "Date",
-        type: "date",
-      },
-      {
-        name: "ethnicity",
-        label: "Ethnicity",
-        type: "enum",
-        valid_values:
-          options: [
-            {value: "1002-5", label: "American Indian or Alaska Native"},
-            {value: "2028-9", label: "Asian"},
-            {value: "2054-5", label: "Black or African American"},
-            {value: "2076-8", label: "Native Hawaiian or Other Pacific Islander"},
-            {value: "2106-3", label: "White"},
-            {value: "2135-2", label: "Hispanic"},
-            {value: "2131-1", label: "Other Race"},
-          ]
-      },
-      {
-        name: "gender",
-        label: "Gender",
-        type: "enum",
-        valid_values:
-          options: [
-            {value: "female", label: "Female"},
-            {value: "male", label: "Male"},
-          ]
-      },
-      {
-        name: "result",
-        label: "Result",
-        type: "result",
-      }
-    ]
+  .service 'FieldsService', (Cdx, $q) ->
+    Fields = null
+
+    appendFlattenedLocations = (locations, all) ->
+      locations = _.sortBy locations, (location) -> location.name.toLowerCase()
+      for location in locations
+        all.push location
+        appendFlattenedLocations location.children, all
+      all
+
+    findLocationIn = (locations, id) ->
+      for location in locations
+        if location.id.toString() == id
+          return location
+
+        match = findLocationIn location.children, id
+        return match if match
+
+      null
 
     service =
+      init: (context = {}) ->
+        q = $q.defer()
+        Cdx.fields(context).success (data) ->
+          Fields = data
+
+          service.find("age_group")?.instructions = "Select the age groups of the events you want to filter"
+          service.find("date")?.instructions = "Select the date range of the events you want to filter"
+          service.find("ethnicity")?.instructions = "Select the ethnicities of the events you want to filter"
+          service.find("gender")?.instructions = "Select the genders of the events you want to filter"
+          service.find("result")?.instructions = "Select the results of the events you want to filter"
+
+          q.resolve()
+        q.promise
+
       all: ->
         Fields
 
       allEnum: ->
-        _.select service.all(), (field) ->
-          field.type == "enum" || field.type == "result"
+        _.select service.all(), (field) -> field.type == "enum"
 
       find: (name) ->
         for field in Fields
@@ -73,8 +52,23 @@ angular.module('ndApp')
       labelFor: (name) ->
         service.find(name).label
 
+      instructionsFor: (name) ->
+        service.find(name).instructions
+
       optionsFor: (name) ->
         service.find(name).valid_values.options
 
+      optionLabelFor: (name, option) ->
+        options = service.optionsFor(name)
+        _.find(options, (o) -> o.value == option).label
+
       valuesFor: (field) ->
         _.map service.optionsFor(field), (option) -> option.value
+
+      flattenedLocations: (name) ->
+        roots = service.find(name).valid_values.locations
+        appendFlattenedLocations roots, []
+
+      locationLabelFor: (name, id) ->
+        id = id.toString()
+        findLocationIn(service.find(name).valid_values.locations, id).name

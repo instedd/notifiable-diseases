@@ -1,0 +1,6 @@
+<div ng-controller="LocationFilterCtrl">
+  <select class="location-filter" ui-select2="select2Options" ng-model="filter.location_id" data-placeholder="Select a location" style="width:100%">
+    <option value=""></option>
+    <option ng-repeat="location in flattenedLocations" value="{{location.id}}" data-level="{{location.level}}">{{location.name}}</option>
+  </select>
+</div>
