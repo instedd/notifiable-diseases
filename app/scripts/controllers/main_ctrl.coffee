@@ -52,6 +52,7 @@ angular.module('ndApp')
 
           $scope.fields = FieldsService.all()
           $scope.enumFields = _.sortBy FieldsService.allEnum(), (f) -> f.label.toLowerCase()
+          $scope.datePeriods = FieldsService.datePeriods()
 
           firstSaveCurrentReport = true
           saveCurrentReport = (newValue, oldValue) ->

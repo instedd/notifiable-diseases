@@ -77,3 +77,19 @@ angular.module('ndApp')
       locationLabelFor: (name, id) ->
         id = id.toString()
         findLocationIn(service.find(name).valid_values.locations, id).name
+
+      datePeriods: ->
+        date = service.find("date")
+        resolution = date?.valid_values?.resolution
+
+        has_day   = !resolution || resolution == "day"
+        has_week  = has_day     || resolution == "week"
+        has_month = has_week    || resolution == "month"
+        has_year  = has_month   || resolution == "year"
+
+        periods = []
+        periods.push value: "day",   label: "Day"   if has_day
+        periods.push value: "week",  label: "Week"  if has_week
+        periods.push value: "month", label: "Month" if has_month
+        periods.push value: "year",  label: "Year"  if has_year
+        periods
