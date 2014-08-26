@@ -1,3 +1,34 @@
 <div ng-controller="DateRangeCtrl">
-  <input date-range-picker ng-model="dateRange" class="form-control date-picker" size="20" />
+  <div ng-show="dateResolution == 'day'">
+    <input date-range-picker ng-model="dateRange" class="form-control date-picker" size="20" />
+  </div>
+  <div ng-show="dateResolution == 'week'">
+    <select ng-model="sinceWeekYear" ng-options="year for year in years">
+    </select>
+    <select ng-model="sinceWeek" ng-options="week.value as week.label for week in sinceWeeks">
+    </select>
+    -
+    <select ng-model="untilWeekYear" ng-options="year for year in years">
+    </select>
+    <select ng-model="untilWeek" ng-options="week.value as week.label for week in untilWeeks">
+    </select>
+  </div>
+  <div ng-show="dateResolution == 'month'">
+    <select ng-model="sinceYear" ng-options="year for year in years">
+    </select>
+    <select ng-model="sinceMonth" ng-options="month.value as month.label for month in months">
+    </select>
+    -
+    <select ng-model="untilYear" ng-options="year for year in years">
+    </select>
+    <select ng-model="untilMonth" ng-options="month.value as month.label for month in months">
+    </select>
+  </div>
+  <div ng-show="dateResolution == 'year'">
+    <select ng-model="sinceYear" ng-options="year for year in years">
+    </select>
+    -
+    <select ng-model="untilYear" ng-options="year for year in years">
+    </select>
+  </div>
 </div>

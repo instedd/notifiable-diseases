@@ -10,6 +10,8 @@
 
 angular.module('ndApp')
   .controller 'MainCtrl', ($scope, $http, $location, $log, $routeParams, ReportsService, FieldsService) ->
+    $scope.dontSaveReport = {value: false}
+
     ReportsService.reportsDescriptions().then (reportsDescriptions) ->
       $scope.reportsDescriptions = reportsDescriptions
 
@@ -56,6 +58,10 @@ angular.module('ndApp')
 
           firstSaveCurrentReport = true
           saveCurrentReport = (newValue, oldValue) ->
+            if $scope.dontSaveReport.value
+              $scope.dontSaveReport.value = false
+              return
+
             if $scope.currentReport
               unless firstSaveCurrentReport
                 if newValue.version == oldValue.version

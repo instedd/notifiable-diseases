@@ -16,7 +16,13 @@ angular.module('ndApp')
         filter = $scope.currentReport.createFilter name
 
       # Without this timeout the collapse panel breaks (see #7134)
-      setTimeout (-> $scope.toggleFilter(filter)), 0
+      # Now, because of this, we don't want an extra update because the filter changes,
+      # so we set dontSaveReport.value to true to skip the next save.
+      # Ugly, but I can't find another way to do it.
+      setTimeout (->
+        $scope.dontSaveReport.value = true
+        $scope.toggleFilter(filter)
+      ), 0
 
       $scope.toggleAddNewFilter()
 

@@ -78,11 +78,15 @@ angular.module('ndApp')
         id = id.toString()
         findLocationIn(service.find(name).valid_values.locations, id).name
 
-      datePeriods: ->
-        date = service.find("date")
-        resolution = date?.valid_values?.resolution
+      dateResolution: ->
+        resolution = service.find("date")?.valid_values?.resolution
+        resolution ?= "day"
+        resolution
 
-        has_day   = !resolution || resolution == "day"
+      datePeriods: ->
+        resolution = service.dateResolution()
+
+        has_day   =                resolution == "day"
         has_week  = has_day     || resolution == "week"
         has_month = has_week    || resolution == "month"
         has_year  = has_month   || resolution == "year"

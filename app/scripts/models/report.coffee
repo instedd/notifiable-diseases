@@ -82,7 +82,21 @@ angular.module('ndApp')
           str += " "
 
         if dateFilter
-          str += " occurred between #{dateFilter.since} and #{dateFilter.until}"
+          str += " occurred between "
+
+          resolution = FieldsService.dateResolution()
+          sinceDate = moment(dateFilter.since)
+          untilDate = moment(dateFilter.until)
+
+          switch resolution
+            when "day"
+              str += "#{dateFilter.since} and #{dateFilter.until}"
+            when "week"
+              str += "#{sinceDate.format('YYYY-[W]WW')} and #{untilDate.format('YYYY-[W]WW')}"
+            when "month"
+              str += "#{sinceDate.format('YYYY-MM')} and #{untilDate.format('YYYY-MM')}"
+            when "year"
+              str += "#{sinceDate.year()} and #{untilDate.year()}"
 
         str
 
