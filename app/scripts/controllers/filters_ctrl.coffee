@@ -15,7 +15,9 @@ angular.module('ndApp')
       else
         filter = $scope.currentReport.createFilter name
 
-      $scope.toggleFilter(filter)
+      # Without this timeout the collapse panel breaks (see #7134)
+      setTimeout (-> $scope.toggleFilter(filter)), 0
+
       $scope.toggleAddNewFilter()
 
     $scope.removeFilterByIndex = (index) ->
