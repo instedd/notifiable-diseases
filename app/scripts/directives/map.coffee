@@ -16,7 +16,7 @@ angular.module('ndApp')
         # --- draw sample data
 
         # configured in chart settings
-        admin_level = 2
+        admin_level = 0
 
         # retrieved via API
         results = sample_data[admin_level]
@@ -54,8 +54,13 @@ draw_results = (admin_level, results) =>
 
 build_polygons = (full_topojson, results) ->
   result_count_by_id = _.object(_.map(results.events, (e) -> [e.location_id, e.count]))
+  object = _.values(full_topojson.objects)[0]
 
-  geometries = _.values(full_topojson.objects)[0].geometries
+  if object["type"] == "GeometryCollection"
+    geometries = object.geometries
+  else
+    geometries = [object]
+
   filtered_geometries = _.reduce(geometries,
                                   (r,o) ->
                                     count_for_location = result_count_by_id[o.properties.GEO_ID]
@@ -78,9 +83,25 @@ build_polygons = (full_topojson, results) ->
 
   omnivore.topojson.parse(filtered_topojson)
 
+restrict_bounds = (bounds) =>
+  south_west_lat = Math.max(bounds.getSouthWest().lat, map.getBounds().getSouthWest().lat)
+  south_west_lng = Math.max(bounds.getSouthWest().lng, map.getBounds().getSouthWest().lng)
+
+  north_east_lat = Math.min(bounds.getNorthEast().lat, map.getBounds().getNorthEast().lat)
+  north_east_lng = Math.min(bounds.getNorthEast().lng, map.getBounds().getNorthEast().lng)
+
+  south_west = L.latLng(south_west_lat, south_west_lng)
+  north_east = L.latLng(north_east_lat, north_east_lng)
+
+  L.latLngBounds(south_west, north_east)
+
 on_each_feature = (feature, layer) =>
-  layer_center = layer.getBounds().getCenter()
-  
+
+  # restrict area to the bounds of the map.
+  # this is to prevent areas outside the map bounds to move
+  # the calculated center of the polygon.
+  layer_center = restrict_bounds(layer.getBounds()).getCenter()
+
   popup_content = "
   <b>#{feature.properties.NAME}</b>
   <br>
@@ -114,6 +135,11 @@ draw_polygons = (polygons) =>
 # ------------------------------------
 
 sample_data = {
+  0:
+    events: [
+      { location_id: "0000000US", count: 203 },
+    ],
+    total_count: 203,
   1:
     events: [
       { location_id: "0400000US04", count: 73 },
