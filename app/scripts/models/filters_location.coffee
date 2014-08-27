@@ -11,7 +11,10 @@ angular.module('ndApp')
         @location_id == other.location_id
 
       empty: ->
-        @location_id.toString().length == 0
+        if @location_id
+          @location_id.toString().length == 0
+        else
+          true
 
       selectedDescription: ->
         if @empty()

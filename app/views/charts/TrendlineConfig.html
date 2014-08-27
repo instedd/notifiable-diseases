@@ -1,4 +1,4 @@
-<div class="row">
+<div class="row first-in-trendline">
   <div class="col-md-2">
     Display:
   </div>
@@ -22,10 +22,7 @@
   </div>
   <div class="col-md-10">
     <div class="btn-group">
-      <button type="button" class="btn btn-default" ng-class="{active: chart.grouping == 'day'}" ng-click="chart.grouping = 'day'">Day</button>
-      <button type="button" class="btn btn-default" ng-class="{active: chart.grouping == 'week'}" ng-click="chart.grouping = 'week'">Week</button>
-      <button type="button" class="btn btn-default" ng-class="{active: chart.grouping == 'month'}" ng-click="chart.grouping = 'month'">Month</button>
-      <button type="button" class="btn btn-default" ng-class="{active: chart.grouping == 'year'}" ng-click="chart.grouping = 'year'">Year</button>
+      <button ng-repeat="period in datePeriods" type="button" class="btn btn-default" ng-class="{active: chart.grouping == period.value}" ng-click="chart.grouping = period.value">{{period.label}}</button>
     </div>
   </div>
 </div>

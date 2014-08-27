@@ -78,10 +78,10 @@ compute = (series) =>
   for col in series.cols
     cols.push id: col, label: col, type: "number"
 
-  series_rows = fillGaps(series.rows, series.interval, series.cols.length - 1)
+  seriesRows = fillGaps(series.rows, series.interval, series.cols.length - 1)
 
   rows = []
-  for row in series_rows
+  for row in seriesRows
     c = [v: row[0]]
 
     i = 0
@@ -146,6 +146,7 @@ fillGaps = (rows, interval, cols_num) ->
 
     i += 1
 
+  new_rows.push rows[rows.length - 1]
   new_rows
 
 nextDate = (value, interval) ->

@@ -25,6 +25,11 @@ angular.module('ndApp')
         Cdx.fields(context).success (data) ->
           Fields = data
 
+          # Keep only positive results
+          resultField = _.find Fields, (field) -> field.name == "result"
+          if resultField
+            resultField.valid_values.options = _.select resultField.valid_values.options, (option) -> option.kind == "positive"
+
           service.find("age_group")?.instructions = "Select the age groups of the events you want to filter"
           service.find("date")?.instructions = "Select the date range of the events you want to filter"
           service.find("ethnicity")?.instructions = "Select the ethnicities of the events you want to filter"
@@ -72,3 +77,23 @@ angular.module('ndApp')
       locationLabelFor: (name, id) ->
         id = id.toString()
         findLocationIn(service.find(name).valid_values.locations, id).name
+
+      dateResolution: ->
+        resolution = service.find("date")?.valid_values?.resolution
+        resolution ?= "day"
+        resolution
+
+      datePeriods: ->
+        resolution = service.dateResolution()
+
+        has_day   =                resolution == "day"
+        has_week  = has_day     || resolution == "week"
+        has_month = has_week    || resolution == "month"
+        has_year  = has_month   || resolution == "year"
+
+        periods = []
+        periods.push value: "day",   label: "Day"   if has_day
+        periods.push value: "week",  label: "Week"  if has_week
+        periods.push value: "month", label: "Month" if has_month
+        periods.push value: "year",  label: "Year"  if has_year
+        periods
