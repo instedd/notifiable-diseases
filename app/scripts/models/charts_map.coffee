@@ -10,22 +10,19 @@ angular.module('ndApp')
       isConfigurable: ->
         false
 
-      # ?
       applyToQuery: (query, filters) =>
         drawn_level = @.groupingLevel(filters)
         query.group_by = [ {"admin_level": drawn_level} ]
 
-      # ?
       getSeries: (report, data) ->
         data.events
         
-      # ?
       getCSV: (series) ->
-        # rows = []
-        # rows.push ["Age", "Male", "Female"]
-        # for serie in series
-        #   rows.push [serie.age, serie.male, serie.female]
-        # rows
+        rows = []
+        rows.push ["Location", "Results"]
+        for serie in series
+          rows.push [serie.location, serie.count]
+        rows
 
       groupingLevel: (filters) ->
         location_filter = _.find(filters, (f) -> f.name == "location")
