@@ -53,6 +53,8 @@ angular.module('ndApp')
         $scope.offset = 0
         $scope.computedInfo = compute $scope.series
         $scope.viz.options.colors = $scope.computedInfo.colors
+        $scope.viz.options.isStacked = $scope.chart.isStacked()
+        $scope.viz.type = $scope.chart.vizType()
         $scope.viz.data.cols = $scope.computedInfo.cols
         render()
 
