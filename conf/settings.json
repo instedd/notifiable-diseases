@@ -3,5 +3,10 @@
   "api": "/cdx/v1",
   "store": "/store",
   "useLocalStorage": false,
+  "polygonUrls": {
+    "0": "data/us_outline.topo.json",
+    "1": "data/us_states.topo.json",
+    "2": "data/us_counties.topo.json"
+  },
   "parentURL": "http://localhost:3000/dashboard/nndd"
 }

@@ -1,5 +1,5 @@
 angular.module('ndApp')
-  .directive 'ndMap', () ->
+  .directive 'ndMap', (PolygonService) ->
     {
       restrict: 'E'
       scope:
@@ -12,16 +12,11 @@ angular.module('ndApp')
         @map = create_map(element[0].children[0])
         @markers = L.layerGroup([]).addTo @map
 
-        @polygons_by_level = {
-          0: NNDD.us_outline_topo
-          1: NNDD.us_states_topo
-          2: NNDD.us_counties_topo
-        }
-
         scope.$watchCollection('series', () ->
           if scope.series
             admin_level = scope.chart.groupingLevel(scope.filters)
-            draw_results(admin_level, scope.series)
+            PolygonService.fetch_polygon(admin_level).then (polygons) ->
+              draw_results(polygons, scope.series)
         )
     }
 
@@ -49,13 +44,12 @@ create_map = (element) =>
 
   map
 
-draw_results = (admin_level, results) =>
+draw_results = (polygons, results) =>
   clear_map()
   if results.length > 0
-    polygons = build_polygons(@polygons_by_level[admin_level], results)
+    polygons = build_polygons(polygons, results)
     draw_polygons(polygons)
   else
-    # debugger
     @map.fitBounds @map.options.maxBounds
 
 build_polygons = (full_topojson, results) ->
