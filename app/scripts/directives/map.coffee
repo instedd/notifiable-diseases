@@ -25,11 +25,8 @@ create_map = (element) =>
     attributionControl: false,
     zoomControl: false,
     minZoom:3,
-    touchZoom: false,
-    doubleClickZoom: false,
-    scrollWheelZoom: false
   })
-         
+     
   map.setView([35.981250, -96.148398], 3)
   map.setMaxBounds map.getBounds()
 
