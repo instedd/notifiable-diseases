@@ -5,7 +5,8 @@ angular.module('ndApp')
         1
 
       applyTo: (query) ->
-        1
+        if @location_id
+          query["location"] = @location_id
 
       equals: (other) ->
         @location_id == other.location_id
