@@ -5,15 +5,15 @@ angular.module('ndApp')
         1
 
       applyTo: (query) ->
-        if @location_id
-          query["location"] = @location_id
+        if @location
+          query["location"] = @location.id
 
       equals: (other) ->
-        @location_id == other.location_id
+        _.isEqual(@location, other.location)
 
       empty: ->
-        if @location_id
-          @location_id.toString().length == 0
+        if @location
+          @location.id.toString().length == 0
         else
           true
 
@@ -21,12 +21,15 @@ angular.module('ndApp')
         if @empty()
           "All"
         else
-          FieldsService.locationLabelFor(@name, @location_id)
+          FieldsService.locationLabelFor(@name, @location.id)
+
+      adminLevel: ->
+        @location && @location.level
 
       shortDescription: ->
         @selectedDescription()
 
       @deserialize: (data) ->
         filter = new LocationFilter(data.name)
-        filter.location_id = data.location_id
+        filter.location = data.location
         filter

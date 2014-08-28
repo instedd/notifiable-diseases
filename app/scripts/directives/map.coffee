@@ -2,10 +2,15 @@ angular.module('ndApp')
   .directive 'ndMap', () ->
     {
       restrict: 'E'
+      scope:
+        series: '='
+        filters: '='
+        chart: '='
       template: '<div class="nd-map"></div>',
       link: (scope, element, attrs) ->
         
         @map = create_map(element[0].children[0])
+        @markers = L.layerGroup([]).addTo @map
 
         @polygons_by_level = {
           0: NNDD.us_outline_topo
@@ -13,15 +18,11 @@ angular.module('ndApp')
           2: NNDD.us_counties_topo
         }
 
-        # --- draw sample data
-
-        # configured in chart settings
-        admin_level = 0
-
-        # retrieved via API
-        results = sample_data[admin_level]
-        
-        draw_results(admin_level, results)
+        scope.$watchCollection('series', () ->
+          if scope.series
+            admin_level = scope.chart.groupingLevel(scope.filters)
+            draw_results(admin_level, scope.series)
+        )
     }
 
 create_map = (element) =>
@@ -49,11 +50,16 @@ create_map = (element) =>
   map
 
 draw_results = (admin_level, results) =>
-  polygons = build_polygons(@polygons_by_level[admin_level], results)
-  draw_polygons(polygons)
+  clear_map()
+  if results.length > 0
+    polygons = build_polygons(@polygons_by_level[admin_level], results)
+    draw_polygons(polygons)
+  else
+    # debugger
+    @map.fitBounds @map.options.maxBounds
 
 build_polygons = (full_topojson, results) ->
-  result_count_by_id = _.object(_.map(results.events, (e) -> [e.location_id, e.count]))
+  result_count_by_id = _.object(_.map(results, (e) -> [e.location, e.count]))
   object = _.values(full_topojson.objects)[0]
 
   if object["type"] == "GeometryCollection"
@@ -83,24 +89,9 @@ build_polygons = (full_topojson, results) ->
 
   omnivore.topojson.parse(filtered_topojson)
 
-restrict_bounds = (bounds) =>
-  south_west_lat = Math.max(bounds.getSouthWest().lat, map.getBounds().getSouthWest().lat)
-  south_west_lng = Math.max(bounds.getSouthWest().lng, map.getBounds().getSouthWest().lng)
-
-  north_east_lat = Math.min(bounds.getNorthEast().lat, map.getBounds().getNorthEast().lat)
-  north_east_lng = Math.min(bounds.getNorthEast().lng, map.getBounds().getNorthEast().lng)
-
-  south_west = L.latLng(south_west_lat, south_west_lng)
-  north_east = L.latLng(north_east_lat, north_east_lng)
-
-  L.latLngBounds(south_west, north_east)
-
 on_each_feature = (feature, layer) =>
 
-  # restrict area to the bounds of the map.
-  # this is to prevent areas outside the map bounds to move
-  # the calculated center of the polygon.
-  layer_center = restrict_bounds(layer.getBounds()).getCenter()
+  layer_center = layer.getBounds().getCenter()
 
   popup_content = "
   <b>#{feature.properties.NAME}</b>
@@ -113,12 +104,14 @@ on_each_feature = (feature, layer) =>
            .setContent(popup_content)
 
   L.marker(layer_center)
-   .addTo @map
+   .addTo @markers
    .bindPopup popup
 
-draw_polygons = (polygons) =>
+clear_map = () =>
   @map.removeLayer(@polygonLayer) if @polygonLayer
+  @markers.clearLayers()
 
+draw_polygons = (polygons) =>
   layout_options =
     style:
        weight: 1,
@@ -129,28 +122,3 @@ draw_polygons = (polygons) =>
   
   @map.fitBounds @polygonLayer.getBounds()
   @polygonLayer.addTo @map
-
-
-
-# ------------------------------------
-
-sample_data = {
-  0:
-    events: [
-      { location_id: "0000000US", count: 203 },
-    ],
-    total_count: 203,
-  1:
-    events: [
-      { location_id: "0400000US04", count: 73 },
-      { location_id: "0400000US06", count: 66 },
-    ],
-    total_count: 203
-  2:
-    events: [
-      { location_id: "0500000US06071", count: 73 },
-      { location_id: "0500000US04005", count: 66 },
-      { location_id: "0500000US32023", count: 64 }
-    ],
-    total_count: 203
-}

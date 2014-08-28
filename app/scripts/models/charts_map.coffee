@@ -11,13 +11,13 @@ angular.module('ndApp')
         false
 
       # ?
-      applyToQuery: (query) ->
-        # console.log("applyToQuery: " + JSON.stringify(query))
-        
+      applyToQuery: (query, filters) =>
+        drawn_level = @.groupingLevel(filters)
+        query.group_by = [ {"admin_level": drawn_level} ]
+
       # ?
       getSeries: (report, data) ->
-        # console.log("getSeries.report: " + JSON.stringify(report))
-        # console.log("getSeries.data: " + JSON.stringify(data))
+        data.events
         
       # ?
       getCSV: (series) ->
@@ -26,3 +26,11 @@ angular.module('ndApp')
         # for serie in series
         #   rows.push [serie.age, serie.male, serie.female]
         # rows
+
+      groupingLevel: (filters) ->
+        location_filter = _.find(filters, (f) -> f.name == "location")
+        filtered_level = location_filter && location_filter.adminLevel()
+        if (filtered_level)
+          drawn_level = Math.min(2, filtered_level + 1)
+        else
+          drawn_level = 1

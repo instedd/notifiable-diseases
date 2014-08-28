@@ -24,7 +24,7 @@ angular.module('ndApp')
 
       query = $scope.currentReport.newQuery()
       $scope.report.applyFiltersTo query
-      $scope.chart.applyToQuery(query)
+      $scope.chart.applyToQuery(query, $scope.report.filters)
       $scope.currentReport.closeQuery(query)
 
       if query.empty
