@@ -13,6 +13,13 @@
     <select ng-disabled="chart.display != 'split'" ng-model="chart.splitField">
       <option ng-repeat="enumField in enumFields" value="{{enumField.name}}">{{enumField.label}}</option>
     </select>
+    <br/>
+    <label>
+      <input type="radio" name="display" ng-model="chart.display" value="compare"> Compare to
+    </label>
+    <select ng-disabled="chart.display != 'compare'" ng-model="chart.compareTo">
+      <option value="previous_year">Previous year</option>
+    </select>
   </div>
 </div>
 <br/>
