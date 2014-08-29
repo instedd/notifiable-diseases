@@ -19,20 +19,33 @@ angular.module('ndApp')
       date = $filter("date")(new Date(), "yyyyMMddHMMss")
       "#{$scope.currentReport.name}_#{$scope.chart.kind}_#{date}".replace(/[^a-zA-Z0-9_]/g, "_")
 
+    queryAll = (queries, index, datas, callback) ->
+      if index < queries.length
+        query = queries[index]
+        Cdx.events(query).success (data) ->
+          datas.push data
+          queryAll(queries, index + 1, datas, callback)
+      else
+        callback(datas)
+
     render = ->
       return if $scope.editingChart
 
       query = $scope.report.newQuery()
       $scope.report.applyFiltersTo query
-      $scope.chart.applyToQuery(query, $scope.report.filters)
-      $scope.report.closeQuery(query)
+      queries = $scope.chart.applyToQuery(query, $scope.report.filters)
 
-      if query.empty
-        $scope.series = $scope.chart.getSeries($scope.report, {events: [], total_count: 0})
+      for query in queries
+        $scope.report.closeQuery(query)
+
+      if _.all(queries, (query) -> query.empty)
+        datas = _.map queries, (query) -> {events: [], total_count: 0}
+
+        $scope.series = $scope.chart.getSeries($scope.report, datas)
       else
         $scope.loadingChart = true
-        Cdx.events(query).success (data) ->
-          $scope.series = $scope.chart.getSeries($scope.report, data)
+        queryAll queries, 0, [], (datas) ->
+          $scope.series = $scope.chart.getSeries($scope.report, datas)
           $scope.loadingChart = false
 
     $scope.$watch 'report.filters', render, true

@@ -13,10 +13,11 @@ angular.module('ndApp')
       applyToQuery: (query, filters) =>
         drawn_level = @.groupingLevel(filters)
         query.group_by = [ {"admin_level": drawn_level} ]
+        [query]
 
       getSeries: (report, data) ->
-        data.events
-        
+        data[0].events
+
       getCSV: (series) ->
         rows = []
         rows.push ["Location", "Results"]
@@ -27,7 +28,7 @@ angular.module('ndApp')
       groupingLevel: (filters) ->
         max_available_polygon_level = _.max(_.keys(settings.polygons))
         location_filter = _.find(filters, (f) -> f.name == "location")
-        
+
         filtered_level = location_filter && location_filter.adminLevel()
         if (filtered_level)
           drawn_level = Math.min(max_available_polygon_level, filtered_level + 1)

@@ -13,9 +13,10 @@ angular.module('ndApp')
       applyToQuery: (query) ->
         query.group_by = ['age_group', 'gender']
         query.gender = ['male', 'female']
+        [query]
 
       getSeries: (report, data) ->
-        data = data.events
+        data = data[0].events
 
         @sortData data
 

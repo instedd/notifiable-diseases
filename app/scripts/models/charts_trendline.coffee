@@ -61,9 +61,10 @@ angular.module('ndApp')
                 throw "Unknown compare to value: #{@compareTo}"
           else
             throw "Uknknown display: #{@display}"
+        [query]
 
       getSeries: (report, data) ->
-        data = data.events
+        data = data[0].events
         series = switch @display
                  when 'simple'
                    @getSimpleSeries(data)
