@@ -8,11 +8,11 @@
   </form>
 </div>
 
-<div ng-show="data.length > 0">
+<div ng-show="data">
   <h2>Response</h2>
 
   <ul>
-    <li ng-repeat="record in data">
+    <li ng-repeat="record in data.events">
       <span>{{ record }}</span>
     </li>
   </ul>
