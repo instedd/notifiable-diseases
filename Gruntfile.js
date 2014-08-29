@@ -94,18 +94,7 @@ module.exports = function (grunt) {
         hostname: 'localhost',
         livereload: 35729
       },
-      proxies: [
-        {
-          context: '<%= yeoman.settings.api %>',
-          host: 'localhost',
-          port: 3000
-        },
-        {
-          context: '<%= yeoman.settings.store %>',
-          host: 'localhost',
-          port: 3000
-        },
-      ],
+      proxies: appConfig.settings.proxies,
       livereload: {
         options: {
           open: true,
