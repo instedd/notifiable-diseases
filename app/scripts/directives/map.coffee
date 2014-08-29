@@ -26,7 +26,7 @@ create_map = (element) =>
     zoomControl: false,
     minZoom:3,
   })
-     
+
   map.setView([35.981250, -96.148398], 3)
   map.setMaxBounds map.getBounds()
 
@@ -94,9 +94,14 @@ on_each_feature = (feature, layer) =>
            .setLatLng(layer_center)
            .setContent(popup_content)
 
-  L.marker(layer_center)
-   .addTo @markers
-   .bindPopup popup
+  icon = L.icon {
+    iconUrl: 'images/location.png'
+    iconSize: [25,25]
+  }
+  marker = L.marker(layer_center, { icon: icon })
+
+  marker.addTo @markers
+        .bindPopup popup
 
 clear_map = () =>
   @map.removeLayer(@polygonLayer) if @polygonLayer
