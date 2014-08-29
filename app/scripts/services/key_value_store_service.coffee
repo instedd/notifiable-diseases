@@ -1,10 +1,10 @@
 angular.module('ndApp')
-  .service 'KeyValueStore', ($http) ->
+  .service 'KeyValueStore', ($http, settings) ->
     keyUri = (key, version = null) ->
       if version
-        "/store/#{key}?version=#{version}"
+        "#{settings.store}/#{key}?version=#{version}"
       else
-        "/store/#{key}"
+        "#{settings.store}/#{key}"
 
     get: (key) ->
       $http.get keyUri(key)
