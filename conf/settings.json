@@ -2,29 +2,5 @@
   "brand": "Notifiable Diseases",
   "api": "/cdx/v1",
   "store": "/store",
-  "useLocalStorage": false,
-  "polygons": {
-    "0": "/polygons/us_outline.topo.json",
-    "1": "/polygons/us_states.topo.json",
-    "2": "/polygons/us_counties.topo.json"
-  },
-  "parentURL": "http://localhost:3000/dashboard/nndd",
-
-  "proxies": [
-    {
-      "context": "/cdx/v1",
-      "host": "localhost",
-      "port": 3000
-    },
-    {
-      "context": "/store",
-      "host": "localhost",
-      "port": 3000
-    },
-    {
-      "context": "polygons",
-      "host": "localhost",
-      "port": 3000
-    }
-  ]
+  "useLocalStorage": false
 }
