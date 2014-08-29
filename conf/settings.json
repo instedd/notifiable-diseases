@@ -3,7 +3,7 @@
   "api": "/cdx/v1",
   "store": "/store",
   "useLocalStorage": false,
-  "polygonUrls": {
+  "polygons": {
     "0": "/polygons/us_outline.topo.json",
     "1": "/polygons/us_states.topo.json",
     "2": "/polygons/us_counties.topo.json"

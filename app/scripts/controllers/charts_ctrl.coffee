@@ -1,11 +1,14 @@
 'use strict'
 
 angular.module('ndApp')
-  .controller 'ChartsCtrl', ($scope, ChartsService) ->
+  .controller 'ChartsCtrl', ($scope, ChartsService, settings) ->
     $scope.addNewChartIsCollapsed = true
 
     $scope.toggleAddNewChart = ->
       $scope.addNewChartIsCollapsed = !$scope.addNewChartIsCollapsed
+
+    $scope.showChart = (chart_name) ->
+      chart_name != 'Map' || settings.polygons
 
     $scope.addChart = (kind) ->
       chart = ChartsService.create kind

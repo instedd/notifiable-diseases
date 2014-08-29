@@ -1,6 +1,6 @@
 angular.module('ndApp').service 'PolygonService', ($q, $http, settings) ->
 
-  polygon_urls = settings.polygonUrls
+  polygon_urls = settings.polygons
 
   cache = {}
 

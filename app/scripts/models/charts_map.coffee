@@ -1,5 +1,5 @@
 angular.module('ndApp')
-  .factory 'Map', (Cdx, FieldsService) ->
+  .factory 'Map', (Cdx, FieldsService, settings) ->
     class Map
       constructor: ->
         @kind = 'Map'
@@ -25,9 +25,11 @@ angular.module('ndApp')
         rows
 
       groupingLevel: (filters) ->
+        max_available_polygon_level = _.max(_.keys(settings.polygons))
         location_filter = _.find(filters, (f) -> f.name == "location")
+        
         filtered_level = location_filter && location_filter.adminLevel()
         if (filtered_level)
-          drawn_level = Math.min(2, filtered_level + 1)
+          drawn_level = Math.min(max_available_polygon_level, filtered_level + 1)
         else
           drawn_level = 1
