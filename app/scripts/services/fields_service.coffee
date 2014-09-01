@@ -78,6 +78,23 @@ angular.module('ndApp')
         id = id.toString()
         findLocationIn(service.find(name).valid_values.locations, id).name
 
+      getParentLocations: (name, id) ->
+        id = id.toString()
+
+        locations = service.find(name).valid_values.locations
+
+        parentLocations = []
+        while true
+          parentLocation = findLocationIn(locations, id)
+          if parentLocation
+            parentLocations.push parentLocation
+            id = parentLocation.parent_id
+          else
+            break
+        parentLocations.shift()
+        # parentLocations.reverse()
+        parentLocations
+
       dateResolution: ->
         resolution = service.find("date")?.valid_values?.resolution
         resolution ?= "day"

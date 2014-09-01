@@ -1,4 +1,4 @@
-<div class="row first-in-trendline">
+<div class="row first-in-trendline" ng-controller="TrendlineConfigCtrl">
   <div class="col-md-2">
     Display:
   </div>
@@ -13,11 +13,20 @@
     <select ng-disabled="chart.display != 'split'" ng-model="chart.splitField">
       <option ng-repeat="enumField in enumFields" value="{{enumField.name}}">{{enumField.label}}</option>
     </select>
+    <span ng-show="hasParentLocations()">
+      <br/>
+      <label>
+        <input type="radio" name="display" ng-model="chart.display" value="compareToLocation"> Compare to
+      </label>
+      <select ng-disabled="chart.display != 'compareToLocation'">
+        <option ng-repeat="location in parentLocations()" value="{{location.level}}" ng-selected="location.level == chart.compareToLocation">{{location.name}}</option>
+      </select>
+    </span>
     <br/>
     <label>
-      <input type="radio" name="display" ng-model="chart.display" value="compare"> Compare to
+      <input type="radio" name="display" ng-model="chart.display" value="compareToDate"> Compare to
     </label>
-    <select ng-disabled="chart.display != 'compare'" ng-model="chart.compareTo">
+    <select ng-disabled="chart.display != 'compareToDate'" ng-model="chart.compareToDate">
       <option value="previous_year">Previous year</option>
     </select>
   </div>

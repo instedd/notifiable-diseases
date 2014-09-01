@@ -5,7 +5,7 @@ angular.module('ndApp')
         @kind = 'Trendline'
         @display = 'simple'
         @grouping = 'year'
-        @compareTo = 'previous_year'
+        @compareToDate = 'previous_year'
 
       initializeNew: ->
         @splitField = FieldsService.allEnum()[0].name
@@ -21,25 +21,28 @@ angular.module('ndApp')
         true
 
       vizType: ->
-        if @display == 'compare'
+        if @display == 'compareToDate'
           'LineChart'
         else
           'AreaChart'
 
       isStacked: ->
-        @display != 'compare'
+        @display != 'compareToDate'
 
       description: ->
         desc = "Events grouped by #{@grouping}"
         switch @display
           when 'split'
             desc += ", split by #{FieldsService.labelFor(@splitField).toLowerCase()}"
-          when 'compare'
-            switch @compareTo
+          when 'compareToDate'
+            switch @compareToDate
               when 'previous_year'
                 desc += ", compared to previous year"
               else
-                throw "Unknown compare to value: #{@compareTo}"
+                throw "Unknown compare to value: #{@compareToDate}"
+          when 'compareToLocation'
+            # TODO
+            desc += "TODO: compareToLocation"
         desc
 
       applyToQuery: (query, filters) ->
@@ -49,16 +52,18 @@ angular.module('ndApp')
             query.group_by = date_grouping
           when 'split'
             query.group_by = [date_grouping, @splitField]
-          when 'compare'
+          when 'compareToDate'
             query.group_by = date_grouping
-            switch @compareTo
+            switch @compareToDate
               when 'previous_year'
                 dateFilter = @getDateFilter filters
                 if dateFilter
                   since = moment(dateFilter.since).add(-1, 'years')
                   query.since = since.format("YYYY-MM-DD")
               else
-                throw "Unknown compare to value: #{@compareTo}"
+                throw "Unknown compare to value: #{@compareToDate}"
+          when 'compareToLocation'
+            # TODO
           else
             throw "Uknknown display: #{@display}"
         [query]
@@ -70,8 +75,10 @@ angular.module('ndApp')
                    @getSimpleSeries(data)
                  when 'split'
                    @getSplitSeries(report, data)
-                 when 'compare'
-                   @getCompareSeries(report, data)
+                 when 'compareToDate'
+                   @getCompareToDateSeries(report, data)
+                 when 'compareToLocation'
+                   @getCompareToLocationSeries(report, data)
                  else
                    throw "Uknknown display: #{@display}"
         series.interval = @grouping
@@ -152,7 +159,7 @@ angular.module('ndApp')
 
         cols: newCols, rows: newRows, indices: foundIndices
 
-      getCompareSeries: (report, data) ->
+      getCompareToDateSeries: (report, data) ->
         @sortData data
 
         # First, index data by started_at
@@ -197,6 +204,12 @@ angular.module('ndApp')
           ["Events", "Previous year events"]
         rows:
           rows
+
+      getCompareToLocationSeries: (report, data) ->
+        cols:
+          ["Events", "Other location events"]
+        rows:
+          []
 
       getCSV: (series) ->
         rows = []
