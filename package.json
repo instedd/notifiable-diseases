@@ -1,7 +1,7 @@
 {
   "name": "notifiablediseases",
   "version": "0.0.1",
-  "repository": "git@bitbucket.org:instedd/notifiable-diseases.git",
+  "repository": "git@github.com:instedd/notifiable-diseases.git",
   "dependencies": {},
   "devDependencies": {
     "grunt": "^0.4.1",
