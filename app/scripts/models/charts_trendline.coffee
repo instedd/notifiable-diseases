@@ -185,6 +185,9 @@ angular.module('ndApp')
         since = @getDateFilter(report.filters)?.since
         since = moment(since) if since
 
+        if data.length > 0
+          max = data[data.length - 1].started_at
+
         # Next, for each event we create two results, one for the
         # previous year and one for the current one
         rows = []
@@ -194,15 +197,19 @@ angular.module('ndApp')
             when "day"
               currentDate = moment(date)
               previousDate = moment(currentDate).add(-1, 'years').format("YYYY-MM-DD")
+              nextDate = moment(currentDate).add(1, 'years').format("YYYY-MM-DD")
             when "week"
               currentDate = moment(date)
               previousDate = moment(currentDate).add(-1, 'years').format("gggg-[W]WW")
+              nextDate = moment(currentDate).add(1, 'years').format("gggg-[W]WW")
             when "month"
               currentDate = moment("#{date}-01")
               previousDate = moment(currentDate).add(-1, 'years').format("YYYY-MM")
+              nextDate = moment(currentDate).add(1, 'years').format("YYYY-MM")
             when "year"
               currentDate = moment("#{date}-01-01")
               previousDate = (parseInt(date) - 1).toString()
+              nextDate = (parseInt(date) + 1).toString()
 
           # If we are still behind the "since" date, skip this event
           if since && currentDate.diff(since) < 0
@@ -212,6 +219,22 @@ angular.module('ndApp')
           previousYearCount ?= 0
 
           rows.push [date, event.count, previousYearCount]
+
+          # We also need to check the next year: if there's no data
+          # we fill it with this year's value, but only if it's before
+          # the maximum date from the results.
+          if nextDate <= max
+            nextYearCount = indexedData[nextDate]
+            unless nextYearCount
+              rows.push [nextDate, 0, event.count]
+
+        rows.sort (x, y) ->
+          if x[0] < y[0]
+            -1
+          else if x[0] > y[0]
+            1
+          else
+            0
 
         cols:
           ["Events", "Previous year events"]
