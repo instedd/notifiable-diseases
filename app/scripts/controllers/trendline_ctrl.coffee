@@ -12,7 +12,7 @@ angular.module('ndApp')
         ]
         rows: []
       options:
-        title: $scope.chart.description()
+        title: $scope.chart.description($scope.currentReport)
         isStacked: true
         vAxis:
           title: "Event count"
@@ -59,8 +59,8 @@ angular.module('ndApp')
         render()
 
     $scope.$watchCollection('series', computeAndRender)
-    $scope.$watch 'chart.description()', ->
-      $scope.viz.options.title = $scope.chart.description()
+    $scope.$watch 'chart.description(currentReport)', ->
+      $scope.viz.options.title = $scope.chart.description($scope.currentReport)
 
 COLORS = ["#3266CC", "#DC3918", "#FD9927", "#149618", "#991499", "#1899C6", "#DD4477", "#66AA1E", "#B82E2E", "#316395", "#994399", "#22AA99", "#ABAA22", "#6633CC"]
 

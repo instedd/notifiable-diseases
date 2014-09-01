@@ -18,7 +18,7 @@
       <label>
         <input type="radio" name="display" ng-model="chart.display" value="compareToLocation"> Compare to
       </label>
-      <select ng-disabled="chart.display != 'compareToLocation'">
+      <select ng-disabled="chart.display != 'compareToLocation'" ng-model="chart.compareToLocation">
         <option ng-repeat="location in parentLocations()" value="{{location.level}}" ng-selected="location.level == chart.compareToLocation">{{location.name}}</option>
       </select>
     </span>

@@ -15,21 +15,24 @@ angular.module('ndApp')
         chart.display = data.display
         chart.splitField = data.splitField
         chart.grouping = data.grouping
+        chart.compareToDate = data.compareToDate
+        chart.compareToLocation = data.compareToLocation
         chart
 
       isConfigurable: ->
         true
 
       vizType: ->
-        if @display == 'compareToDate'
-          'LineChart'
-        else
-          'AreaChart'
+        switch @display
+          when 'compareToDate', 'compareToLocation'
+            'LineChart'
+          else
+            'AreaChart'
 
       isStacked: ->
         @display != 'compareToDate'
 
-      description: ->
+      description: (report) ->
         desc = "Events grouped by #{@grouping}"
         switch @display
           when 'split'
@@ -41,8 +44,9 @@ angular.module('ndApp')
               else
                 throw "Unknown compare to value: #{@compareToDate}"
           when 'compareToLocation'
-            # TODO
-            desc += "TODO: compareToLocation"
+            location = @getCompareToLocation(report.filters)
+            if location
+              desc += ", compared to #{location.name}"
         desc
 
       applyToQuery: (query, filters) ->
@@ -63,22 +67,31 @@ angular.module('ndApp')
               else
                 throw "Unknown compare to value: #{@compareToDate}"
           when 'compareToLocation'
-            # TODO
+            query.group_by = date_grouping
+            firstQuery = query
+            secondQuery = JSON.parse(JSON.stringify(firstQuery))
+            targetLocation = @getCompareToLocation(filters)
+            if targetLocation
+              secondQuery.location = targetLocation.id
+              return [firstQuery, secondQuery]
           else
             throw "Uknknown display: #{@display}"
+
         [query]
 
       getSeries: (report, data) ->
-        data = data[0].events
         series = switch @display
                  when 'simple'
-                   @getSimpleSeries(data)
+                   @getSimpleSeries(data[0].events)
                  when 'split'
-                   @getSplitSeries(report, data)
+                   @getSplitSeries(report, data[0].events)
                  when 'compareToDate'
-                   @getCompareToDateSeries(report, data)
+                   @getCompareToDateSeries(report, data[0].events)
                  when 'compareToLocation'
-                   @getCompareToLocationSeries(report, data)
+                   if @getCompareToLocation(report.filters)
+                     @getCompareToLocationSeries(report, data[0].events, data[1].events)
+                   else
+                     @getSimpleSeries(data[0].events)
                  else
                    throw "Uknknown display: #{@display}"
         series.interval = @grouping
@@ -205,11 +218,67 @@ angular.module('ndApp')
         rows:
           rows
 
-      getCompareToLocationSeries: (report, data) ->
+      getCompareToLocationSeries: (report, thisLocationEvents, otherLocationEvents) ->
+        @sortData thisLocationEvents
+        @sortData otherLocationEvents
+
+        rows = []
+
+        # Traverse both lists at the same time, always advancing the one
+        # that has the lowest started_at value (similar to a merge sort).
+        thisIndex = 0
+        otherIndex = 0
+
+        while true
+          thisData = thisLocationEvents[thisIndex]
+          otherData = otherLocationEvents[otherIndex]
+
+          if !thisData && !otherData
+            break
+
+          if thisData && !otherData
+            rows.push [thisData.started_at, thisData.count, 0]
+            thisIndex += 1
+          else if otherData && !thisData
+            rows.push [otherData.started_at, 0, otherData.count]
+            otherIndex += 1
+          else
+            thisStartedAt = thisData.started_at
+            otherStartedAt = otherData.started_at
+
+            if thisStartedAt == otherStartedAt
+              rows.push [thisData.started_at, thisData.count, otherData.count]
+              thisIndex += 1
+              otherIndex += 1
+            else if thisStartedAt < otherStartedAt
+              rows.push [thisData.started_at, thisData.count, 0]
+              thisIndex += 1
+            else #  thisStartedAt > otherStartedAt
+              rows.push [otherData.started_at, 0, otherData.count]
+              otherIndex += 1
+
+        filterLocation = @getFilterLocation(report.filters)
+        targetLocation = @getCompareToLocation(report.filters)
+
         cols:
-          ["Events", "Other location events"]
+          ["#{filterLocation.name} events", "#{targetLocation.name} events"]
         rows:
-          []
+          rows
+
+      getFilterLocation: (filters) ->
+        locationFilter = _.find filters, (filter) -> filter.name == "location"
+        locationId = locationFilter.location.id
+        FieldsService.locationFor "location", locationId
+
+      getCompareToLocation: (filters) ->
+        locationFilter = _.find filters, (filter) -> filter.name == "location"
+        locationId = locationFilter?.location?.id
+        if locationId
+          parentLocations = FieldsService.getParentLocations "location", locationId
+          myLevel = parseInt(@compareToLocation)
+          _.find parentLocations, (loc) -> loc.level == myLevel
+        else
+          null
 
       getCSV: (series) ->
         rows = []

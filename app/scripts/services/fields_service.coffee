@@ -74,9 +74,12 @@ angular.module('ndApp')
         roots = service.find(name).valid_values.locations
         appendFlattenedLocations roots, []
 
-      locationLabelFor: (name, id) ->
+      locationFor: (name, id) ->
         id = id.toString()
-        findLocationIn(service.find(name).valid_values.locations, id).name
+        findLocationIn(service.find(name).valid_values.locations, id)
+
+      locationLabelFor: (name, id) ->
+        service.locationFor(name, id).name
 
       getParentLocations: (name, id) ->
         id = id.toString()
