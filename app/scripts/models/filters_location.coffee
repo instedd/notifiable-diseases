@@ -24,7 +24,8 @@ angular.module('ndApp')
         if @empty()
           "All"
         else
-          FieldsService.locationLabelFor(@name, @location.id)
+          location = FieldsService.locationFor(@name, @location.id)
+          FieldsService.getFullLocationPath(@name, location)
 
       adminLevel: ->
         @location && @location.level

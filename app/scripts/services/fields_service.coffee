@@ -36,6 +36,16 @@ angular.module('ndApp')
           service.find("gender")?.instructions = "Select the genders of the events you want to filter"
           service.find("result")?.instructions = "Select the results of the events you want to filter"
 
+          # For those fields that are of type location we build a map
+          # of locationId -> location for faster access.
+          for field in Fields
+            if field.type == "location"
+              field.byId = {}
+
+              flattenedLocations = service.flattenedLocations(field.name)
+              for location in flattenedLocations
+                field.byId[location.id] = location
+
           q.resolve()
         q.promise
 
@@ -76,7 +86,7 @@ angular.module('ndApp')
 
       locationFor: (name, id) ->
         id = id.toString()
-        findLocationIn(service.find(name).valid_values.locations, id)
+        service.find(name).byId[id]
 
       locationLabelFor: (name, id) ->
         service.locationFor(name, id).name
@@ -84,19 +94,24 @@ angular.module('ndApp')
       getParentLocations: (name, id) ->
         id = id.toString()
 
-        locations = service.find(name).valid_values.locations
-
         parentLocations = []
         while true
-          parentLocation = findLocationIn(locations, id)
+          parentLocation = service.locationFor(name, id)
           if parentLocation
             parentLocations.push parentLocation
             id = parentLocation.parent_id
+            break unless id
           else
             break
         parentLocations.shift()
         # parentLocations.reverse()
         parentLocations
+
+      getFullLocationPath: (name, location) ->
+        if location.parent_id && (parent = service.locationFor(name, location.parent_id))
+          "#{location.name}, #{service.getFullLocationPath(name, parent)}"
+        else
+          location.name
 
       dateResolution: ->
         resolution = service.find("date")?.valid_values?.resolution

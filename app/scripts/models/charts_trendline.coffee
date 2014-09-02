@@ -291,7 +291,7 @@ angular.module('ndApp')
       getFilterLocation: (filters) ->
         locationFilter = _.find filters, (filter) -> filter.name == "location"
         locationId = locationFilter.location.id
-        FieldsService.locationFor "location", locationId
+        FieldsService.locationFor locationFilter.name, locationId
 
       getCompareToLocation: (filters) ->
         locationFilter = _.find filters, (filter) -> filter.name == "location"
