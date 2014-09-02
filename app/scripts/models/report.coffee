@@ -43,7 +43,7 @@ angular.module('ndApp')
         # TODO: other filters is always empty for now, so it's not used
         otherFilters = []
 
-        for filter in @filters when !filter.empty()
+        for filter in @filters when !filter.allSelected()
           switch filter.name
             when "age_group" then ageFilter = filter
             when "date"      then dateFilter = filter
@@ -54,17 +54,21 @@ angular.module('ndApp')
             else                  otherFilters.push filter
 
         str = ""
+        first = true
 
         if ageFilter
-          str += ageFilter.shortDescription()
+          str += ageFilter.shortDescription(first)
+          first = false
 
         if genderFilter
-          str += ", " unless str.length == 0
-          str += genderFilter.shortDescription()
+          str += ", " unless first
+          str += genderFilter.shortDescription(first)
+          first = false
 
         if ethnicityFilter
-          str += ", " unless str.length == 0
-          str += ethnicityFilter.shortDescription()
+          str += ", " unless first
+          str += ethnicityFilter.shortDescription(first)
+          first = false
 
         if str.length == 0
           str += "Cases "

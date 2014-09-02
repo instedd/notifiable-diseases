@@ -17,6 +17,9 @@ angular.module('ndApp')
         else
           true
 
+      allSelected: ->
+        false
+
       selectedDescription: ->
         if @empty()
           "All"

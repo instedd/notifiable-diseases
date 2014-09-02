@@ -19,6 +19,9 @@ angular.module('ndApp')
       empty: ->
         @values.length == 0
 
+      allSelected: ->
+        @values.length == FieldsService.valuesFor(@name).length
+
       selectedDescription: ->
         if @values.length == 0
           "none"
@@ -29,9 +32,24 @@ angular.module('ndApp')
         else
           "#{@values.length} selected"
 
-      shortDescription: ->
-        labels = _.map(@values, (value) => "\"#{FieldsService.optionLabelFor(@name, value)}\"")
-        StringService.toSentence(labels, ", ", " or ")
+      shortDescription: (first) ->
+        if @values.length == 0
+          label = FieldsService.labelFor(@name).toLowerCase()
+          if first
+            "No #{label}"
+          else
+            "no #{label}"
+        else
+          labels = _.map(@values, (value) => "\"#{FieldsService.optionLabelFor(@name, value)}\"")
+          if labels.length == 3
+            if labels[2].length <= "1 other".length
+              "#{labels[0]}, #{labels[1]} or #{labels[2]}"
+            else
+              "#{labels[0]}, #{labels[1]} and 1 other"
+          else if labels.length > 3
+            "#{labels[0]}, #{labels[1]} and #{labels.length - 2} others"
+          else
+            StringService.toSentence(labels, ", ", " or ")
 
       @deserialize: (data) ->
         filter = new EnumFilter(data.name)

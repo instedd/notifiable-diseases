@@ -15,6 +15,9 @@ angular.module('ndApp')
       empty: ->
         false
 
+      allSelected: ->
+        false
+
       selectedDescription: ->
         "#{@since} to #{@until}"
 
