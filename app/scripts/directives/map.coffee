@@ -15,10 +15,21 @@ angular.module('ndApp')
         scope.$watchCollection('series', () ->
           if scope.series
             admin_level = scope.chart.groupingLevel(scope.filters)
-            PolygonService.fetch_polygon(admin_level).then (polygons) ->
-              draw_results(polygons, scope.series)
+            draw_results(PolygonService, admin_level, scope.series)
         )
     }
+
+polygon_style = {
+  weight: 1,
+  fillOpacity: 0.1
+}
+
+context_polygon_style = {
+  fillColor: '#E0DFEG',
+  stroke: false
+  fillOpacity: 0.1
+  clickable: false
+}
 
 create_map = (element) =>
   map = L.map(element, { 
@@ -41,35 +52,26 @@ create_map = (element) =>
 
   map
 
-draw_results = (polygons, results) =>
-  clear_map()
-  if results.length > 0
-    polygons = build_polygons(polygons, results)
-    draw_polygons(polygons)
-  else
-    @map.fitBounds @map.options.maxBounds
+draw_results = (polygon_service, admin_level, results) =>
+  polygon_service.fetch_polygon(admin_level).then (polygons) ->
+    clear_map()
+    if results.length > 0
+      polygons = result_polygons(polygons, results)
+      add_polygon_layer(polygons)
+      add_context_layer(polygon_service, polygons, admin_level)
+    else
+      @map.fitBounds @map.options.maxBounds
 
-build_polygons = (full_topojson, results) ->
-  result_count_by_id = _.object(_.map(results, (e) -> [e.location, e.count]))
-  object = _.values(full_topojson.objects)[0]
-
+topojson_geometries = (topojson) ->
+  object = _.values(topojson.objects)[0]
   if object["type"] == "GeometryCollection"
-    geometries = object.geometries
+    object.geometries
   else
-    geometries = [object]
+    [object]
 
-  filtered_geometries = _.reduce(geometries,
-                                  (r,o) ->
-                                    count_for_location = result_count_by_id[o.properties.GEO_ID]
-                                    if count_for_location
-                                      clone = $.extend(true, {}, o)
-                                      clone.properties.event_count = count_for_location
-                                      r.push clone
-                                    r
-                                  [])
-
-  # TODO: consider keeping only arcs needed by filtered geometries
-  filtered_topojson =
+# TODO: consider keeping only arcs needed by filtered geometries
+topojson_restrict = (full_topojson, filtered_geometries) ->
+  {
     type: "Topology",
     objects:
       locations:
@@ -77,11 +79,22 @@ build_polygons = (full_topojson, results) ->
         geometries: filtered_geometries
     arcs: full_topojson.arcs,
     transform: full_topojson.transform
+  }
 
-  omnivore.topojson.parse(filtered_topojson)
+result_polygons = (full_topojson, results) ->
+  result_count_by_id = _.object(_.map(results, (e) -> [e.location, e.count]))
+  geometries = topojson_geometries(full_topojson)
+  filtered_geometries = _.reduce(geometries, ((r,o) ->
+    count_for_location = result_count_by_id[o.properties.GEO_ID]
+    if count_for_location
+      clone = $.extend(true, {}, o)
+      clone.properties.event_count = count_for_location
+      r.push clone
+    r
+  ), [])
+  topojson_restrict(full_topojson, filtered_geometries)
 
 on_each_feature = (feature, layer) =>
-
   layer_center = layer.getBounds().getCenter()
 
   popup_content = "
@@ -104,17 +117,31 @@ on_each_feature = (feature, layer) =>
         .bindPopup popup
 
 clear_map = () =>
-  @map.removeLayer(@polygonLayer) if @polygonLayer
+  @map.removeLayer(@polygonLayer)  if @polygonLayer
+  @map.removeLayer(@contextLayer) if @contextLayer
   @markers.clearLayers()
 
-draw_polygons = (polygons) =>
-  layout_options =
-    style:
-       weight: 1,
-       fillOpacity: 0.1
+add_context_layer = (polygon_service, polygons, admin_level) ->
+  geometries =  polygons.objects.locations.geometries
+  if admin_level > 0 and geometries.length > 0
+    parent_id = geometries[0].properties["PARENT_GEO_ID"]
+    polygon_service.fetch_polygon(admin_level - 1).then (topojson) ->
+      geometries = topojson_geometries(topojson)
+      parent = _.find(geometries, (g) -> g.properties["GEO_ID"] == parent_id)
+      if parent
+        filtered_topojson = topojson_restrict(topojson, [parent])
+        geojson = omnivore.topojson.parse(filtered_topojson)
+        @contextLayer = L.geoJson geojson, { style: context_polygon_style }
+        @contextLayer.addTo @map
+
+add_polygon_layer = (polygons) =>
+  geojson = omnivore.topojson.parse(polygons)
+  
+  layer_options =
+    style: polygon_style
     onEachFeature: on_each_feature
 
-  @polygonLayer = L.geoJson(polygons, layout_options)
+  @polygonLayer = L.geoJson(geojson, layer_options)
   
   @map.fitBounds @polygonLayer.getBounds()
   @polygonLayer.addTo @map

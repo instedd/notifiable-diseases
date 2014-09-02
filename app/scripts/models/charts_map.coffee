@@ -26,8 +26,8 @@ angular.module('ndApp')
         rows
 
       groupingLevel: (filters) ->
-        max_available_polygon_level = _.max(_.keys(settings.polygons))
         location_filter = _.find(filters, (f) -> f.name == "location")
+        max_available_polygon_level = _.max(_.keys(settings.polygons))
 
         filtered_level = location_filter && location_filter.adminLevel()
         if (filtered_level)
