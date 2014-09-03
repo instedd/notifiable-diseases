@@ -1,14 +1,18 @@
 angular.module('ndApp')
   .factory 'Map', (Cdx, FieldsService, settings) ->
     class Map
-      constructor: ->
+      constructor: (thresholds)->
         @kind = 'Map'
+        @thresholds = thresholds || {
+          min: 110
+          max: 150
+        }
 
       @deserialize: (data) ->
-        new Map
+        new Map(data.thresholds)
 
       isConfigurable: ->
-        false
+        true
 
       applyToQuery: (query, filters) =>
         drawn_level = @.groupingLevel(filters)

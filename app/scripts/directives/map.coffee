@@ -11,6 +11,7 @@ angular.module('ndApp')
         
         @map = create_map(element[0].children[0])
         @markers = L.layerGroup([]).addTo @map
+        @chart = scope.chart
 
         scope.$watchCollection('series', () ->
           if scope.series
@@ -22,6 +23,7 @@ angular.module('ndApp')
 polygon_style = {
   weight: 1,
   fillOpacity: 0.1
+  clickable: false
 }
 
 context_polygon_style = {
@@ -94,6 +96,21 @@ result_polygons = (full_topojson, results) ->
   ), [])
   topojson_restrict(full_topojson, filtered_geometries)
 
+create_icon = (feature) ->
+  count = feature.properties.event_count
+  if count < @chart.thresholds.min
+    url = 'images/locationGreen.png'
+  else if count < @chart.thresholds.max
+    url = 'images/locationYellow.png'
+  else
+    url = 'images/locationRed.png'
+
+  L.icon {
+    iconUrl: url
+    iconSize: [25,25]
+  }
+    
+
 on_each_feature = (feature, layer) =>
   layer_center = layer.getBounds().getCenter()
 
@@ -107,11 +124,7 @@ on_each_feature = (feature, layer) =>
            .setLatLng(layer_center)
            .setContent(popup_content)
 
-  icon = L.icon {
-    iconUrl: 'images/location.png'
-    iconSize: [25,25]
-  }
-  marker = L.marker(layer_center, { icon: icon })
+  marker = L.marker(layer_center, { icon: create_icon(feature) })
 
   marker.addTo @markers
         .bindPopup popup

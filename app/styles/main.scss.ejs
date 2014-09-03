@@ -520,6 +520,29 @@ a.editable-click {
 .depth4 { padding-left: 40px; }
 .depth5 { padding-left: 50px; }
 
+.map-config {
+
+  .row {
+    margin-bottom: 8px;
+  }
+
+  .description {
+    margin-bottom: 15px;
+  }
+
+  .nd-slider-widget {
+
+    margin-top: 15px;
+
+    .noUi-base { 
+      background: #68c04c;
+      .noUi-origin:first-of-type { background: #feb300; }
+      .noUi-origin:last-of-type  { background: #FF1C00; }
+    }
+  }
+}
+
+
 <% if(yeoman.customStyles) { %>
 @import "<%= yeoman.customStyles %>";
 <% } %>
