@@ -29,6 +29,7 @@ angular
     'ui.select2',
   ])
   .config ($routeProvider) ->
+    # CODEREVIEW: Use resource-like routes to instantiate controller with report with requested id. Rename MainCtrl to ReportsCtrl, and ReportsCtrl to NewReportCtrl. Handle missing reports from here and not from main controller.
     $routeProvider
       .when '/',
         templateUrl: 'views/main.html'

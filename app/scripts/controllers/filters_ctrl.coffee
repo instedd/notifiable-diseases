@@ -19,6 +19,8 @@ angular.module('ndApp')
       # Now, because of this, we don't want an extra update because the filter changes,
       # so we set dontSaveReport.value to true to skip the next save.
       # Ugly, but I can't find another way to do it.
+
+      # CODEREVIEW: Either use $timeout; or extract filter values to a separate object (without props such as expanded) and watch on them; or save in main controller current expanded filter; or extract each filter as a directive that gets state from scope and keeps view props internal to the directive. Also debounce the save call. Review why adding and collapsing at the same time breaks UI, consider using CSS transition and not using bootstrap animation that goes outside angular.
       setTimeout (->
         $scope.dontSaveReport.value = true
         $scope.toggleFilter(filter)
@@ -63,6 +65,7 @@ angular.module('ndApp')
           index = findLeastFilterIndexThatChanged(newFilters, oldFilters)
 
         for i in [index ... $scope.counts.length]
+          # CODEREVIEW: Set null instead of undefined
           $scope.counts[i] = undefined
 
         for i in [index ... $scope.currentReport.filters.length]
@@ -80,6 +83,7 @@ angular.module('ndApp')
         oldFilter = oldFilters[i]
         newFilter = newFilters[i]
 
+        # CODEREVIEW: Use == instead of equals after view props are moved outside the filter itself
         unless newFilter.equals(oldFilter)
           return i
 

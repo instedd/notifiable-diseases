@@ -52,6 +52,8 @@ angular.module('ndApp')
           report = ReportsService.deserialize(report)
           $scope.currentReport = report
 
+          # CODEREVIEW: field service should return an object with all the field information, that can answer all, allEnum, datePeriods, etc, and that is stored in $scope so the fieldService is stateless; or play with injector to inject a field with state below a certain point in the tree instead of keeping it in the scope
+
           $scope.fields = FieldsService.all()
           $scope.enumFields = _.sortBy FieldsService.allEnum(), (f) -> f.label.toLowerCase()
           $scope.datePeriods = FieldsService.datePeriods()
@@ -64,11 +66,14 @@ angular.module('ndApp')
 
             if $scope.currentReport
               unless firstSaveCurrentReport
+                # CODEREVIEW: Consider having a model with the actual report data (body), and Report contains the metadata (version) and the actual data (body) as well; watch is issued only on the body
                 if newValue.version == oldValue.version
                   ReportsService.save($scope.currentReport)
               firstSaveCurrentReport = false
 
           $scope.$watch 'currentReport', saveCurrentReport, true
+
+          # CODEREVIEW: Move the following functions outside the field service init callback
 
           $scope.duplicateReport = ->
             dupReport = $scope.currentReport.duplicate()

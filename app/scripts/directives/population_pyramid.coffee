@@ -37,6 +37,7 @@ angular.module('ndApp')
         )
     }
 
+# CODEREVIEW: Move this function inside the directive, instead of a global private function
 updateChart = (chart, series, title) =>
   rows = []
   for serie in series

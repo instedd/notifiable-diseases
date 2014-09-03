@@ -1,3 +1,4 @@
+# CODEREVIEW: Directivise me
 angular.module('ndApp')
   .factory 'Trendline', (Cdx, FieldsService) ->
     class Trendline
