@@ -1,30 +1,25 @@
 'use strict'
 
 angular.module('ndApp')
-  .controller 'FiltersCtrl', ($scope, $q, Cdx, FieldsService) ->
+  .controller 'FiltersCtrl', ($scope, $q, $timeout, Cdx, FieldsService) ->
     $scope.addNewFilterIsCollapsed = true
     $scope.counts = []
+    $scope.expandedFilter = null
+
+    $scope.filterIsExpanded = (filter) ->
+      $scope.expandedFilter == filter
 
     $scope.toggleAddNewFilter = ->
       $scope.addNewFilterIsCollapsed = !$scope.addNewFilterIsCollapsed
 
     $scope.addFilter = (name) ->
       filter = _.find $scope.currentReport.filters, (filter) -> filter.name == name
-      if filter
-        filter.expanded = false
-      else
+      unless filter
         filter = $scope.currentReport.createFilter name
 
       # Without this timeout the collapse panel breaks (see #7134)
-      # Now, because of this, we don't want an extra update because the filter changes,
-      # so we set dontSaveReport.value to true to skip the next save.
-      # Ugly, but I can't find another way to do it.
-
-      # CODEREVIEW: Either use $timeout; or extract filter values to a separate object (without props such as expanded) and watch on them; or save in main controller current expanded filter; or extract each filter as a directive that gets state from scope and keeps view props internal to the directive. Also debounce the save call. Review why adding and collapsing at the same time breaks UI, consider using CSS transition and not using bootstrap animation that goes outside angular.
-      setTimeout (->
-        $scope.dontSaveReport.value = true
-        $scope.toggleFilter(filter)
-      ), 0
+      $timeout ->
+        $scope.expandedFilter = filter
 
       $scope.toggleAddNewFilter()
 
@@ -35,10 +30,10 @@ angular.module('ndApp')
       "views/filters/#{FieldsService.typeFor(filter.name)}.html"
 
     $scope.toggleFilter = (filter) ->
-      newExpanded = !filter.expanded
-      for otherFilter in $scope.currentReport.filters
-        otherFilter.expanded = false
-      filter.expanded = newExpanded
+      if $scope.expandedFilter == filter
+        $scope.expandedFilter = null
+      else
+        $scope.expandedFilter = filter
 
     $scope.clearFilters = ->
       $scope.currentReport.filters.splice(0, $scope.currentReport.filters.length)

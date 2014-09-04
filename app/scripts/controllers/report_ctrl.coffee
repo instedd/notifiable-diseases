@@ -2,8 +2,6 @@
 
 angular.module('ndApp')
   .controller 'ReportCtrl', ($scope, $http, $location, $log, $routeParams, debounce, ReportsService, FieldsService) ->
-    $scope.dontSaveReport = {value: false}
-
     $scope.duplicateReport = ->
       dupReport = $scope.currentReport.duplicate()
       ReportsService.create(dupReport).then ->
@@ -30,14 +28,9 @@ angular.module('ndApp')
 
     firstSaveCurrentReport = true
     saveCurrentReport = (newValue, oldValue) ->
-      if $scope.dontSaveReport.value
-        $scope.dontSaveReport.value = false
-        return
-
       unless firstSaveCurrentReport
         ReportsService.save($scope.currentReport, currentReportVersion).then (newVersion) ->
           currentReportVersion = newVersion
-
       firstSaveCurrentReport = false
 
     ReportsService.reportsDescriptions().then (reportsDescriptions) ->
