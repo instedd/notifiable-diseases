@@ -9,7 +9,7 @@
 ###
 
 angular.module('ndApp')
-  .controller 'MainCtrl', ($scope, $http, $location, $log, $routeParams, ReportsService, FieldsService) ->
+  .controller 'MainCtrl', ($scope, $http, $location, $log, $routeParams, debounce, ReportsService, FieldsService) ->
     $scope.dontSaveReport = {value: false}
 
     ReportsService.reportsDescriptions().then (reportsDescriptions) ->
@@ -71,7 +71,7 @@ angular.module('ndApp')
                   ReportsService.save($scope.currentReport)
               firstSaveCurrentReport = false
 
-          $scope.$watch 'currentReport', saveCurrentReport, true
+          $scope.$watch 'currentReport', debounce(saveCurrentReport, 300), true
 
           # CODEREVIEW: Move the following functions outside the field service init callback
 

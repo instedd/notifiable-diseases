@@ -1,15 +1,21 @@
 angular.module('ndApp')
   .factory 'Map', (Cdx, FieldsService, settings) ->
     class Map
-      constructor: (thresholds)->
+
+      default_thersholds = {
+        min: 10
+        max: 50
+      }
+
+      default_thersholds_max = default_thersholds.max + 10
+
+      constructor: (thresholds, thresholds_max)->
         @kind = 'Map'
-        @thresholds = thresholds || {
-          min: 10
-          max: 50
-        }
+        @thresholds = thresholds || default_thersholds
+        @thresholds_max = thresholds_max || default_thersholds_max
 
       @deserialize: (data) ->
-        new Map(data.thresholds)
+        new Map(data.thresholds, data.thresholds_max)
 
       isConfigurable: ->
         true
@@ -19,8 +25,10 @@ angular.module('ndApp')
         query.group_by = [ {"admin_level": drawn_level} ]
         [query]
 
-      getSeries: (report, data) ->
-        data[0].events
+      getSeries: (report, data) =>
+        events = data[0].events
+        @.update_thresholds_max(events)
+        events
 
       getCSV: (series) ->
         rows = []
@@ -38,3 +46,12 @@ angular.module('ndApp')
           drawn_level = Math.min(max_available_polygon_level, filtered_level + 1)
         else
           drawn_level = 1
+
+      update_thresholds_max: (events) ->
+        # hack :(
+        # values equal to the yellow threshold will show a red marker
+        # if we set max = top_event.count, the top marker will always
+        # be shown in red.
+        top_event = _.max(events, (e) -> e.count)
+        @thresholds_max = Math.max(default_thersholds_max, top_event.count + 10)
+

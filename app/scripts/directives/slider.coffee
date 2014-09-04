@@ -32,7 +32,20 @@ angular.module('ndApp')
         )
 
         update_tooltips(values)
+
+        scope.$watch 'max', (new_max, old_max) =>
+          if new_max != old_max
+            update_limits(scope.min, new_max)
+    
     }
+
+update_limits = (new_min, new_max) ->
+  @slider_container.noUiSlider({
+    range:
+      min: [ new_min ]
+      max: [ new_max ]
+  }, true)
+  update_tooltips(@slider_container.val())
 
 update_tooltips = (values) ->
   @slider_container.find('.noUi-handle-lower').html(tooltip_html(values[0]))
