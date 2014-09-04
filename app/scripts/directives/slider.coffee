@@ -8,15 +8,10 @@ angular.module('ndApp')
         model: '='
       template: '<div class="nd-slider-widget"></div>',
       link: (scope, element, attrs) ->
+        values = [scope.model.min, scope.model.max]
+        
         @slider_container = $(element[0].children[0])
-
-        if scope.model
-          values = [scope.model.min, scope.model.max]
-        else
-          value_0 = scope.min + (scope.max - scope.min) / 3
-          value_1 = scope.min + 2 * (scope.max - scope.min) / 3
-          values = [value_0, value_1]
-
+        
         @slider_container.noUiSlider(
           start: values
           behaviour: 'snap'
