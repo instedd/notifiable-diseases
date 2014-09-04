@@ -532,12 +532,33 @@ a.editable-click {
 
   .nd-slider-widget {
 
-    margin-top: 15px;
+    margin-top: 25px;
+    margin-bottom: 40px;
 
     .noUi-base { 
       background: #68c04c;
-      .noUi-origin:first-of-type { background: #feb300; }
-      .noUi-origin:last-of-type  { background: #FF1C00; }
+      .noUi-origin {
+        &:first-of-type { background: #feb300; }
+        &:last-of-type  { background: #FF1C00; }
+        .nd-slider-tooltip {
+          display: block;
+          position: absolute;
+          border: 1px solid #D9D9D9;
+          font-size: 12px;
+          border-radius: 3px;
+          background: #fff;
+          top: 30px;
+          padding: 4px;
+          left: -9px;
+          text-align: center;
+          width: 50px;
+
+          strong {
+           display: block;
+           padding: 2px;
+          }
+        }
+      }
     }
   }
 }
