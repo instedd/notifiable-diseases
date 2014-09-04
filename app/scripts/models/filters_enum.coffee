@@ -13,9 +13,6 @@ angular.module('ndApp')
         if @values.length == 0
           query.empty = true
 
-      equals: (other) ->
-        angular.equals(@values, other.values)
-
       empty: ->
         @values.length == 0
 

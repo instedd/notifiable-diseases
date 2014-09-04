@@ -8,9 +8,6 @@ angular.module('ndApp')
         if @location
           query["location"] = @location.id
 
-      equals: (other) ->
-        _.isEqual(@location, other.location)
-
       empty: ->
         if @location
           @location.id.toString().length == 0

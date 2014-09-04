@@ -77,8 +77,7 @@ angular.module('ndApp')
         oldFilter = oldFilters[i]
         newFilter = newFilters[i]
 
-        # CODEREVIEW: Use == instead of equals after view props are moved outside the filter itself
-        unless newFilter.equals(oldFilter)
+        unless angular.equals(newFilter, oldFilter)
           return i
 
       $scope.currentReport.filters.length

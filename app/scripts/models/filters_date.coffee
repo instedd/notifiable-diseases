@@ -9,9 +9,6 @@ angular.module('ndApp')
         query.since = @since
         query.until = @until
 
-      equals: (other) ->
-        @since == other.since && @until == other.until
-
       empty: ->
         false
 
