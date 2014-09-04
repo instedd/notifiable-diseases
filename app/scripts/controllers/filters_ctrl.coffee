@@ -65,8 +65,7 @@ angular.module('ndApp')
           index = findLeastFilterIndexThatChanged(newFilters, oldFilters)
 
         for i in [index ... $scope.counts.length]
-          # CODEREVIEW: Set null instead of undefined
-          $scope.counts[i] = undefined
+          $scope.counts[i] = null
 
         for i in [index ... $scope.currentReport.filters.length]
           updateCount i

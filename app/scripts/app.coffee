@@ -34,15 +34,15 @@ angular
       .when '/',
         templateUrl: 'views/main.html'
         controller: 'MainCtrl'
+      .when '/reports/new',
+        templateUrl: 'views/reports/new.html'
+        controller: 'NewReportCtrl'
+      .when '/reports/:reportId',
+        templateUrl: 'views/main.html'
+        controller: 'ReportCtrl'
       .when '/playground',
         templateUrl: 'views/playground.html'
         controller: 'PlaygroundCtrl'
-      .when '/reports/new',
-        templateUrl: 'views/reports/new.html'
-        controller: 'ReportsCtrl'
-      .when '/reports/:reportId',
-        templateUrl: 'views/main.html'
-        controller: 'MainCtrl'
       .otherwise
         redirectTo: '/'
   .run (editableOptions) ->

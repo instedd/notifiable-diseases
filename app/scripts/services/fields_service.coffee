@@ -53,7 +53,8 @@ angular.module('ndApp')
         Fields
 
       allEnum: ->
-        _.select service.all(), (field) -> field.type == "enum"
+        enumFields = _.select service.all(), (field) -> field.type == "enum"
+        _.sortBy enumFields, (f) -> f.label.toLowerCase()
 
       find: (name) ->
         for field in Fields

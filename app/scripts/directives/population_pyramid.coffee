@@ -31,20 +31,19 @@ angular.module('ndApp')
               duration: 600
               easing: 'out'
 
+        updateChart = (chart, series, title) =>
+          rows = []
+          for serie in series
+            rows.push c: [
+                          {v: serie.age},
+                          {v: -serie.male, f: "#{serie.male} events"},
+                          {v: serie.female, f: "#{serie.female} events"},
+                        ]
+
+          chart.data.rows = rows
+
         scope.$watchCollection('series', () ->
           if scope.series
             updateChart(scope.chart, scope.series, scope.title)
         )
     }
-
-# CODEREVIEW: Move this function inside the directive, instead of a global private function
-updateChart = (chart, series, title) =>
-  rows = []
-  for serie in series
-    rows.push c: [
-                  {v: serie.age},
-                  {v: -serie.male, f: "#{serie.male} events"},
-                  {v: serie.female, f: "#{serie.female} events"},
-                ]
-
-  chart.data.rows = rows

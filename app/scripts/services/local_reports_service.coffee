@@ -37,6 +37,8 @@ angular.module('ndApp').service 'LocalReportsService', (localStorageService, Rep
 
     save: (report) ->
       save()
+      then: (callback) ->
+        callback()
 
     findById: (id) ->
       then: (callback) ->
@@ -51,4 +53,4 @@ angular.module('ndApp').service 'LocalReportsService', (localStorageService, Rep
       data.assay
 
     deserialize: (data) ->
-      data
+      [data, null]

@@ -1,5 +1,5 @@
 angular.module('ndApp')
-  .controller 'ReportsCtrl', ($scope, $location, Report, ReportsService, FieldsService, Cdx) ->
+  .controller 'NewReportCtrl', ($scope, $location, Report, ReportsService, FieldsService, Cdx) ->
     ReportsService.reportsDescriptions().then (reportsDescriptions) ->
       FieldsService.init().then ->
         $scope.reportsDescriptions = reportsDescriptions

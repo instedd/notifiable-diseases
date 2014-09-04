@@ -11,7 +11,7 @@
       <input type="radio" name="display" ng-model="chart.display" value="split"> Split by
     </label>
     <select ng-disabled="chart.display != 'split'" ng-model="chart.splitField">
-      <option ng-repeat="enumField in enumFields" value="{{enumField.name}}">{{enumField.label}}</option>
+      <option ng-repeat="enumField in fieldsInfo.enumFields" value="{{enumField.name}}">{{enumField.label}}</option>
     </select>
     <span ng-show="hasParentLocations()">
       <br/>
@@ -38,7 +38,7 @@
   </div>
   <div class="col-md-10">
     <div class="btn-group">
-      <button ng-repeat="period in datePeriods" type="button" class="btn btn-default" ng-class="{active: chart.grouping == period.value}" ng-click="chart.grouping = period.value">{{period.label}}</button>
+      <button ng-repeat="period in fieldsInfo.datePeriods" type="button" class="btn btn-default" ng-class="{active: chart.grouping == period.value}" ng-click="chart.grouping = period.value">{{period.label}}</button>
     </div>
   </div>
 </div>

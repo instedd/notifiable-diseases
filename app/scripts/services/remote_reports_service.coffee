@@ -63,8 +63,7 @@ angular.module('ndApp').service 'RemoteReportsService', (KeyValueStore, $q, rfc4
 
     deserialize: (data) ->
       report = Report.deserialize(JSON.parse(data.value))
-      report.version = data.version
-      report
+      [report, data.version]
 
     delete: (report) ->
       q = $q.defer()
@@ -80,7 +79,7 @@ angular.module('ndApp').service 'RemoteReportsService', (KeyValueStore, $q, rfc4
 
       q.promise
 
-    save: (report) ->
+    save: (report, version) ->
       q = $q.defer()
 
       # When saving a report we must update the corresponding
@@ -91,8 +90,7 @@ angular.module('ndApp').service 'RemoteReportsService', (KeyValueStore, $q, rfc4
           saveReportsDescriptions()
           break
 
-      KeyValueStore.put(reportKey(report.id), JSON.stringify(report), report.version).success (data) ->
-        report.version = data.version
-        q.resolve(report)
+      KeyValueStore.put(reportKey(report.id), JSON.stringify(report), version).success (data) ->
+        q.resolve(data.version)
 
       q.promise
