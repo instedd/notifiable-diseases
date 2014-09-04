@@ -3,11 +3,11 @@ angular.module('ndApp')
     class Map
 
       default_thersholds = {
-        min: 10
-        max: 50
+        lower: 10
+        upper: 50
       }
 
-      default_thersholds_max = default_thersholds.max + 10
+      default_thersholds_max = default_thersholds.upper + 10
 
       constructor: (thresholds, thresholds_max)->
         @kind = 'Map'
