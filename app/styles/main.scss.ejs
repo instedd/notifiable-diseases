@@ -180,6 +180,16 @@ a.editable-click {
 .nd-map {
   height: 320px;
   cursor: default;
+
+  .nd-map-marker {
+    width: 25px !important;
+    height: 25px !important;
+    margin: -12.5px -12.5px !important;
+    
+    &.red    { background-image: url('../images/locationRed.png')    }
+    &.yellow { background-image: url('../images/locationYellow.png') }
+    &.green  { background-image: url('../images/locationGreen.png')  }
+  }
 }
 
 .add-new-visualization {

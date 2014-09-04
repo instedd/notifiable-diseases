@@ -121,21 +121,16 @@ class MapWidet
           @contextLayer = L.geoJson geojson, { style: context_polygon_style }
           @contextLayer.addTo @map
 
-
   create_icon: (feature) ->
     count = feature.properties.event_count
     if count >= @chart.thresholds.upper
-      url = 'images/locationRed.png'
+      color = 'red'
     else if count >= @chart.thresholds.lower
-      url = 'images/locationYellow.png'
+      color = 'yellow'
     else
-      url = 'images/locationGreen.png'
-
-    L.icon {
-      iconUrl: url
-      iconSize: [25,25]
-    }
-      
+      color = 'green'
+    
+    L.divIcon { className: "nd-map-marker #{color}" }
 
   on_each_feature: (feature, layer) =>
     layer_center = layer.getBounds().getCenter()
@@ -154,8 +149,6 @@ class MapWidet
 
     marker.addTo @markers
           .bindPopup popup
-
-    1
 
   add_polygon_layer: (polygons) ->
     geojson = omnivore.topojson.parse(polygons)
