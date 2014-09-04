@@ -4,8 +4,8 @@ angular.module('ndApp')
       constructor: (thresholds)->
         @kind = 'Map'
         @thresholds = thresholds || {
-          min: 110
-          max: 150
+          min: 10
+          max: 50
         }
 
       @deserialize: (data) ->
