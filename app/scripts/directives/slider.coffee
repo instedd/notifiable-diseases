@@ -21,6 +21,7 @@ class SliderWidget
     values = [@scope.model.lower, @scope.model.upper]
     @slider_container.noUiSlider(
       start: values
+      margin: 1
       behaviour: 'snap'
       range:
         min: [ @scope.min ]
