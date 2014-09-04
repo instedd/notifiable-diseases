@@ -98,12 +98,12 @@ result_polygons = (full_topojson, results) ->
 
 create_icon = (feature) ->
   count = feature.properties.event_count
-  if count < @chart.thresholds.min
-    url = 'images/locationGreen.png'
-  else if count < @chart.thresholds.max
+  if count >= @chart.thresholds.max
+    url = 'images/locationRed.png'
+  else if count >= @chart.thresholds.min
     url = 'images/locationYellow.png'
   else
-    url = 'images/locationRed.png'
+    url = 'images/locationGreen.png'
 
   L.icon {
     iconUrl: url
