@@ -29,8 +29,6 @@ angular.module('ndApp')
         callback(datas)
 
     render = ->
-      return if $scope.editingChart
-
       # CODEREVIEW: Consider adding report as a property to query object
       query = $scope.report.newQuery()
       $scope.report.applyFiltersTo query

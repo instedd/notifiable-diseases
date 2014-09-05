@@ -1,5 +1,5 @@
 angular.module('ndApp')
-  .directive 'ndMap', (PolygonService) ->
+  .directive 'ndMap', (PolygonService, debounce) ->
     {
       restrict: 'E'
       scope:
@@ -8,7 +8,7 @@ angular.module('ndApp')
         chart: '='
       template: '<div class="nd-map"></div>',
       link: (scope, element) ->
-        new MapWidet(scope, element[0].children[0]).initialize(PolygonService)
+        new MapWidget(scope, element[0].children[0]).initialize(PolygonService, debounce)
     }
 
 polygon_style = {
@@ -24,21 +24,28 @@ context_polygon_style = {
   clickable: false
 }
 
-class MapWidet
+class MapWidget
 
   constructor: (scope, element) ->
     @scope = scope
     @element = element
 
-  initialize: (polygon_service) ->
+  initialize: (polygon_service, debounce) ->
     @map = @create_map(@element)
     @markers = L.layerGroup([]).addTo @map
     @chart = @scope.chart
-    @scope.$watchCollection('series', () =>
+
+    # debounce to prevent consecutive updates to trigger concurrent
+    # drawings on the map.
+    #
+    # (beginning to draw a map before a previous one has finished may
+    # cause old layers from the 'old' map to be added after the reset
+    # call is made)
+    @scope.$watchCollection('series', debounce(() =>
       if @scope.series
         admin_level = @scope.chart.groupingLevel(@scope.filters)
         @draw_results(polygon_service, admin_level, @scope.series)
-    )
+    , 1000, false))
 
   create_map: (element) ->
     map = L.map(element, { 
