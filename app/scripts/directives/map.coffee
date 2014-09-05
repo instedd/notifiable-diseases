@@ -94,7 +94,7 @@ class MapWidet
     result_count_by_id = _.object(_.map(results, (e) -> [e.location, e.count]))
     geometries = @topojson_geometries(full_topojson)
     filtered_geometries = _.reduce(geometries, ((r,o) ->
-      count_for_location = result_count_by_id[o.properties.GEO_ID]
+      count_for_location = result_count_by_id[o.properties.ID]
       if count_for_location
         clone = $.extend(true, {}, o)
         clone.properties.event_count = count_for_location
@@ -111,10 +111,10 @@ class MapWidet
   add_context_layer: (polygon_service, polygons, admin_level) ->
     geometries =  polygons.objects.locations.geometries
     if admin_level > 0 and geometries.length > 0
-      parent_id = geometries[0].properties["PARENT_GEO_ID"]
+      parent_id = geometries[0].properties["PARENT_ID"]
       polygon_service.fetch_polygon(admin_level - 1).then (topojson) =>
         geometries = @topojson_geometries(topojson)
-        parent = _.find(geometries, (g) -> g.properties["GEO_ID"] == parent_id)
+        parent = _.find(geometries, (g) -> g.properties["ID"] == parent_id)
         if parent
           filtered_topojson = @topojson_restrict(topojson, [parent])
           geojson = omnivore.topojson.parse(filtered_topojson)
