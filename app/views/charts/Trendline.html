@@ -1,15 +1,20 @@
 <div ng-controller="TrendlineCtrl">
   <div google-chart chart="viz" class="nd-chart"></div>
 
-  <a href="javascript:void(0)" ng-click="moveOffset(10)" ng-show="canMoveOffset(10)">&lt;&lt;</a>
-  <span ng-hide="canMoveOffset(10)">&lt;&lt;</span>
+  <div class="scrollArrows">
 
-  <a href="javascript:void(0)" ng-click="moveOffset(1)" ng-show="canMoveOffset(1)">&lt;</a>
-  <span ng-hide="canMoveOffset(1)">&lt;</span>
+    <a href="javascript:void(0)" ng-click="moveOffset(10)" ng-show="canMoveOffset(10)" class="leftPage"></a>
+    <!-- <span ng-hide="canMoveOffset(10)"></span> -->
 
-  <a href="javascript:void(0)" ng-click="moveOffset(-1)" ng-show="canMoveOffset(-1)">&gt;</a>
-  <span ng-hide="canMoveOffset(-1)">&gt;</span>
+    <a href="javascript:void(0)" ng-click="moveOffset(1)" ng-show="canMoveOffset(1)" class="leftArrow"></a>
+    <!-- <span ng-hide="canMoveOffset(1)"></span> -->
 
-  <a href="javascript:void(0)" ng-click="moveOffset(-10)" ng-show="canMoveOffset(-10)">&gt;&gt;</a>
-  <span ng-hide="canMoveOffset(-10)">&gt;&gt;</span>
+    <a href="javascript:void(0)" ng-click="moveOffset(-1)" ng-show="canMoveOffset(-1)" class="rightArrow"></a>
+    <!-- <span ng-hide="canMoveOffset(-1)"></span> -->
+
+    <a href="javascript:void(0)" ng-click="moveOffset(-10)" ng-show="canMoveOffset(-10)" class="rightPage"></a>
+    <!-- <span ng-hide="canMoveOffset(-10)"></span> -->
+  </div>
 </div>
+
+

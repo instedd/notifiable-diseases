@@ -360,14 +360,29 @@ a.editable-click {
           display:block;
         }
       }
+
       .selected-desc {
         font-size: 11px;
         display: inline-block;
         overflow: hidden;
         text-overflow: ellipsis;
-        width: 127px;
         white-space: nowrap;
         vertical-align: middle;
+      }
+      @media (min-width: 1230px) {
+        .selected-desc {
+          width: 40%;
+        }
+      }
+      @media (min-width: 1400px) {
+        .selected-desc {
+          width: 50%;
+        }
+      }
+      @media (min-width: 1600px) {
+        .selected-desc {
+          width: 58%;
+        }
       }
     }
     &.expanded {
@@ -569,6 +584,32 @@ a.editable-click {
           }
         }
       }
+    }
+  }
+}
+
+/*Trendline arrows*/
+.scrollArrows {
+  font-size: 0;
+  float: right;
+
+  a {
+    display: inline-block;
+    vertical-align: middle;
+    width: 26px;
+    height: 24px;
+
+    &.leftPage {
+      background: url("../images/pPage.png") no-repeat;
+    }
+    &.leftArrow {
+      background: url("../images/pStep.png") no-repeat;
+    }
+    &.rightArrow {
+      background: url("../images/nStep.png") no-repeat;
+    }
+    &.rightPage {
+      background: url("../images/nPage.png") no-repeat;
     }
   }
 }
