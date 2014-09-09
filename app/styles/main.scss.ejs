@@ -185,7 +185,7 @@ a.editable-click {
     width: 25px !important;
     height: 25px !important;
     margin: -12.5px -12.5px !important;
-    
+
     &.red    { background-image: url('../images/locationRed.png')    }
     &.yellow { background-image: url('../images/locationYellow.png') }
     &.green  { background-image: url('../images/locationGreen.png')  }
@@ -300,6 +300,11 @@ a.editable-click {
     background: url("../images/f_arrow_sep01.png") no-repeat right top;
     padding: 0 10px 0 15px;
 
+    &:after {
+      @include transition(opacity ease 0s 0s);
+      opacity:0;
+    }
+
     .filter-title {
       padding: 15px 0;
       position: relative;
@@ -413,6 +418,9 @@ a.editable-click {
 
       & + .filter {
         background: url("../images/f_arrow_sep02.png") no-repeat right top;
+        &:after {
+          opacity: 0 !important;
+        }
       }
 
       &.last {
@@ -420,6 +428,16 @@ a.editable-click {
       }
       .remove {
         background-color: #cccccc;
+      }
+      &.empty {
+
+        .count {
+          background: none;
+          color:#ff6600;
+          &:before {
+            display:none;
+          }
+        }
       }
     }
 
@@ -456,6 +474,47 @@ a.editable-click {
       font-size: 12px;
       padding-bottom: 10px;
       color: #666;
+    }
+    &.empty {
+
+      .count {
+        background: #ff6600;
+        color: #ffffff;
+        border-bottom: 1px solid #ff6600;
+
+        &:before {
+          content:'';
+          display: block;
+          position: absolute;
+          left: 50%;
+          margin-left: -27px;
+          top: 0px;
+          width: 0;
+          height: 0;
+          border-style: solid;
+          border-width: 8px 27px 0 27px;
+          border-color: #ffffff transparent transparent transparent;
+          z-index: 5;
+        }
+      }
+      & + .filter {
+        position: relative;
+        &:after {
+          @include transition(opacity ease-in .5s .15s);
+          content:'';
+          display: block;
+          position: absolute;
+          right: 18px;
+          top: 0;
+          width: 0;
+          height: 0;
+          border-style: solid;
+          border-width: 8px 27px 0 27px;
+          border-color: #ff6600 transparent transparent transparent;
+          z-index: 5;
+          opacity: 1;
+        }
+      }
     }
   }
   hr {
@@ -560,7 +619,7 @@ a.editable-click {
     margin-top: 25px;
     margin-bottom: 40px;
 
-    .noUi-base { 
+    .noUi-base {
       background: #68c04c;
       .noUi-origin {
         &:first-of-type { background: #feb300; }
