@@ -181,7 +181,6 @@ module.exports = function (grunt) {
     // Automatically inject Bower components into the app
     wiredep: {
       options: {
-        cwd: '<%= yeoman.app %>'
       },
       app: {
         src: ['<%= yeoman.app %>/index.html'],
@@ -394,7 +393,7 @@ module.exports = function (grunt) {
         src: 'app/styles/main.scss.ejs',
         dest: '<%= yeoman.sassDir %>/main.scss',
         options: {
-            process: function(content, path) {
+            process: function(content) {
                 return grunt.template.process(content);
             }
         }
