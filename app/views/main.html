@@ -35,7 +35,7 @@
           <span class="count" ng-hide="hasCount(-1)">(...)</span>
         </div>
       </div>
-      <div class="filter" ng-repeat="filter in currentReport.filters" ng-class="{expanded: filterIsExpanded(filter), last: isLastFilter($index)}">
+      <div class="filter" ng-repeat="filter in currentReport.filters" ng-class="{expanded: filterIsExpanded(filter), last: isLastFilter($index), empty: counts[$index] === 0}">
         <div class="filter-title" ng-click="toggleFilter(filter)">
           <strong ng-class="filter.name">{{labelFor(filter)}}:</strong>
           <span class="selected-desc">{{filter.selectedDescription()}}</span>

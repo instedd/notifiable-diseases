@@ -14,14 +14,16 @@ angular.module('ndApp')
       options:
         title: $scope.chart.description($scope.currentReport)
         isStacked: true
+        width: 540
+        height: 320
         vAxis:
           title: "Event count"
-          gridlines:
-            count: 6
-          viewWindow:
-            min: 0
+          minValue: 0
+          maxValue: 4
         hAxis:
           title: "Date"
+          maxAlternation: 1
+          slantedText: true
           textStyle:
             fontSize: 9
         animation:
@@ -30,6 +32,7 @@ angular.module('ndApp')
     $scope.computedInfo = null
 
     $scope.moveOffset = (step) ->
+      return if not $scope.canMoveOffset(step)
       if $scope.computedInfo
         $scope.offset += step
         $scope.offset = $scope.computedInfo.total - 10 if $scope.offset > $scope.computedInfo.total - 10
