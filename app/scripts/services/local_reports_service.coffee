@@ -1,15 +1,16 @@
-angular.module('ndApp').service 'LocalReportsService', (localStorageService, settings) ->
+angular.module('ndApp').service 'LocalReportsService', (localStorageService, settings, FiltersService, ChartsService) ->
   return unless settings.useLocalStorage
 
-  reports = localStorageService.get("reports")
-  if reports
-    reports = _.map reports, (report) ->
-      Report.deserialize(report)
-  else
-    reports = []
+  reports = localStorageService.get("reports") || []
 
   save = ->
     localStorageService.add "reports", reports
+
+  findReportIndex = (id) ->
+    _.findIndex reports, id: id
+
+  nextId = ->
+    _.max([0].concat(_.map(reports, 'id'))) + 1
 
   service =
     reportsDescriptions: ->
@@ -21,14 +22,16 @@ angular.module('ndApp').service 'LocalReportsService', (localStorageService, set
         callback(descs)
 
     create: (report) ->
-      reports.push report
-      report.id = reports.length
+      report.id = nextId()
+      reports.push report.toJSON()
       save()
       then: (callback)->
         callback()
 
     delete: (report) ->
-      index = _.indexOf reports, report
+      index = findReportIndex(report.id)
+      return unless index >= 0
+
       reports.splice(index, 1)
       save()
       then: (callback) ->
@@ -36,21 +39,28 @@ angular.module('ndApp').service 'LocalReportsService', (localStorageService, set
           callback(descs)
 
     save: (report) ->
+      index = findReportIndex(report.id)
+      return unless index >= 0
+
+      reports[index] = report.toJSON()
       save()
       then: (callback) ->
         callback()
 
     findById: (id) ->
       then: (callback) ->
-        id = parseInt id
-        for report in reports
-          if report.id == id
-            callback(report)
-            return
-        callback(null)
+        index = findReportIndex(parseInt id)
+        if index >= 0
+          callback reports[index]
+        else
+          callback null
 
     getAssay: (data) ->
       data.assay
 
-    deserialize: (data) ->
-      [data, null]
+    deserialize: (data, fieldsCollection) ->
+      data.filters = _.map data.filters, (filterData) -> FiltersService.deserialize(filterData, fieldsCollection)
+      data.charts = _.map data.charts, (chartData) -> ChartsService.deserialize(chartData, fieldsCollection)
+      report = new Report(fieldsCollection).initializeFrom(data)
+      [report, null]
+
