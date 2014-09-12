@@ -1,64 +1,67 @@
-angular.module('ndApp')
-  .factory 'PopulationPyramid', (Cdx, FieldsService) ->
-    class PopulationPyramid
-      constructor: ->
-        @kind = 'PopulationPyramid'
+@Charts ?= {}
 
-      @deserialize: (data) ->
-        new PopulationPyramid
+class @Charts.PopulationPyramid
+  constructor: (fieldsCollection) ->
+    @kind = 'PopulationPyramid'
 
-      isConfigurable: ->
-        false
+  toJSON: ->
+    @
 
-      applyToQuery: (query) ->
-        query.group_by = ['age_group', 'gender']
-        query.gender = ['male', 'female']
-        [query]
+  initializeFrom: (data) ->
+    @
 
-      getSeries: (report, data) ->
-        data = data[0].events
+  isConfigurable: ->
+    false
 
-        @sortData data
+  applyToQuery: (query) ->
+    query.group_by = ['age_group', 'gender']
+    query.gender = ['male', 'female']
+    [query]
 
-        # Build an array of objects with age, male and female properties
-        series = []
+  getSeries: (report, data) ->
+    data = data[0].events
 
-        i = 0
-        while i < data.length
-          item = data[i]
-          nextItem = data[i + 1]
-          if item.age_group == nextItem?.age_group
-            series.push age: item.age_group, male: item.count, female: nextItem.count
-            i += 2
-          else
-            obj = age: item.age_group
-            if item.gender == "male"
-              item.male = item.count
-              item.female = 0
-            else
-              item.female = item.count
-              item.male = 0
-            series.push obj
-            i += 1
+    @sortData data
 
-        series
+    # Build an array of objects with age, male and female properties
+    series = []
 
-      getCSV: (series) ->
-        rows = []
-        rows.push ["Age", "Male", "Female"]
-        for serie in series
-          rows.push [serie.age, serie.male, serie.female]
-        rows
+    i = 0
+    while i < data.length
+      item = data[i]
+      nextItem = data[i + 1]
+      if item.age_group == nextItem?.age_group
+        series.push age: item.age_group, male: item.count, female: nextItem.count
+        i += 2
+      else
+        obj = age: item.age_group
+        if item.gender == "male"
+          item.male = item.count
+          item.female = 0
+        else
+          item.female = item.count
+          item.male = 0
+        series.push obj
+        i += 1
 
-      sortData: (data) ->
-        data.sort (x, y) =>
-          if x.age_group < y.age_group
-            -1
-          else if x.age_group > y.age_group
-            1
-          else if x.gender < y.gender
-            1
-          else if x.gender > y.gender
-            -1
-          else
-            0
+    series
+
+  getCSV: (series) ->
+    rows = []
+    rows.push ["Age", "Male", "Female"]
+    for serie in series
+      rows.push [serie.age, serie.male, serie.female]
+    rows
+
+  sortData: (data) ->
+    data.sort (x, y) =>
+      if x.age_group < y.age_group
+        -1
+      else if x.age_group > y.age_group
+        1
+      else if x.gender < y.gender
+        1
+      else if x.gender > y.gender
+        -1
+      else
+        0

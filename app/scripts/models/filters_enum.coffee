@@ -1,54 +1,68 @@
-angular.module('ndApp')
-  .factory 'EnumFilter', (FieldsService, StringService) ->
-    class EnumFilter
-      constructor: (@name) ->
-        @values = FieldsService.valuesFor(@name)
+@Filters ?= {}
 
-      options: ->
-        FieldsService.optionsFor(@name)
+class @Filters.EnumFilter
+  constructor: (field) ->
+    @name = field.name
+    @values = _.map field.options, 'value'
+    @field = () -> field
 
-      applyTo: (query) ->
-        query[@name] = @values
+  type: ->
+    "enum"
 
-        if @values.length == 0
-          query.empty = true
+  label: ->
+    @field().label
 
-      empty: ->
-        @values.length == 0
+  options: ->
+    @field().options
 
-      allSelected: ->
-        @values.length == FieldsService.valuesFor(@name).length
+  applyTo: (query) ->
+    query[@name] = @values
 
-      selectedDescription: ->
-        if @values.length == 0
-          "none"
-        else if @values.length == FieldsService.valuesFor(@name).length
-          "all"
-        else if @values.length == 1
-          FieldsService.optionLabelFor(@name, @values[0])
+    if @values.length == 0
+      query.empty = true
+
+  empty: ->
+    @values.length == 0
+
+  allSelected: ->
+    @values.length == @field().options.length
+
+  selectedDescription: ->
+    if @values.length == 0
+      "none"
+    else if @values.length == @field().options.length
+      "all"
+    else if @values.length == 1
+      @field().labelFor(@values[0])
+    else
+      "#{@values.length} selected"
+
+  shortDescription: (first) ->
+    if @values.length == 0
+      label = @field().label.toLowerCase()
+      if first
+        "No #{label}"
+      else
+        "no #{label}"
+    else
+      labels = _.map(@values, (value) => "\"#{@field().labelFor(value)}\"")
+      if labels.length == 3
+        if labels[2].length <= "1 other".length
+          "#{labels[0]}, #{labels[1]} or #{labels[2]}"
         else
-          "#{@values.length} selected"
+          "#{labels[0]}, #{labels[1]} and 1 other"
+      else if labels.length > 3
+        "#{labels[0]}, #{labels[1]} and #{labels.length - 2} others"
+      else
+        StringService.toSentence(labels, ", ", " or ")
 
-      shortDescription: (first) ->
-        if @values.length == 0
-          label = FieldsService.labelFor(@name).toLowerCase()
-          if first
-            "No #{label}"
-          else
-            "no #{label}"
-        else
-          labels = _.map(@values, (value) => "\"#{FieldsService.optionLabelFor(@name, value)}\"")
-          if labels.length == 3
-            if labels[2].length <= "1 other".length
-              "#{labels[0]}, #{labels[1]} or #{labels[2]}"
-            else
-              "#{labels[0]}, #{labels[1]} and 1 other"
-          else if labels.length > 3
-            "#{labels[0]}, #{labels[1]} and #{labels.length - 2} others"
-          else
-            StringService.toSentence(labels, ", ", " or ")
+  toJSON: ->
+    {
+      name: @name
+      values: @values
+    }
 
-      @deserialize: (data) ->
-        filter = new EnumFilter(data.name)
-        filter.values = data.values
-        filter
+  initializeFrom: (data) ->
+    @values = data.values
+    @
+

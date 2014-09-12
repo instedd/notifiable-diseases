@@ -1,57 +1,65 @@
-angular.module('ndApp')
-  .factory 'Map', (Cdx, FieldsService, settings) ->
-    class Map
+@Charts ?= {}
 
-      default_thersholds = {
-        lower: 10
-        upper: 50
-      }
+class @Charts.Map
+  default_thersholds = {
+    lower: 10
+    upper: 50
+  }
 
-      default_thersholds_max = default_thersholds.upper + 10
+  default_thersholds_max = default_thersholds.upper + 10
 
-      constructor: (thresholds, thresholds_max)->
-        @kind = 'Map'
-        @thresholds = thresholds || default_thersholds
-        @thresholds_max = thresholds_max || default_thersholds_max
+  max_available_polygon_level = 5   # initialize at configuration time
 
-      @deserialize: (data) ->
-        new Map(data.thresholds, data.thresholds_max)
+  @setMaxAvailablePolygonLevel: (value) ->
+    max_available_polygon_level = value
 
-      isConfigurable: ->
-        true
+  constructor: (fieldsCollection) ->
+    @kind = 'Map'
+    @thresholds = default_thersholds
+    @thresholds_max = default_thersholds_max
 
-      applyToQuery: (query, filters) =>
-        drawn_level = @.groupingLevel(filters)
-        query.group_by = [ {"admin_level": drawn_level} ]
-        [query]
+  initializeFrom: (data) ->
+    @thresholds = _.clone data.thresholds
+    @thresholds_max = data.thresholds_max
+    @
 
-      getSeries: (report, data) =>
-        events = data[0].events
-        @.update_thresholds_max(events)
-        events
+  toJSON: ->
+    @
 
-      getCSV: (series) ->
-        rows = []
-        rows.push ["Location", "Results"]
-        for serie in series
-          rows.push [serie.location, serie.count]
-        rows
+  isConfigurable: ->
+    true
 
-      groupingLevel: (filters) ->
-        location_filter = _.find(filters, (f) -> f.name == "location")
-        max_available_polygon_level = _.max(_.keys(settings.polygons))
+  applyToQuery: (query, filters) =>
+    drawn_level = @.groupingLevel(filters)
+    query.group_by = [ {"admin_level": drawn_level} ]
+    [query]
 
-        filtered_level = location_filter && location_filter.adminLevel()
-        if (filtered_level)
-          drawn_level = Math.min(max_available_polygon_level, filtered_level + 1)
-        else
-          drawn_level = 1
+  getSeries: (report, data) =>
+    events = data[0].events
+    @updateThresholdsMax(events)
+    events
 
-      update_thresholds_max: (events) ->
-        # hack :(
-        # values equal to the yellow threshold will show a red marker
-        # if we set max = top_event.count, the top marker will always
-        # be shown in red.
-        top_event = _.max(events, (e) -> e.count)
-        @thresholds_max = Math.max(default_thersholds_max, top_event.count + 10)
+  getCSV: (series) ->
+    rows = []
+    rows.push ["Location", "Results"]
+    for serie in series
+      rows.push [serie.location, serie.count]
+    rows
+
+  groupingLevel: (filters) ->
+    location_filter = _.find(filters, (f) -> f.name == "location")
+
+    filtered_level = location_filter && location_filter.adminLevel()
+    if (filtered_level)
+      drawn_level = Math.min(max_available_polygon_level, filtered_level + 1)
+    else
+      drawn_level = 1
+
+  updateThresholdsMax: (events) ->
+    # hack :(
+    # values equal to the yellow threshold will show a red marker
+    # if we set max = top_event.count, the top marker will always
+    # be shown in red.
+    top_count = _.max _.map(events, 'count')
+    @thresholds_max = Math.max(default_thersholds_max, top_count + 10)
 

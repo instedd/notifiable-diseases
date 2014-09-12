@@ -1,121 +1,129 @@
-angular.module('ndApp')
-  .factory 'Report', (FiltersService, FieldsService, ChartsService) ->
-    class Report
-      constructor: ->
-        @filters = []
-        @charts  = []
+class @Report
+  constructor: (fieldsCollection) ->
+    @filters = []
+    @charts  = []
+    @fieldsCollection = () -> fieldsCollection
 
-      createFilter: (name) ->
-        filter = FiltersService.create name
-        filter.setReport?(this)
-        @filters.push filter
-        filter
+  addFilter: (filter) ->
+    @filters.push filter
+    filter
 
-      applyFiltersTo: (query) ->
-        for filter in @filters
-          filter.applyTo(query)
-        query
+  addChart: (chart) ->
+    @charts.push chart
+    chart
 
-      newQuery: ->
-        page_size: 0
-        assay_name: @assay
+  applyFiltersTo: (query) ->
+    for filter in @filters
+      filter.applyTo(query)
+    query
 
-      closeQuery: (query) ->
-        # If there's no result specified, restrict result to the valid values
-        query.result ?= FieldsService.valuesFor("result")
+  newQuery: ->
+    page_size: 0
+    assay_name: @assay
 
-      fieldOptionsFor: (fieldName) ->
-        FieldsService.optionsFor(fieldName)
+  closeQuery: (query) ->
+    # If there's no result specified, restrict result to the valid values
+    query.result ?= @fieldsCollection().find('result').values()
 
-      duplicate: ->
-        dup = new Report
-        dup.name = "#{@name} (duplicate)"
-        dup.description = @description
-        dup.assay = @assay
-        dup.filters = @filters
-        dup.charts = @charts
-        dup
+  fieldOptionsFor: (fieldName) ->
+    @fieldsCollection().optionsFor(fieldName)
 
-      fullDescription: ->
-        if @filters.length == 0
-          return "All cases"
+  duplicate: ->
+    dup = new Report(@fieldsCollection())
+    dup.name = "#{@name} (duplicate)"
+    dup.description = @description
+    dup.assay = @assay
+    dup.filters = @filters
+    dup.charts = @charts
+    dup
 
-        # TODO: other filters is always empty for now, so it's not used
-        otherFilters = []
+  fullDescription: ->
+    if @filters.length == 0
+      return "All cases"
 
-        for filter in @filters when !filter.allSelected()
-          switch filter.name
-            when "age_group" then ageFilter = filter
-            when "date"      then dateFilter = filter
-            when "ethnicity" then ethnicityFilter = filter
-            when "gender"    then genderFilter = filter
-            when "result"    then resultFilter = filter
-            when "location"  then locationFilter = filter
-            else                  otherFilters.push filter
+    # TODO: other filters is always empty for now, so it's not used
+    otherFilters = []
 
-        str = ""
-        first = true
+    for filter in @filters when !filter.allSelected()
+      switch filter.name
+        when "age_group" then ageFilter = filter
+        when "date"      then dateFilter = filter
+        when "ethnicity" then ethnicityFilter = filter
+        when "gender"    then genderFilter = filter
+        when "result"    then resultFilter = filter
+        when "location"  then locationFilter = filter
+        else                  otherFilters.push filter
 
-        if ageFilter
-          str += ageFilter.shortDescription(first)
-          first = false
+    str = ""
+    first = true
 
-        if genderFilter
-          str += ", " unless first
-          str += genderFilter.shortDescription(first)
-          first = false
+    if ageFilter
+      str += ageFilter.shortDescription(first)
+      first = false
 
-        if ethnicityFilter
-          str += ", " unless first
-          str += ethnicityFilter.shortDescription(first)
-          first = false
+    if genderFilter
+      str += ", " unless first
+      str += genderFilter.shortDescription(first)
+      first = false
 
-        if str.length == 0
-          str += "Cases "
-        else
-          str += " cases "
+    if ethnicityFilter
+      str += ", " unless first
+      str += ethnicityFilter.shortDescription(first)
+      first = false
 
-        if resultFilter
-          str += " of "
-          str += resultFilter.shortDescription()
-          str += " "
+    if str.length == 0
+      str += "Cases "
+    else
+      str += " cases "
 
-        if locationFilter
-          str += " in "
-          str += locationFilter.shortDescription()
-          str += " "
+    if resultFilter
+      str += " of "
+      str += resultFilter.shortDescription()
+      str += " "
 
-        if dateFilter
-          str += " occurred between "
+    if locationFilter
+      str += " in "
+      str += locationFilter.shortDescription()
+      str += " "
 
-          resolution = FieldsService.dateResolution()
-          sinceDate = moment(dateFilter.since)
-          untilDate = moment(dateFilter.until)
+    if dateFilter
+      str += " occurred between "
 
-          switch resolution
-            when "day"
-              str += "#{dateFilter.since} and #{dateFilter.until}"
-            when "week"
-              str += "#{sinceDate.format('YYYY-[W]WW')} and #{untilDate.format('YYYY-[W]WW')}"
-            when "month"
-              str += "#{sinceDate.format('YYYY-MM')} and #{untilDate.format('YYYY-MM')}"
-            when "year"
-              str += "#{sinceDate.year()} and #{untilDate.year()}"
+      resolution = dateFilter.dateResolution()
+      sinceDate = moment(dateFilter.since)
+      untilDate = moment(dateFilter.until)
 
-        str
+      switch resolution
+        when "day"
+          str += "#{dateFilter.since} and #{dateFilter.until}"
+        when "week"
+          str += "#{sinceDate.format('YYYY-[W]WW')} and #{untilDate.format('YYYY-[W]WW')}"
+        when "month"
+          str += "#{sinceDate.format('YYYY-MM')} and #{untilDate.format('YYYY-MM')}"
+        when "year"
+          str += "#{sinceDate.year()} and #{untilDate.year()}"
 
-      findFilter: (name) ->
-        _.find @filters, (filter) -> filter.name == name
+    str
 
-      @deserialize: (data) ->
-        report = new Report
-        report.id = data.id
-        report.name = data.name
-        report.description = data.description
-        report.assay = data.assay
-        report.filters = _.map data.filters, (filter) ->
-          FiltersService.deserialize(filter)
-        report.charts = _.map data.charts, (chart) ->
-          ChartsService.deserialize(chart)
-        report
+  findFilter: (name) ->
+    _.find @filters, (filter) -> filter.name == name
+
+  initializeFrom: (data) ->
+    @id = data.id
+    @name = data.name
+    @description = data.description
+    @assay = data.assay
+    @filters = data.filters || []
+    @charts = data.charts || []
+    @
+
+  toJSON: ->
+    {
+      id: @id
+      name: @name
+      description: @description
+      assay: @assay
+      filters: _.map @filters, (f) -> f.toJSON()
+      charts: _.map @charts, (c) -> c.toJSON()
+    }
 

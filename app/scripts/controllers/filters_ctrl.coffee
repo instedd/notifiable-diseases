@@ -1,7 +1,7 @@
 'use strict'
 
 angular.module('ndApp')
-  .controller 'FiltersCtrl', ($scope, $q, $timeout, Cdx, FieldsService) ->
+  .controller 'FiltersCtrl', ($scope, $q, $timeout, FiltersService, Cdx) ->
     $scope.addNewFilterIsCollapsed = true
     $scope.counts = []
     $scope.expandedFilter = null
@@ -12,10 +12,11 @@ angular.module('ndApp')
     $scope.toggleAddNewFilter = ->
       $scope.addNewFilterIsCollapsed = !$scope.addNewFilterIsCollapsed
 
-    $scope.addFilter = (name) ->
-      filter = _.find $scope.currentReport.filters, (filter) -> filter.name == name
+    $scope.addFilter = (field) ->
+      filter = _.find $scope.currentReport.filters, (filter) -> filter.name == field.name
       unless filter
-        filter = $scope.currentReport.createFilter name
+        filter = FiltersService.create field
+        $scope.currentReport.addFilter filter
 
       # Without this timeout the collapse panel breaks (see #7134)
       $timeout ->
@@ -27,7 +28,7 @@ angular.module('ndApp')
       $scope.currentReport.filters.splice(index, 1)
 
     $scope.filterTemplateFor = (filter) ->
-      "views/filters/#{FieldsService.typeFor(filter.name)}.html"
+      "views/filters/#{filter.type()}.html"
 
     $scope.toggleFilter = (filter) ->
       if $scope.expandedFilter == filter
@@ -43,12 +44,6 @@ angular.module('ndApp')
 
     $scope.isLastFilter = ($index) ->
       $scope.currentReport.filters.length == $index + 1
-
-    $scope.labelFor = (filter) ->
-      FieldsService.labelFor(filter.name)
-
-    $scope.instructionsFor = (filter) ->
-      FieldsService.instructionsFor(filter.name)
 
     firstChange = true
     $scope.$watch 'currentReport.filters', ((newFilters, oldFilters) ->

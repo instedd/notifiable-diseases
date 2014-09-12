@@ -1,7 +1,7 @@
 'use strict'
 
 angular.module('ndApp')
-  .controller 'MainCtrl', ($scope, $http, $location, $log, $routeParams, ReportsService, FieldsService) ->
+  .controller 'MainCtrl', ($scope, $http, $location, $log, $routeParams, ReportsService) ->
     ReportsService.reportsDescriptions().then (reportsDescriptions) ->
       if reportsDescriptions.length == 0
         $location.path "/reports/new"

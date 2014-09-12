@@ -1,36 +1,47 @@
-angular.module('ndApp')
-  .factory 'LocationFilter', (FieldsService) ->
-    class LocationFilter
-      constructor: (@name) ->
-        1
+@Filters ?= {}
 
-      applyTo: (query) ->
-        if @location
-          query["location"] = @location.id
+class @Filters.LocationFilter
+  constructor: (field) ->
+    @name = field.name
+    @field = () -> field
 
-      empty: ->
-        if @location
-          @location.id.toString().length == 0
-        else
-          true
+  label: ->
+    @field().label
 
-      allSelected: ->
-        false
+  type: ->
+    "location"
 
-      selectedDescription: ->
-        if @empty()
-          "All"
-        else
-          location = FieldsService.locationFor(@name, @location.id)
-          FieldsService.getFullLocationPath(@name, location)
+  applyTo: (query) ->
+    if @location
+      query["location"] = @location.id
 
-      adminLevel: ->
-        @location && @location.level
+  empty: ->
+    if @location
+      @location.id.toString().length == 0
+    else
+      true
 
-      shortDescription: ->
-        @selectedDescription()
+  allSelected: ->
+    false
 
-      @deserialize: (data) ->
-        filter = new LocationFilter(data.name)
-        filter.location = data.location
-        filter
+  selectedDescription: ->
+    if @empty()
+      "All"
+    else
+      @field().getFullLocationPath(@location)
+
+  adminLevel: ->
+    @location && @location.level
+
+  shortDescription: ->
+    @selectedDescription()
+
+  toJSON: ->
+    {
+      name: @name
+      location: @location
+    }
+
+  initializeFrom: (data) ->
+    @location = data.location
+    @

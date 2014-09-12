@@ -40,8 +40,8 @@ angular.module('ndApp')
         $location.path "/reports/new"
         return
 
-      ReportsService.findById($routeParams.reportId).then (report) ->
-        unless report
+      ReportsService.findById($routeParams.reportId).then (reportData) ->
+        unless reportData
           if $scope.reportsDescriptions.length > 0
             goToFirstReport()
           else
@@ -54,13 +54,14 @@ angular.module('ndApp')
         # the report's assay *without* deserailizing it to an object.
         # Once we initialize the FieldsService we can safely deserialize
         # the report.
-        assay = ReportsService.getAssay(report)
+        assay = ReportsService.getAssay(reportData)
 
-        FieldsService.init(assay_name: assay).then ->
-          [$scope.currentReport, currentReportVersion] = ReportsService.deserialize(report)
+        FieldsService.loadForContext(assay_name: assay).then (fieldsCollection) ->
+          [$scope.currentReport, currentReportVersion] = ReportsService.deserialize(reportData, fieldsCollection)
           $scope.fieldsInfo =
-            fields: FieldsService.all()
-            enumFields: FieldsService.allEnum()
-            datePeriods: FieldsService.datePeriods()
+            fields: fieldsCollection.all()
+            enumFields: fieldsCollection.allEnum()
+            datePeriods: fieldsCollection.datePeriods()
 
           $scope.$watch 'currentReport', debounce(saveCurrentReport, 300), true
+

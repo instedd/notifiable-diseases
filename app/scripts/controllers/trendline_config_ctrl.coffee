@@ -1,6 +1,6 @@
 'use strict'
 
-angular.module('ndApp').controller 'TrendlineConfigCtrl', ($scope, FieldsService) ->
+angular.module('ndApp').controller 'TrendlineConfigCtrl', ($scope) ->
   getLocationFilter = ->
     _.find $scope.currentReport.filters, (filter) -> filter.name == "location"
 
@@ -10,7 +10,7 @@ angular.module('ndApp').controller 'TrendlineConfigCtrl', ($scope, FieldsService
   $scope.parentLocations = ->
     locationFilter = getLocationFilter()
     if locationId = locationFilter?.location?.id
-      parentLocations = FieldsService.getParentLocations("location", locationId)
+      parentLocations = $scope.currentReport.fieldsCollection().getParentLocations("location", locationId)
 
       # Initialize $scope.chart.compareToLocation if not already set, so the
       # combo-box isn't selected with an empty option

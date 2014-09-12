@@ -1,20 +1,21 @@
 'use strict'
 
 angular.module('ndApp')
-  .controller 'LocationFilterCtrl', ($scope, FieldsService) ->
-    flattenedLocations = FieldsService.flattenedLocations($scope.filter.name)
+  .controller 'LocationFilterCtrl', ($scope) ->
+    field = $scope.filter.field()
+    flattenedLocations = field.flattenedLocations()
 
     $scope.selectedLocationId = $scope.filter.location?.id
 
     locationById = (id) ->
-      FieldsService.locationFor($scope.filter.name, id)
+      field.byId[id.toString()]
 
     matchesQuery = (location, query) ->
       name = location.name.toLowerCase()
       name.length >= query.length && name.substr(0, query.length) == query
 
     fullPath = (location) ->
-      FieldsService.getFullLocationPath($scope.filter.name, location)
+      field.getFullLocationPath(location)
 
     $scope.select2Options =
       minimumInputLength: 1

@@ -1,4 +1,4 @@
-angular.module('ndApp').service 'RemoteReportsService', (KeyValueStore, $q, rfc4122, Report, settings) ->
+angular.module('ndApp').service 'RemoteReportsService', (KeyValueStore, FiltersService, ChartsService, $q, rfc4122, settings) ->
   return if settings.useLocalStorage
 
   reportsDescriptionsKey = 'reportsDescriptions'
@@ -10,8 +10,8 @@ angular.module('ndApp').service 'RemoteReportsService', (KeyValueStore, $q, rfc4
   KeyValueStore.get(reportsDescriptionsKey).success (data) ->
     if data.found
       reportsDescriptionsVersion = data.version
-      for report in JSON.parse(data.value)
-        reportsDescriptions.push Report.deserialize(report)
+      for reportData in JSON.parse(data.value)
+        reportsDescriptions.push new Report().initializeFrom(reportData)
 
     qReportsDescriptions.resolve(reportsDescriptions)
 
@@ -61,9 +61,12 @@ angular.module('ndApp').service 'RemoteReportsService', (KeyValueStore, $q, rfc4
     getAssay: (data) ->
       JSON.parse(data.value).assay
 
-    deserialize: (data) ->
-      report = Report.deserialize(JSON.parse(data.value))
-      [report, data.version]
+    deserialize: (reportData, fieldsCollection) ->
+      data = JSON.parse(reportData.value)
+      data.filters = _.map data.filters, (filterData) -> FiltersService.deserialize(filterData, fieldsCollection)
+      data.charts = _.map data.charts, (chartData) -> ChartsService.deserialize(chartData, fieldsCollection)
+      report = new Report(fieldsCollection).initializeFrom(data)
+      [report, reportData.version]
 
     delete: (report) ->
       q = $q.defer()

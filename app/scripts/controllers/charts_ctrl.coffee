@@ -11,9 +11,8 @@ angular.module('ndApp')
       chart_name != 'Map' || settings.polygons
 
     $scope.addChart = (kind) ->
-      chart = ChartsService.create kind
-      chart.initializeNew?()
-      $scope.currentReport.charts.push chart
+      chart = ChartsService.create kind, $scope.currentReport.fieldsCollection()
+      $scope.currentReport.addChart chart
       $scope.toggleAddNewChart()
 
     $scope.removeChartByIndex = (index) ->

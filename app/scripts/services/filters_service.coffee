@@ -1,21 +1,22 @@
 angular.module('ndApp')
-  .service 'FiltersService', (EnumFilter, DateFilter, LocationFilter, FieldsService) ->
+  .service 'FiltersService', () ->
     service =
-      create: (name) ->
-        klass = service.findClass(name)
-        new klass(name)
+      create: (field) ->
+        klass = service.findClass(field.type)
+        new klass(field)
 
-      deserialize: (data) ->
-        service.findClass(data.name).deserialize(data)
+      deserialize: (data, fieldsCollection) ->
+        field = fieldsCollection.find(data.name)
+        klass = service.findClass(field.type)
+        new klass(field).initializeFrom(data)
 
-      findClass: (name) ->
-        field = FieldsService.find(name)
-        switch field.type
+      findClass: (type) ->
+        switch type
           when "enum"
-            EnumFilter
+            Filters.EnumFilter
           when "date"
-            DateFilter
+            Filters.DateFilter
           when "location"
-            LocationFilter
+            Filters.LocationFilter
           else
-            throw "Unknown field type: #{field.type}"
+            throw "Unknown field type: #{type}"

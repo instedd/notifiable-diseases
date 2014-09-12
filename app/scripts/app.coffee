@@ -45,6 +45,7 @@ angular
         controller: 'PlaygroundCtrl'
       .otherwise
         redirectTo: '/'
+
   .run (editableOptions) ->
     editableOptions.theme = 'bs3'
   .run ($rootScope, settings) ->

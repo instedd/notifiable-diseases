@@ -1,11 +1,11 @@
 angular.module('ndApp')
-  .controller 'NewReportCtrl', ($scope, $location, Report, ReportsService, FieldsService, Cdx) ->
+  .controller 'NewReportCtrl', ($scope, $location, ReportsService, FieldsService, Cdx) ->
     ReportsService.reportsDescriptions().then (reportsDescriptions) ->
-      FieldsService.init().then ->
+      FieldsService.loadForContext().then (fieldsCollection) ->
         $scope.reportsDescriptions = reportsDescriptions
         $scope.currentReport = null
-        $scope.assays = FieldsService.optionsFor("assay_name")
-        $scope.report = new Report
+        $scope.assays = fieldsCollection.optionsFor("assay_name")
+        $scope.report = new Report(fieldsCollection)
         $scope.report.assay = $scope.assays[0].value
         $scope.events = "..."
 

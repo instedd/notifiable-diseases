@@ -1,11 +1,11 @@
 'use strict'
 
 angular.module('ndApp')
-  .controller 'DateRangeCtrl', ($scope, FieldsService) ->
+  .controller 'DateRangeCtrl', ($scope) ->
     sinceDate = moment($scope.filter.since)
     untilDate = moment($scope.filter.until)
 
-    $scope.dateResolution = FieldsService.dateResolution()
+    $scope.dateResolution = $scope.filter.dateResolution()
     $scope.dateRange =
       startDate: sinceDate
       endDate: untilDate

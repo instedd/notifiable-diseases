@@ -1,4 +1,4 @@
-angular.module('ndApp').service 'LocalReportsService', (localStorageService, Report, settings) ->
+angular.module('ndApp').service 'LocalReportsService', (localStorageService, settings) ->
   return unless settings.useLocalStorage
 
   reports = localStorageService.get("reports")
