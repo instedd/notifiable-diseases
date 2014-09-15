@@ -78,7 +78,7 @@ class @Charts.Trendline
       when 'compareToLocation'
         query.group_by = date_grouping
         firstQuery = query
-        secondQuery = JSON.parse(JSON.stringify(firstQuery))
+        secondQuery = _.cloneDeep firstQuery
         targetLocation = @getCompareToLocation(filters)
         if targetLocation
           secondQuery.location = targetLocation.id

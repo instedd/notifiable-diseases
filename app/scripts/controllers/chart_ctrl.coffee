@@ -17,7 +17,7 @@ angular.module('ndApp')
 
     $scope.getCSVFilename = ->
       date = $filter("date")(new Date(), "yyyyMMddHMMss")
-      "#{$scope.currentReport.name}_#{$scope.chart.kind}_#{date}".replace(/[^a-zA-Z0-9_]/g, "_")
+      "#{$scope.report.name}_#{$scope.chart.kind}_#{date}".replace(/[^a-zA-Z0-9_]/g, "_")
 
     queryAll = (queries, index, datas, callback) ->
       if index < queries.length

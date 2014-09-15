@@ -48,12 +48,6 @@ angular.module('ndApp')
             goToNewReport()
           return
 
-        # This is tricky: to deserialize the report we first need to
-        # initialize the FieldsService. But to initialize it we need
-        # to know the report's assay. So, we invoke getAssay to get
-        # the report's assay *without* deserailizing it to an object.
-        # Once we initialize the FieldsService we can safely deserialize
-        # the report.
         assay = ReportsService.getAssay(reportData)
 
         FieldsService.loadForContext(assay_name: assay).then (fieldsCollection) ->
