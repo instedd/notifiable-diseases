@@ -1,6 +1,14 @@
 class @FieldsCollection
   constructor: (@fields) ->
 
+  @fieldNames:
+    age_group: 'age_group'
+    date: 'start_time'
+    ethnicity: 'ethnicity'
+    gender: 'gender'
+    result: 'result'
+    assay_name: 'assay_name'
+
   all: ->
     _.values @fields
 
@@ -15,7 +23,7 @@ class @FieldsCollection
     @fields[name].options
 
   locationFor: (name, id) ->
-    @fields[name].byId[id.toString()]
+    @fields[name].locations[id.toString()]
 
   getParentLocations: (name, id) ->
     id = id.toString()
@@ -34,7 +42,7 @@ class @FieldsCollection
     parentLocations
 
   datePeriods: ->
-    resolution = @fields['date'].dateResolution()
+    resolution = @fields[FieldsCollection.fieldNames.date].dateResolution()
 
     has_day   =                resolution == "day"
     has_week  = has_day     || resolution == "week"

@@ -3,12 +3,12 @@
 angular.module('ndApp')
   .controller 'LocationFilterCtrl', ($scope) ->
     field = $scope.filter.field()
-    flattenedLocations = field.flattenedLocations()
+    flattenedLocations = _.values(field.locations)
 
     $scope.selectedLocationId = $scope.filter.location?.id
 
     locationById = (id) ->
-      field.byId[id.toString()]
+      field.locations[id.toString()]
 
     matchesQuery = (location, query) ->
       name = location.name.toLowerCase()

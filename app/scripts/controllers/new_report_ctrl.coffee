@@ -4,7 +4,7 @@ angular.module('ndApp')
       FieldsService.loadForContext().then (fieldsCollection) ->
         $scope.reportsDescriptions = reportsDescriptions
         $scope.currentReport = null
-        $scope.assays = fieldsCollection.optionsFor("assay_name")
+        $scope.assays = fieldsCollection.optionsFor(FieldsCollection.fieldNames.assay_name)
         $scope.report = new Report(fieldsCollection)
         $scope.report.assay = $scope.assays[0].value
         $scope.events = "..."

@@ -37,7 +37,7 @@
       </div>
       <div class="filter" ng-repeat="filter in currentReport.filters" ng-class="{expanded: filterIsExpanded(filter), last: isLastFilter($index), empty: counts[$index] === 0}">
         <div class="filter-title" ng-click="toggleFilter(filter)">
-          <strong ng-class="filter.name">{{filter.label()}}</strong>
+          <strong ng-class="[filter.name, filter.field().type]">{{filter.label()}}</strong>
           <span class="selected-desc">{{filter.selectedDescription()}}</span>
           <span class="count" ng-show="hasCount($index)">{{counts[$index]}}</span>
           <span class="count" ng-hide="hasCount($index)">(...)</span>
@@ -52,7 +52,7 @@
       <div class="add-new-filter">
         <a href="javascript:void(0);" ng-click="addNewFilterIsCollapsed = !addNewFilterIsCollapsed"><span>+</span> Add new filter</a>
         <div collapse="addNewFilterIsCollapsed">
-          <a ng-class="field.name" title="{{field.label}}" ng-repeat="field in fieldsInfo.fields" href="javascript:void(0);" ng-click="addFilter(field)">{{field.label}}</a>
+          <a ng-class="[field.name, field.type]" title="{{field.label}}" ng-repeat="field in fieldsInfo.fields" href="javascript:void(0);" ng-click="addFilter(field)">{{field.label}}</a>
         </div>
       </div>
     </div>

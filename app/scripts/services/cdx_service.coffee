@@ -4,5 +4,5 @@ angular.module('ndApp')
       $http.post "#{settings.api}/events", query
 
     fields: (context = {}) ->
-      $http.get "#{settings.api}/fields?#{$.param context}"
+      $http.get "#{settings.api}/events/schema?#{$.param context}"
 
