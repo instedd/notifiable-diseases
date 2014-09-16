@@ -79,7 +79,7 @@
               <span ng-show="loadingChart">...</span>
               <a href="javascript:void(0)" ng-click="$parent.removeChartByIndex($index)" title="Delete"><img src="images/ic-delete.png"></a>
             </div>
-            <div ng-include src="chartTemplateFor(chart)"></div>
+            <div class="content" ng-include src="chartTemplateFor(chart)"></div>
           </div>
           <div ng-show="editingChart">
             <form ng-submit="saveChanges()">
