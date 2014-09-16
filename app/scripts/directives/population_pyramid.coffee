@@ -17,7 +17,7 @@ angular.module('ndApp')
             ]
             rows: []
           options:
-            width: 540
+            width: '100%'
             height: 320
             title: scope.title
             isStacked: true
