@@ -51,7 +51,15 @@ angular
   .run ($rootScope, settings) ->
     $rootScope.settings = settings
 
-    # If we have a parentURL and we are not embedded in it, redirect to it
-    if settings.parentURL && window.parent == window
-      newLocation = "#{settings.parentURL}/#{window.location.hash}"
-      window.location = newLocation
+    if settings.parentURL
+
+      # If we have a parentURL and we are not embedded in it, redirect to it
+      if window.parent == window
+        newLocation = "#{settings.parentURL}/#{window.location.hash}"
+        window.location = newLocation
+      else if settings.replaceParentURLHash
+        # We change the parent window's hash to match this one, so when the user
+        # refreshes it stays in the same page.
+        $rootScope.$on '$routeChangeStart', ->
+          window.parent.location.hash = window.location.hash
+
