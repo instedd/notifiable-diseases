@@ -7,3 +7,4 @@ bower_components
 *.sublime-workspace
 
 conf/settings.local.json
+conf/custom.local.scss

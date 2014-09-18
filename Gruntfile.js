@@ -17,22 +17,19 @@ module.exports = function (grunt) {
 
   // Manually load settings files and merge them
   var merge = require('merge');
-  var settings = function() {
-    return merge(
-      grunt.file.readJSON('conf/settings.json'),
-      grunt.file.exists('conf/settings.local.json') ? grunt.file.readJSON('conf/settings.local.json') : {},
-      grunt.option('settings') ? grunt.file.readJSON(grunt.option('settings')) : {}
-    );
-  };
+  var appSettings = merge(
+    grunt.file.readJSON('conf/settings.json'),
+    grunt.file.exists('conf/settings.local.json') ? grunt.file.readJSON('conf/settings.local.json') : {},
+    grunt.option('settings') ? grunt.file.readJSON(grunt.option('settings')) : {}
+  );
 
   // Configurable paths for the application
   var appConfig = {
     app: require('./bower.json').appPath || 'app',
     dist: require('./bower.json').distPath || 'dist',
-
-    customStyles: grunt.option('custom-styles'),
     sassDir: '.tmp/.build/styles',
-    settings: settings()
+    customStyles: grunt.option('custom-styles') || appSettings.customStyles,
+    settings: appSettings,
   };
 
   // Snippet for proxy configuration
@@ -463,7 +460,7 @@ module.exports = function (grunt) {
         name: 'config',
         dest: '.tmp/scripts/config.js',
         constants: {
-          settings : settings()
+          settings : appSettings
         }
       },
       build: {}
