@@ -3,7 +3,7 @@
 <div class="row report">
   <div class="col-md-12">
     <h3>
-      <a href="#" editable-text="currentReport.name">{{currentReport.name}}</a>
+      <a href="#" editable-text="currentReport.name" onbeforesave="validateReportName($data)">{{currentReport.name}}</a>
     </h3>
     <p>
       <a href="#" editable-textarea="currentReport.description" e-rows="4" e-cols="60">{{currentReport.description || 'No description'}}</a>

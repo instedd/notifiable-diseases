@@ -15,6 +15,10 @@ angular.module('ndApp')
           else
             goToReport(descs[0].id)
 
+    $scope.validateReportName = (name) ->
+      if $.trim(name).length == 0
+        return "Name can't be blank"
+
     goToReport = (id) ->
       $location.path "/reports/#{id}"
 
