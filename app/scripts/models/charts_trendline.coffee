@@ -104,7 +104,45 @@ class @Charts.Trendline
              else
                throw "Uknknown display: #{@display}"
     series.interval = @grouping
+
+    @extendToDateBounds(report, series.rows, series.cols)
+
     series
+
+  extendToDateBounds: (report, rows, cols) ->
+    createRow = (firstValue) ->
+      row = [firstValue]
+      i = 0
+      while i < cols.length
+        row.push 0
+        i += 1
+      row
+
+    dateFilter = report.findFilter "start_time"
+    if dateFilter
+      intervalFormat = @intervalFormat(@grouping)
+
+      sinceDate = moment(dateFilter.since).format(intervalFormat)
+      untilDate = moment(dateFilter.until).format(intervalFormat)
+
+      if rows.length == 0
+        rows.push createRow(sinceDate)
+        rows.push createRow(untilDate)
+        return
+
+      firstRow = rows[0]
+      lastRow = rows[rows.length - 1]
+
+      if firstRow
+        firstDate = moment(firstRow[0]).format(intervalFormat)
+        if firstDate != sinceDate
+          rows.splice 0, 0, createRow(sinceDate)
+
+        lastDate = moment(lastRow[0]).format(intervalFormat)
+        if lastDate != untilDate
+          rows.push createRow(untilDate)
+
+
 
   getSimpleSeries: (data) ->
     @sortData data
@@ -205,20 +243,17 @@ class @Charts.Trendline
       switch @grouping
         when "day"
           currentDate = moment(date)
-          previousDate = moment(currentDate).add(-1, 'years').format("YYYY-MM-DD")
-          nextDate = moment(currentDate).add(1, 'years').format("YYYY-MM-DD")
         when "week"
           currentDate = moment(date)
-          previousDate = moment(currentDate).add(-1, 'years').format("gggg-[W]WW")
-          nextDate = moment(currentDate).add(1, 'years').format("gggg-[W]WW")
         when "month"
           currentDate = moment("#{date}-01")
-          previousDate = moment(currentDate).add(-1, 'years').format("YYYY-MM")
-          nextDate = moment(currentDate).add(1, 'years').format("YYYY-MM")
         when "year"
           currentDate = moment("#{date}-01-01")
-          previousDate = (parseInt(date) - 1).toString()
-          nextDate = (parseInt(date) + 1).toString()
+
+      intervalFormat = @intervalFormat(@grouping)
+
+      previousDate = moment(currentDate).add(-1, 'years').format(intervalFormat)
+      nextDate = moment(currentDate).add(1, 'years').format(intervalFormat)
 
       # If we are still behind the "since" date, skip this event
       if since && currentDate.diff(since) < 0
@@ -249,6 +284,17 @@ class @Charts.Trendline
       ["Events", "Previous year events"]
     rows:
       rows
+
+  intervalFormat: (interval) ->
+    switch interval
+      when "day"
+        "YYYY-MM-DD"
+      when "week"
+        "gggg-[W]WW"
+      when "month"
+        "YYYY-MM"
+      when "year"
+        "YYYY"
 
   getCompareToLocationSeries: (report, thisLocationEvents, otherLocationEvents) ->
     @sortData thisLocationEvents
@@ -343,4 +389,4 @@ class @Charts.Trendline
         0
 
   getDateFilter: (filters) ->
-    _.find filters, (filter) -> filter.name == "date"
+    _.find filters, (filter) -> filter.name == "start_time"
