@@ -368,7 +368,7 @@ class @Charts.Trendline
     else
       null
 
-  getCSV: (series) ->
+  getCSV: (report, series) ->
     rows = []
     rows.push ["Date"].concat(series.cols)
     for row in series.rows

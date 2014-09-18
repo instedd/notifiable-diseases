@@ -39,11 +39,17 @@ class @Charts.Map
     @updateThresholdsMax(events)
     events
 
-  getCSV: (series) ->
+  getCSV: (report, series) ->
+    locationField = report.fieldsCollection().find("location")
     rows = []
     rows.push ["Location", "Results"]
     for serie in series
-      rows.push [serie.location, serie.count]
+      if locationField
+        location = locationField.locations[serie.location]
+        locationName = locationField.getFullLocationPath(location)
+      else
+        locationName = serie.location
+      rows.push [locationName, serie.count]
     rows
 
   groupingLevel: (filters) ->

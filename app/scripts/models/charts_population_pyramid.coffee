@@ -46,7 +46,7 @@ class @Charts.PopulationPyramid
 
     series
 
-  getCSV: (series) ->
+  getCSV: (report, series) ->
     rows = []
     rows.push ["Age", "Male", "Female"]
     for serie in series

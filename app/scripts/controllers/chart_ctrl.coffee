@@ -13,7 +13,7 @@ angular.module('ndApp')
       render()
 
     $scope.getCSV = ->
-      $scope.chart.getCSV($scope.series)
+      $scope.chart.getCSV($scope.report, $scope.series)
 
     $scope.getCSVFilename = ->
       date = $filter("date")(new Date(), "yyyyMMddHMMss")
