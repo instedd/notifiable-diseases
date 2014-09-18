@@ -36,11 +36,11 @@ class @Charts.PopulationPyramid
       else
         obj = age: item.age_group
         if item.gender == "male"
-          item.male = item.count
-          item.female = 0
+          obj.male = item.count
+          obj.female = 0
         else
-          item.female = item.count
-          item.male = 0
+          obj.female = item.count
+          obj.male = 0
         series.push obj
         i += 1
 
