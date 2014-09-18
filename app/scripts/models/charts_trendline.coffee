@@ -118,9 +118,10 @@ class @Charts.Trendline
         i += 1
       row
 
+    intervalFormat = @intervalFormat(@grouping)
+
     dateFilter = report.findFilter "start_time"
     if dateFilter
-      intervalFormat = @intervalFormat(@grouping)
 
       sinceDate = moment(dateFilter.since).format(intervalFormat)
       untilDate = moment(dateFilter.until).format(intervalFormat)
@@ -141,8 +142,14 @@ class @Charts.Trendline
         lastDate = moment(lastRow[0]).format(intervalFormat)
         if lastDate != untilDate
           rows.push createRow(untilDate)
+    else if rows.length > 0
+      now = moment().format(intervalFormat)
 
+      firstRow = rows[0]
+      firstDate = moment(firstRow[0]).format(intervalFormat)
 
+      if firstDate != now
+        rows.push createRow(now)
 
   getSimpleSeries: (data) ->
     @sortData data
