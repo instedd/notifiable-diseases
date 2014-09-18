@@ -4,7 +4,7 @@ class @FieldsCollection
   @fieldNames:
     age_group: 'age_group'
     date: 'start_time'
-    ethnicity: 'ethnicity'
+    ethnicity: 'race_ethnicity'
     gender: 'gender'
     result: 'result'
     assay_name: 'assay_name'
