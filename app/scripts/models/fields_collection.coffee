@@ -8,6 +8,7 @@ class @FieldsCollection
     gender: 'gender'
     result: 'result'
     assay_name: 'assay_name'
+    location: 'location'
 
   all: ->
     _.values @fields

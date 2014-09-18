@@ -40,7 +40,7 @@ class @Charts.Map
     events
 
   getCSV: (report, series) ->
-    locationField = report.fieldsCollection().find("location")
+    locationField = report.fieldsCollection().find(FieldsCollection.fieldNames.location)
     rows = []
     rows.push ["Location", "Results"]
     for serie in series
@@ -53,7 +53,7 @@ class @Charts.Map
     rows
 
   groupingLevel: (filters) ->
-    location_filter = _.find(filters, (f) -> f.name == "location")
+    location_filter = _.find(filters, (f) -> f.name == FieldsCollection.fieldNames.location)
 
     filtered_level = location_filter && location_filter.adminLevel()
     if (filtered_level)

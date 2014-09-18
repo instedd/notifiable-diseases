@@ -122,7 +122,7 @@ class @Charts.Trendline
     cols = series.cols
     intervalFormat = @intervalFormat(@grouping)
 
-    dateFilter = report.findFilter "start_time"
+    dateFilter = report.findFilter FieldsCollection.fieldNames.date
     if dateFilter
 
       sinceDate = moment(dateFilter.since).format(intervalFormat)
@@ -353,7 +353,7 @@ class @Charts.Trendline
       rows
 
   findLocationFilter: (filters) ->
-    _.find filters, (filter) -> filter.name == "location"
+    _.find filters, (filter) -> filter.name == FieldsCollection.fieldNames.location
 
   getFilterLocation: (filters) ->
     @findLocationFilter(filters)?.location
@@ -362,7 +362,7 @@ class @Charts.Trendline
     locationFilter = @findLocationFilter(filters)
     locationId = locationFilter?.location?.id
     if locationId
-      parentLocations = @fieldsCollection().getParentLocations "location", locationId
+      parentLocations = @fieldsCollection().getParentLocations FieldsCollection.fieldNames.location, locationId
       myLevel = parseInt(@compareToLocation)
       _.find parentLocations, (loc) -> loc.level == myLevel
     else
@@ -398,7 +398,7 @@ class @Charts.Trendline
         0
 
   getDateFilter: (filters) ->
-    _.find filters, (filter) -> filter.name == "start_time"
+    _.find filters, (filter) -> filter.name == FieldsCollection.fieldNames.date
 
   fillGaps: (series) ->
     rows = series.rows

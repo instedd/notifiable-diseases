@@ -28,7 +28,8 @@ class @Filters.LocationFilter
     if @empty()
       "All"
     else
-      @field().getFullLocationPath(@location)
+      location = @field().locations[@location.id]
+      @field().getFullLocationPath(location)
 
   adminLevel: ->
     @location && @location.level
