@@ -83,10 +83,8 @@ compute = (series) =>
   for col in series.cols
     cols.push id: col, label: col, type: "number"
 
-  seriesRows = fillGaps(series.rows, series.interval, series.cols.length - 1)
-
   rows = []
-  for row in seriesRows
+  for row in series.rows
     c = [v: row[0]]
 
     i = 0
@@ -124,92 +122,3 @@ sliceRows = (rows, offset) ->
     rows.slice(start)
   else
     rows.slice(start, end)
-
-fillGaps = (rows, interval, cols_num) ->
-  return rows if rows.length < 2
-
-  new_rows = []
-  i = 0
-  while i < rows.length - 1
-    row = rows[i]
-    thisRow = row[0]
-    nextRow = rows[i + 1][0]
-
-    new_rows.push row
-
-    nextValue = thisRow
-
-    while true
-      nextValue = nextDate(nextValue, interval)
-      if nextValue >= nextRow
-        break
-      else
-        emptyRow = [nextValue]
-        for j in [0 .. cols_num]
-          emptyRow.push 0
-        new_rows.push emptyRow
-
-    i += 1
-
-  new_rows.push rows[rows.length - 1]
-  new_rows
-
-nextDate = (value, interval) ->
-  switch interval
-    when "year"
-      nextYear(value)
-    when "month"
-      nextMonth(value)
-    when "week"
-      nextWeek(value)
-    when "day"
-      nextDay(value)
-    else
-      throw "Uknknown interval: #{interval}"
-
-nextYear = (value) ->
-  (parseInt(value) + 1).toString()
-
-nextMonth = (value) ->
-  [year, month] = value.split("-")
-  year = parseInt(year)
-  month = parseInt(month)
-  month += 1
-  if month == 13
-    month = 1
-    year += 1
-  "#{year}-#{pad(month)}"
-
-nextWeek = (value) ->
-  [year, week] = value.split("-W")
-  year = parseInt(year)
-  week = parseInt(week)
-
-  # Easy case: week is less than 50, there's no problem adding one
-  if week < 50
-    "#{year}-W#{pad(week + 1)}"
-  else
-    date = moment().year(year).isoWeek(week).add(1, 'weeks')
-    # Apparently when week is 1 moment doesn't increase the year...
-    if date.isoWeek() == 1
-      "#{year + 1}-W01"
-    else
-      "#{year}-W#{pad(week + 1)}"
-
-nextDay = (value) ->
-  [year, month, day] = value.split("-")
-  year = parseInt(year)
-  month = parseInt(month)
-  day = parseInt(day)
-
-  # Easy case: day is less than 28, there's no problem adding one
-  if day < 28
-    "#{year}-#{pad(month)}-#{pad(day + 1)}"
-  else
-    moment().year(year).month(month - 1).date(day).add(1, 'days').format("YYYY-MM-DD")
-
-pad = (num) ->
-  if num < 10
-    "0#{num}"
-  else
-    "#{num}"
