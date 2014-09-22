@@ -13,7 +13,7 @@ class @Filters.LocationFilter
 
   applyTo: (query) ->
     if @location
-      query["location"] = @location.id
+      query[@name] = @location.id
 
   empty: ->
     if @location
