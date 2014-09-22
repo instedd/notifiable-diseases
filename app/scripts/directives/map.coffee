@@ -51,11 +51,14 @@ class MapWidget
     map = L.map(element, { 
       attributionControl: false,
       zoomControl: false,
-      minZoom:3,
+      minZoom: 2
     })
 
-    map.setView([35.981250, -96.148398], 3)
-    map.setMaxBounds map.getBounds()
+    us_center = [48.224672, -100.371093]
+    us_bounds = [[-1.054627, -182.109375],[73.726594, -18.632812]]
+
+    map.setView(us_center, 2)
+    map.setMaxBounds us_bounds
 
     map.dragging._draggable.on('predrag', () -> 
       currentTopLeft = map._initialTopLeftPoint.subtract(@_newPos)
