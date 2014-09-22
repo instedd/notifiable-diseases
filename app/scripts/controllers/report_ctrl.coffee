@@ -16,8 +16,11 @@ angular.module('ndApp')
             goToReport(descs[0].id)
 
     $scope.validateReportName = (name) ->
-      if $.trim(name).length == 0
+      length = $.trim(name).length
+      if length == 0
         return "Name can't be blank"
+      else if length > 60
+        return "Name is too long (maximum 60 chars, current is #{length})"
 
     goToReport = (id) ->
       $location.path "/reports/#{id}"
