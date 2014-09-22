@@ -1,7 +1,7 @@
 'use strict'
 
 angular.module('ndApp')
-  .controller 'TrendlineCtrl', ($scope) ->
+  .controller 'TrendlineCtrl', ($scope, $timeout) ->
     $scope.offset = 0
     $scope.viz =
       type: "AreaChart"
@@ -50,6 +50,11 @@ angular.module('ndApp')
 
     render = ->
       $scope.viz.data.rows = sliceRows($scope.computedInfo.rows, $scope.offset)
+
+      # The angular chart directive sometimes doesn't realize data changes, so
+      # we force a window reisze to force a redraw.
+      $timeout ->
+        window.dispatchEvent(new Event('resize'))
 
     computeAndRender = ->
       if $scope.series
