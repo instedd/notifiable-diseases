@@ -1,7 +1,17 @@
-<div class="map-config">
+<div class="map-config" ng-controller="MapConfigCtrl">
   <div class="row description">
     <div class="col-md-12">
       Show location in a different colour when positive result count reaches the following thresholds:
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-12">
+      <label>
+        Map using:
+      </label>
+      <select ng-model="chart.mappingField">
+        <option ng-repeat="field in locationFields()" value="{{field.name}}" ng-selected="chart.mappingField == field.name">{{field.label}}</option>
+      </select>
     </div>
   </div>
   <div class="row">

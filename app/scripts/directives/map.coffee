@@ -72,7 +72,7 @@ class MapWidget
     map
 
   draw_results: (polygon_service, admin_level, results) ->
-    polygon_service.fetch_polygon(admin_level).then (polygons) =>
+    polygon_service.fetch_polygon(@chart.mappingField, admin_level).then (polygons) =>
       @clear_map()
       if results.length > 0
         polygons = @result_polygons(polygons, results)
@@ -101,7 +101,8 @@ class MapWidget
     }
 
   result_polygons: (full_topojson, results) ->
-    result_count_by_id = _.object(_.map(results, (e) -> [e.location, e.count]))
+    field = @chart.mappingField
+    result_count_by_id = _.object(_.map(results, (e) -> [e[field], e.count]))
     geometries = @topojson_geometries(full_topojson)
     filtered_geometries = _.reduce(geometries, ((r,o) ->
       count_for_location = result_count_by_id[o.properties.ID]
@@ -122,7 +123,7 @@ class MapWidget
     geometries =  polygons.objects.locations.geometries
     if admin_level > 0 and geometries.length > 0
       parent_id = geometries[0].properties["PARENT_ID"]
-      polygon_service.fetch_polygon(admin_level - 1).then (topojson) =>
+      polygon_service.fetch_polygon(@chart.mappingField, admin_level - 1).then (topojson) =>
         geometries = @topojson_geometries(topojson)
         parent = _.find(geometries, (g) -> g.properties["ID"] == parent_id)
         if parent

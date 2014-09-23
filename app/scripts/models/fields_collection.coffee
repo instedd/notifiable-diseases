@@ -17,6 +17,9 @@ class @FieldsCollection
     enumFields = _.filter @fields, type: 'enum'
     _.sortBy enumFields, (f) -> f.label.toLowerCase()
 
+  allLocation: ->
+    _.filter @fields, type: 'location'
+
   find: (name) ->
     @fields[name]
 

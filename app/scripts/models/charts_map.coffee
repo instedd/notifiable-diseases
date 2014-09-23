@@ -8,19 +8,25 @@ class @Charts.Map
 
   default_thersholds_max = default_thersholds.upper + 10
 
-  max_available_polygon_level = 5   # initialize at configuration time
+  fieldLevels = {}
 
-  @setMaxAvailablePolygonLevel: (value) ->
-    max_available_polygon_level = value
+  @setAvailablePolygonLevels: (field_levels) ->
+    fieldLevels = field_levels
+
+  getMaxPolygonLevel = (field) ->
+    fieldLevels[field] || 0
 
   constructor: (fieldsCollection) ->
     @kind = 'Map'
+    @fieldsCollection = () -> fieldsCollection
+    @mappingField = fieldsCollection.allLocation()[0]?.name
     @thresholds = default_thersholds
     @thresholds_max = default_thersholds_max
 
   initializeFrom: (data) ->
     @thresholds = _.clone data.thresholds
     @thresholds_max = data.thresholds_max
+    @mappingField = data.mappingField
     @
 
   toJSON: ->
@@ -31,7 +37,10 @@ class @Charts.Map
 
   applyToQuery: (query, filters) =>
     drawn_level = @.groupingLevel(filters)
-    query.group_by = [ {"admin_level": drawn_level} ]
+    grouping_field = if @mappingField == 'location' then 'admin_level' else "#{@mappingField}_admin_level"
+    grouping = {}
+    grouping[grouping_field] = drawn_level
+    query.group_by = [grouping]
     [query]
 
   getSeries: (report, data) =>
@@ -40,7 +49,7 @@ class @Charts.Map
     events
 
   getCSV: (report, series) ->
-    locationField = report.fieldsCollection().find(FieldsCollection.fieldNames.location)
+    locationField = report.fieldsCollection().find(@mappingField)
     rows = []
     rows.push ["Location", "Results"]
     for serie in series
@@ -53,11 +62,11 @@ class @Charts.Map
     rows
 
   groupingLevel: (filters) ->
-    location_filter = _.find(filters, (f) -> f.name == FieldsCollection.fieldNames.location)
+    location_filter = _.find(filters, name: @mappingField)
 
     filtered_level = location_filter && location_filter.adminLevel()
     if (filtered_level)
-      drawn_level = Math.min(max_available_polygon_level, filtered_level + 1)
+      drawn_level = Math.min(getMaxPolygonLevel(@mappingField), filtered_level + 1)
     else
       drawn_level = 1
 

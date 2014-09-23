@@ -5,16 +5,19 @@ angular.module('ndApp').service 'PolygonService', ($q, $http, settings) ->
   cache = {}
 
   service =
-    fetch_polygon: (admin_level) ->
+    fetch_polygon: (field, admin_level) ->
       q = $q.defer()
-      
-      if cache[admin_level]
-        q.resolve cache[admin_level]
-      else if polygon_urls[admin_level]
-        $http.get(polygon_urls[admin_level]).success (data) ->
-          cache[admin_level] = data
-          q.resolve(data)
+
+      url = polygon_urls[field]?[admin_level]
+
+      if url
+        if cache[url]
+          q.resolve cache[url]
+        else
+          $http.get(url).success (data) ->
+            cache[url] = data
+            q.resolve(data)
       else
-        q.reject "No url configured to fetch polygons of level #{admin_level}"
+        q.reject "No url configured to fetch polygons for field #{field} of level #{admin_level}"
 
       q.promise
