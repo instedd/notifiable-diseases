@@ -273,6 +273,30 @@ a.editable-click {
   }
 }
 
+@mixin filter-icon() {
+  background-repeat: no-repeat;
+  &.all {
+    background-image: url("../images/f_all.png");
+  }
+  &.date {
+    background-image: url("../images/f_date.png");
+  }
+  &.age_group.enum {
+    background-image: url("../images/f_age.png");
+  }
+  &.gender.enum {
+    background-image: url("../images/f_gender.png");
+  }
+  &.ethnicity.enum, &.race_ethnicity.enum, &.race.enum {
+    background-image: url("../images/f_ethnicity.png");
+  }
+  &.result.enum {
+    background-image: url("../images/f_condition.png");
+  }
+  &.location {
+    background-image: url("../images/f_location.png");
+  }
+}
 
 .filters-list {
   @include box-shadow(0 1px 1px 1px rgba(0, 0, 0, 0.1));
@@ -300,8 +324,8 @@ a.editable-click {
       @include gradient-vertical(#e5e5e5, #fcfcfc);
       @include box-sizing(content-box);
     }
-
   }
+
   .filter {
     background: url("../images/f_arrow_sep01.png") no-repeat right top;
     padding: 0 10px 0 15px;
@@ -317,28 +341,9 @@ a.editable-click {
       cursor: pointer;
       strong {
         padding: 5px 0 5px 30px ;
-        &.all {
-          background: url("../images/f_all.png") no-repeat;
-        }
-        &.date {
-          background: url("../images/f_date.png") no-repeat;
-        }
-        &.age_group.enum {
-          background: url("../images/f_age.png") no-repeat;
-        }
-        &.gender.enum {
-          background: url("../images/f_gender.png") no-repeat;
-        }
-        &.race_ethnicity.enum, &.race.enum, &.ethnicity.enum {
-          background: url("../images/f_ethnicity.png") no-repeat;
-        }
-        &.result.enum {
-          background: url("../images/f_condition.png") no-repeat;
-        }
-        &.location {
-          background: url("../images/f_location.png") no-repeat;
-        }
+        @include filter-icon();
       }
+
       .count {
         @include box-sizing(border-box);
         font-size: 11px;
@@ -526,12 +531,12 @@ a.editable-click {
   hr {
     margin: 10px 0;
   }
+
   .add-new-filter {
     font-weight: bold;
     padding: 0 15px 10px 15px;
 
     a {
-      /*color: #999999;*/
       text-decoration: none !important;
       span {
         font-size: 20px;
@@ -541,32 +546,30 @@ a.editable-click {
     div {
       padding-top: 5px;
       a {
-        text-indent: -999em;
+        font-weight: normal;
         display: inline-block;
-        margin-right: 10px;
-        width: 40px;
-        height: 40px;
-        border-radius: 4px;
-        border: 1px solid #eaeaea;
-        overflow: hidden;
+        margin: 5px 10px 5px 0px;
+        text-align:center;
+        width: 50px;
+        vertical-align: top;
+        color: #555555;
 
-        &.date {
-          background: url("../images/f_date.png") no-repeat center;
+        i {
+          display: inline-block;
+          width: 40px;
+          height: 40px;
+          border-radius: 4px;
+          border: 1px solid #eaeaea;
+          background-position: center;
+          @include filter-icon();
         }
-        &.age_group {
-          background: url("../images/f_age.png") no-repeat center
-        }
-        &.gender {
-          background: url("../images/f_gender.png") no-repeat center;
-        }
-        &.race, &.ethnicity, &.race_ethnicity {
-          background: url("../images/f_ethnicity.png") no-repeat center;
-        }
-        &.result {
-          background: url("../images/f_condition.png") no-repeat center;
-        }
-        &.location {
-          background: url("../images/f_location.png") no-repeat center;
+
+        span {
+          font-size: 12px;
+          display: block;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          line-height: 12px;
         }
       }
     }

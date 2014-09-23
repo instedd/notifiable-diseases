@@ -52,7 +52,10 @@
       <div class="add-new-filter">
         <a href="javascript:void(0);" ng-click="addNewFilterIsCollapsed = !addNewFilterIsCollapsed"><span>+</span> Add new filter</a>
         <div collapse="addNewFilterIsCollapsed">
-          <a ng-class="[field.name, field.type]" title="{{field.label}}" ng-repeat="field in fieldsInfo.fields" href="javascript:void(0);" ng-click="addFilter(field)">{{field.label}}</a>
+          <a title="{{field.label}}" ng-repeat="field in fieldsInfo.fields" href="javascript:void(0);" ng-click="addFilter(field)">
+            <i ng-class="[field.name, field.type]"></i>
+            <span>{{field.label}}</span>
+          </a>
         </div>
       </div>
     </div>
