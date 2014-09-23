@@ -32,7 +32,7 @@
         <div class="filter-title">
           <strong class="all">All cases</strong>
           <span class="count" ng-show="hasCount(-1)">{{counts[-1]}}</span>
-          <span class="count" ng-hide="hasCount(-1)">(...)</span>
+          <span class="count loading" ng-hide="hasCount(-1)"></span>
         </div>
       </div>
       <div class="filter" ng-repeat="filter in currentReport.filters" ng-class="{expanded: filterIsExpanded(filter), last: isLastFilter($index), empty: counts[$index] === 0}">
@@ -40,7 +40,7 @@
           <strong ng-class="[filter.name, filter.field().type]">{{filter.label()}}</strong>
           <span class="selected-desc">{{filter.selectedDescription()}}</span>
           <span class="count" ng-show="hasCount($index)">{{counts[$index]}}</span>
-          <span class="count" ng-hide="hasCount($index)">(...)</span>
+          <span class="count loading" ng-hide="hasCount($index)"></span>
           <a class="remove" href="javascript:void(0)" ng-click="$parent.removeFilterByIndex($index)" title="Remove filter"></a>
         </div>
         <div collapse="!filterIsExpanded(filter)">
@@ -70,13 +70,13 @@
       <div class="col-md-6" ng-repeat="chart in currentReport.charts">
         <!-- CODEREVIEW: Keep all chart pieces into a separate template which includes the necessary directives -->
         <div class='nd-chart-container well' ng-controller="ChartCtrl" ng-init="chart=chart;report=currentReport">
+          <div ng-show="loadingChart && !editingChart" class="chart-loading"></div>
           <div ng-hide="editingChart">
             <div class="actions">
               <span ng-show="chart.isConfigurable()">
                 <a href="javascript:void(0)" ng-click="edit()" title="Edit"><img src="images/ic-edit.png"></a>
               </span>
               <a href="javascript:void(0)" ng-csv="getCSV()" filename="{{getCSVFilename()}}" title="Download CSV"><img src="images/ic-download.png"></a>
-              <span ng-show="loadingChart">...</span>
               <a href="javascript:void(0)" ng-click="$parent.removeChartByIndex($index)" title="Delete"><img src="images/ic-delete.png"></a>
             </div>
             <div class="content" ng-include src="chartTemplateFor(chart)"></div>

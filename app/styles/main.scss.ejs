@@ -124,23 +124,10 @@ body {
   }
 }
 
-.report {
-  /*padding: 15px 0px 0px 15px;*/
-  .nd-chart-container {
-    position: relative;
-    .nd-chart {
-      padding: 10px;
-      height: 400px;
-      width: 100%;
-    }
-
-    .controls {
-      padding-top: 30px;
-      label {
-        display: block;
-      }
-    }
-  }
+.loading {
+  display: inline-block;
+  width: 20px;
+  background: url('../images/loading.gif') no-repeat center;
 }
 
 a.editable-click {
@@ -180,10 +167,22 @@ a.editable-click {
     margin-top: 40px;
   }
 
+  .chart-loading {
+    position: absolute;
+    opacity: 0.8;
+    background: url('../images/loading-large.gif') no-repeat center 180px #ffffff;
+    width: 100%;
+    height: 100%;
+    top: 0px;
+    left: 0px;
+    z-index: 10;
+  }
+
   &:hover .actions {
     display: block;
   }
 }
+
 .nd-map {
   height: 320px;
   cursor: default;
