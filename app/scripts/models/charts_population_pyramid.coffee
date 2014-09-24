@@ -17,7 +17,6 @@ class @Charts.PopulationPyramid
 
   applyToQuery: (query) ->
     query.group_by = ['age_group', 'gender']
-    query.gender = _.keys GENDERS
     [query]
 
   getSeries: (report, data) ->
