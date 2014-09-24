@@ -80,10 +80,19 @@ angular.module('ndApp')
         fields[FieldsCollection.fieldNames.gender]?.instructions = "Select the genders of the events you want to filter"
         fields[FieldsCollection.fieldNames.result]?.instructions = "Select the results of the events you want to filter"
 
-        fields = _.mapValues fields, (field, name) ->
-          field.name = name
-          field_type = _.find(FIELD_TYPES, (type) -> type.handles(field)) || Field
-          new field_type(field)
+        # fields = _.mapValues fields, (field, name) ->
+        #   field.name = name
+        #   field_type = _.find(FIELD_TYPES, (type) -> type.handles(field)) || Field
+        #   new field_type(field)
+
+        # Not supported field types are ignored.
+        fields = _.inject fields, ((fields, field, name) ->
+            field_type = _.find(FIELD_TYPES, (type) -> type.handles(field))
+            if field_type
+              field.name = name
+              fields[name] = new field_type(field)
+            fields
+          ), {}
 
         q.resolve(new FieldsCollection(fields))
 
