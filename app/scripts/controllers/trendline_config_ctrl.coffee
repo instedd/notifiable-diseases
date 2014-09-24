@@ -12,6 +12,8 @@ angular.module('ndApp').controller 'TrendlineConfigCtrl', ($scope) ->
 
   $scope.parentLocations = (fieldName) ->
     filter = _.find getLocationFilters(), name: fieldName
+    return [] unless filter
+
     parentLocations = getParentLocations(filter)
 
     # Initialize $scope.chart.compareToLocation if not already set, so the
