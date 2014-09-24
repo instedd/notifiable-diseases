@@ -2,6 +2,7 @@ class @FieldsCollection
   constructor: (@fields) ->
 
   @fieldNames:
+    age: 'age'
     age_group: 'age_group'
     date: 'start_time'
     ethnicity: 'race_ethnicity'

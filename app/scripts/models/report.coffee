@@ -47,13 +47,14 @@ class @Report
     for filter in @filters when !filter.allSelected()
       switch filter.name
         when FieldsCollection.fieldNames.age_group        then ageFilter = filter
+        when FieldsCollection.fieldNames.age              then ageFilter = filter
         when FieldsCollection.fieldNames.date             then dateFilter = filter
         when FieldsCollection.fieldNames.ethnicity        then ethnicityFilter = filter
         when FieldsCollection.fieldNames.gender           then genderFilter = filter
         when FieldsCollection.fieldNames.result           then resultFilter = filter
         when FieldsCollection.fieldNames.location         then locationFilter = filter
         when FieldsCollection.fieldNames.patient_location then patientLocationFilter = filter
-        else                                                   otherFilters.push filter
+        else                                              otherFilters.push filter
 
     str = ""
     first = true

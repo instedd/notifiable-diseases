@@ -18,5 +18,7 @@ angular.module('ndApp')
             Filters.DateFilter
           when "location"
             Filters.LocationFilter
+          when "integer"
+            Filters.IntegerFilter
           else
             throw "Unknown field type: #{type}"

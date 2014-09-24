@@ -1,4 +1,7 @@
 <div ng-controller="DateRangeCtrl">
+  <div ng-show="dateResolution == 'second'">
+    <input date-range-picker ng-model="dateRange" class="form-control date-picker" size="20" />
+  </div>
   <div ng-show="dateResolution == 'day'">
     <input date-range-picker ng-model="dateRange" class="form-control date-picker" size="20" />
   </div>

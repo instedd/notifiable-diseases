@@ -26,6 +26,16 @@ class EnumField extends Field
   @handles: (attrs) ->
     attrs.values?
 
+class IntegerField extends Field
+  constructor: (field) ->
+    @type = 'integer'
+    @minimum = field.minimum
+    @maximum = field.maximum
+    super(field)
+
+  @handles: (attrs) ->
+    attrs.type == 'integer' && attrs.minimum? && attrs.maximum?
+
 class LocationField extends Field
   constructor: (field) ->
     @type = 'location'
@@ -58,7 +68,7 @@ class DateField extends Field
     @resolution
 
 
-FIELD_TYPES = [DateField, LocationField, EnumField]
+FIELD_TYPES = [DateField, LocationField, EnumField, IntegerField]
 
 angular.module('ndApp')
   .service 'FieldsService', (Cdx, $q) ->
