@@ -18,11 +18,13 @@
       <label>
         <input type="radio" name="display" ng-model="chart.display" value="compareToLocation"> Compare to
       </label>
-      <select ng-disabled="chart.display != 'compareToLocation'" ng-model="chart.compareToLocationField">
-        <option ng-repeat="field in comparableLocationFields()" value="{{field.name}}" ng-selected="field.name == chart.compareToLocationField">{{field.label}}</option>
+      <select ng-disabled="chart.display != 'compareToLocation'"
+              ng-model="chart.compareToLocationField"
+              ng-options="field.name as field.label for field in comparableLocationFields()">
       </select>
-      <select ng-disabled="chart.display != 'compareToLocation'" ng-model="chart.compareToLocation">
-        <option ng-repeat="location in parentLocations(chart.compareToLocationField)" value="{{location.level}}" ng-selected="location.level == chart.compareToLocation">{{location.name}}</option>
+      <select ng-disabled="chart.display != 'compareToLocation'"
+              ng-model="chart.compareToLocation"
+              ng-options="location.level as location.name for location in parentLocations(chart.compareToLocationField)">
       </select>
     </span>
     <br/>

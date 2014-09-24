@@ -59,7 +59,7 @@ class @Charts.Trendline
         location = @getCompareToLocation(report.filters)
         if location
           compareField = @fieldsCollection().find(@compareToLocationField)
-          desc += ", compared to #{location.name} using #{compareField.label}"
+          desc += ", compared to #{location.name} from #{compareField.label}"
     desc
 
   applyToQuery: (query, filters) ->

@@ -40,7 +40,7 @@ class @Filters.LocationFilter
   toJSON: ->
     {
       name: @name
-      location: @location.id
+      location: @location?.id
     }
 
   initializeFrom: (data) ->
