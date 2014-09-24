@@ -5,7 +5,7 @@ class @Charts.PopulationPyramid
 
   constructor: (fieldsCollection) ->
     @kind = 'PopulationPyramid'
-    age_group_field = fieldsCollection.find('age_group')
+    age_group_field = fieldsCollection.find(FieldsCollection.fieldNames.age_group)
     @ageGroupField = () -> age_group_field
 
   toJSON: ->
@@ -18,11 +18,11 @@ class @Charts.PopulationPyramid
     false
 
   applyToQuery: (query) ->
-    query.group_by = ['age_group', 'gender']
+    query.group_by = [FieldsCollection.fieldNames.age_group, FieldsCollection.fieldNames.gender]
     [query]
 
   getFilter = (report) ->
-    _.find report.filters, name: 'age_group'
+    _.find report.filters, name: FieldsCollection.fieldNames.age_group
 
   getSeries: (report, data) ->
     data = data[0].events
@@ -30,7 +30,7 @@ class @Charts.PopulationPyramid
     field = @ageGroupField()
     if !field
       # convert the flat list of event counts to an array of objects, one for each age group
-      groups = _.groupBy data, 'age_group'
+      groups = _.groupBy data, FieldsCollection.fieldNames.age_group
       series = _.map groups, (items, age_group) ->
         group = _.object(_.map items, (item) -> [GENDERS[item.gender], item.count])
         group.age = age_group

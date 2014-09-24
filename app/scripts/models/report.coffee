@@ -47,13 +47,14 @@ class @Report
     # TODO: we're missing the patient location in the filter description
     for filter in @filters when !filter.allSelected()
       switch filter.name
-        when FieldsCollection.fieldNames.age_group then ageFilter = filter
-        when FieldsCollection.fieldNames.date      then dateFilter = filter
-        when FieldsCollection.fieldNames.ethnicity then ethnicityFilter = filter
-        when FieldsCollection.fieldNames.gender    then genderFilter = filter
-        when FieldsCollection.fieldNames.result    then resultFilter = filter
-        when FieldsCollection.fieldNames.location  then locationFilter = filter
-        else                                            otherFilters.push filter
+        when FieldsCollection.fieldNames.age_group        then ageFilter = filter
+        when FieldsCollection.fieldNames.date             then dateFilter = filter
+        when FieldsCollection.fieldNames.ethnicity        then ethnicityFilter = filter
+        when FieldsCollection.fieldNames.gender           then genderFilter = filter
+        when FieldsCollection.fieldNames.result           then resultFilter = filter
+        when FieldsCollection.fieldNames.location         then locationFilter = filter
+        when FieldsCollection.fieldNames.patient_location then patientLocationFilter = filter
+        else                                                   otherFilters.push filter
 
     str = ""
     first = true
@@ -85,6 +86,11 @@ class @Report
     if locationFilter
       str += " in "
       str += locationFilter.shortDescription()
+      str += " "
+
+    if patientLocationFilter
+      str += " from patients in "
+      str += patientLocationFilter.shortDescription()
       str += " "
 
     if dateFilter

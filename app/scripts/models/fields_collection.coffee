@@ -9,6 +9,7 @@ class @FieldsCollection
     result: 'result'
     assay_name: 'assay_name'
     location: 'location'
+    patient_location: 'patient_location'
 
   all: ->
     _.values @fields
