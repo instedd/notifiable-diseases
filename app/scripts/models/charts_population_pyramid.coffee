@@ -5,6 +5,8 @@ class @Charts.PopulationPyramid
 
   constructor: (fieldsCollection) ->
     @kind = 'PopulationPyramid'
+    age_group_field = fieldsCollection.find('age_group')
+    @ageGroupField = () -> age_group_field
 
   toJSON: ->
     @
@@ -19,15 +21,34 @@ class @Charts.PopulationPyramid
     query.group_by = ['age_group', 'gender']
     [query]
 
+  getFilter = (report) ->
+    _.find report.filters, name: 'age_group'
+
   getSeries: (report, data) ->
     data = data[0].events
 
-    # convert the flat list of event counts to an array of objects, one for each age group
-    groups = _.groupBy data, 'age_group'
-    series = _.map groups, (items, age_group) ->
-      group = _.object(_.map items, (item) -> [GENDERS[item.gender], item.count])
-      group.age = age_group
-      group
+    field = @ageGroupField()
+    if !field
+      # convert the flat list of event counts to an array of objects, one for each age group
+      groups = _.groupBy data, 'age_group'
+      series = _.map groups, (items, age_group) ->
+        group = _.object(_.map items, (item) -> [GENDERS[item.gender], item.count])
+        group.age = age_group
+        group
+    else
+      options = if filter = getFilter(report)
+        filter.values
+      else
+        _.map field.options, 'value'
+
+      # create the age groups from the age_group enumerated options and then
+      # fill in the counts with the received data
+      groups = _.object(_.map options, (option) ->
+        [option, { age: option, male: 0, female: 0}]
+      )
+      _.forEach data, (item) ->
+        groups[item.age_group][GENDERS[item.gender]] = item.count if groups[item.age_group]
+      series = _.mapValues groups
 
     _.sortBy series, (group) -> parseFloat(group.age.split('-')[0])
 

@@ -44,6 +44,7 @@ class @Report
     # TODO: other filters is always empty for now, so it's not used
     otherFilters = []
 
+    # TODO: we're missing the patient location in the filter description
     for filter in @filters when !filter.allSelected()
       switch filter.name
         when FieldsCollection.fieldNames.age_group then ageFilter = filter
