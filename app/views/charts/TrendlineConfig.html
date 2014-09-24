@@ -13,13 +13,16 @@
     <select ng-disabled="chart.display != 'split'" ng-model="chart.splitField">
       <option ng-repeat="enumField in fieldsInfo.enumFields" value="{{enumField.name}}">{{enumField.label}}</option>
     </select>
-    <span ng-show="hasParentLocations()">
+    <span ng-show="hasAnyParentLocations()">
       <br/>
       <label>
         <input type="radio" name="display" ng-model="chart.display" value="compareToLocation"> Compare to
       </label>
+      <select ng-disabled="chart.display != 'compareToLocation'" ng-model="chart.compareToLocationField">
+        <option ng-repeat="field in comparableLocationFields()" value="{{field.name}}" ng-selected="field.name == chart.compareToLocationField">{{field.label}}</option>
+      </select>
       <select ng-disabled="chart.display != 'compareToLocation'" ng-model="chart.compareToLocation">
-        <option ng-repeat="location in parentLocations()" value="{{location.level}}" ng-selected="location.level == chart.compareToLocation">{{location.name}}</option>
+        <option ng-repeat="location in parentLocations(chart.compareToLocationField)" value="{{location.level}}" ng-selected="location.level == chart.compareToLocation">{{location.name}}</option>
       </select>
     </span>
     <br/>

@@ -8,6 +8,7 @@ class @Charts.Trendline
     @grouping = 'year'
     @compareToDate = 'previous_year'
     @splitField = fieldsCollection.allEnum()[0]?.name
+    @compareToLocationField = fieldsCollection.allLocation()[0]?.name
 
   initializeFrom: (data) ->
     @display = data.display
@@ -15,6 +16,7 @@ class @Charts.Trendline
     @grouping = data.grouping
     @compareToDate = data.compareToDate
     @compareToLocation = data.compareToLocation
+    @compareToLocationField = data.compareToLocationField
     @
 
   toJSON: ->
@@ -25,6 +27,7 @@ class @Charts.Trendline
       grouping: @grouping
       compareToDate: @compareToDate
       compareToLocation: @compareToLocation
+      compareToLocationField: @compareToLocationField
     }
 
   isConfigurable: ->
@@ -38,7 +41,7 @@ class @Charts.Trendline
         'AreaChart'
 
   isStacked: ->
-    @display != 'compareToDate'
+    @display != 'compareToDate' && @display != 'compareToLocation'
 
   description: (report) ->
     desc = "Events grouped by #{@grouping}"
@@ -55,7 +58,8 @@ class @Charts.Trendline
       when 'compareToLocation'
         location = @getCompareToLocation(report.filters)
         if location
-          desc += ", compared to #{location.name}"
+          compareField = @fieldsCollection().find(@compareToLocationField)
+          desc += ", compared to #{location.name} using #{compareField.label}"
     desc
 
   applyToQuery: (query, filters) ->
@@ -81,10 +85,10 @@ class @Charts.Trendline
         secondQuery = _.cloneDeep firstQuery
         targetLocation = @getCompareToLocation(filters)
         if targetLocation
-          secondQuery.location = targetLocation.id
+          secondQuery[@compareToLocationField] = targetLocation.id
           return [firstQuery, secondQuery]
       else
-        throw "Uknknown display: #{@display}"
+        throw "Unknown display: #{@display}"
 
     [query]
 
@@ -353,7 +357,7 @@ class @Charts.Trendline
       rows
 
   findLocationFilter: (filters) ->
-    _.find filters, (filter) -> filter.name == FieldsCollection.fieldNames.location
+    _.find filters, name: @compareToLocationField
 
   getFilterLocation: (filters) ->
     @findLocationFilter(filters)?.location
@@ -362,7 +366,7 @@ class @Charts.Trendline
     locationFilter = @findLocationFilter(filters)
     locationId = locationFilter?.location?.id
     if locationId
-      parentLocations = @fieldsCollection().getParentLocations FieldsCollection.fieldNames.location, locationId
+      parentLocations = @fieldsCollection().getParentLocations @compareToLocationField, locationId
       myLevel = parseInt(@compareToLocation)
       _.find parentLocations, (loc) -> loc.level == myLevel
     else
