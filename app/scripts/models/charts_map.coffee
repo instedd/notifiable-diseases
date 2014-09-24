@@ -78,3 +78,9 @@ class @Charts.Map
     top_count = _.max _.map(events, 'count')
     @thresholds_max = Math.max(default_thersholds_max, top_count + 10)
 
+  startRendering: (q) ->
+    @renderingDeferred = q.defer()
+    @renderingDeferred.promise
+  
+  doneRendering: (q) ->
+    @renderingDeferred.resolve()

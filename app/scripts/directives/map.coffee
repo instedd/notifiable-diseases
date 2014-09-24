@@ -1,5 +1,5 @@
 angular.module('ndApp')
-  .directive 'ndMap', (PolygonService, debounce) ->
+  .directive 'ndMap', ($q, PolygonService, debounce) ->
     {
       restrict: 'E'
       scope:
@@ -8,7 +8,7 @@ angular.module('ndApp')
         chart: '='
       template: '<div class="nd-map"></div>',
       link: (scope, element) ->
-        new MapWidget(scope, element[0].children[0]).initialize(PolygonService, debounce)
+        new MapWidget(scope, element[0].children[0]).initialize($q, PolygonService, debounce)
     }
 
 polygon_style = {
@@ -30,7 +30,8 @@ class MapWidget
     @scope = scope
     @element = element
 
-  initialize: (polygon_service, debounce) ->
+  initialize: (q, polygon_service, debounce) ->
+
     @map = @create_map(@element)
     @markers = L.layerGroup([]).addTo @map
     @chart = @scope.chart
@@ -43,6 +44,7 @@ class MapWidget
     # call is made)
     @scope.$watchCollection('series', debounce(() =>
       if @scope.series
+        @beginRendering(q)
         admin_level = @scope.chart.groupingLevel(@scope.filters)
         @draw_results(polygon_service, admin_level, @scope.series)
     , 1000, false))
@@ -71,6 +73,15 @@ class MapWidget
 
     map
 
+  beginRendering: (q) ->
+    @polygonsRendering = q.defer()
+    @contextRendering = q.defer()
+    
+    # TO-DO: timeout and fail cases?
+    q.all([@polygonsRendering, @contextRendering])
+     .then => @chart.doneRendering()
+
+
   draw_results: (polygon_service, admin_level, results) ->
     polygon_service.fetch_polygon(@chart.mappingField, admin_level).then (polygons) =>
       @clear_map()
@@ -79,6 +90,8 @@ class MapWidget
         @add_polygon_layer(polygons)
         @add_context_layer(polygon_service, polygons, admin_level)
       else
+        @polygonsRendering.resolve()
+        @contextRendering.resolve()
         @map.fitBounds @map.options.maxBounds
 
   topojson_geometries: (topojson) ->
@@ -131,6 +144,9 @@ class MapWidget
           geojson = omnivore.topojson.parse(filtered_topojson)
           @contextLayer = L.geoJson geojson, { style: context_polygon_style }
           @contextLayer.addTo @map
+        @contextRendering.resolve()
+    else
+      @contextRendering.resolve()
 
   create_icon: (feature) ->
     count = feature.properties.event_count
@@ -172,3 +188,4 @@ class MapWidget
     
     @map.fitBounds @polygonLayer.getBounds()
     @polygonLayer.addTo @map
+    @polygonsRendering.resolve()

@@ -38,3 +38,4 @@ class @Charts.PopulationPyramid
       rows.push [serie.age, serie.male, serie.female]
     rows
 
+  startRendering: (q) -> q.when(true)

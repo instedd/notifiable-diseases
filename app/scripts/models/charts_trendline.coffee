@@ -504,3 +504,5 @@ class @Charts.Trendline
       "0#{num}"
     else
       "#{num}"
+
+  startRendering: (q) -> q.when(true)

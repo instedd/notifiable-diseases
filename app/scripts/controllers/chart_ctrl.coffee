@@ -1,9 +1,13 @@
 'use strict'
 
 angular.module('ndApp')
-  .controller 'ChartCtrl', ($scope, $filter, Cdx) ->
+  .controller 'ChartCtrl', ($q, $scope, $filter, Cdx) ->
     $scope.editingChart = false
-    $scope.loadingChart = false
+    
+    $scope.fetchingData = false
+    $scope.renderingChart = false
+
+    $scope.loadingChart = -> $scope.fetchingData || $scope.renderingChart
 
     $scope.edit = ->
       $scope.editingChart = true
@@ -42,9 +46,25 @@ angular.module('ndApp')
 
         $scope.series = $scope.chart.getSeries($scope.report, datas)
       else
-        $scope.loadingChart = true
+        # TO-DO: consider making the data update explicit instead
+        # of depending on the chart watching the 'series' attribute
+        # of the scope.
+
+        startRenderingChart()
+        $scope.fetchingData = true
+
         queryAll queries, 0, [], (datas) ->
           $scope.series = $scope.chart.getSeries($scope.report, datas)
-          $scope.loadingChart = false
+          
+          $scope.fetchingData = false
 
     $scope.$watch 'report.filters', render, true
+
+    # the chart doesn't know this controller.
+    # this is currently the way to tell ask the chart
+    # to notify us when it has finished rendering new
+    # data.
+    startRenderingChart = ->
+      $scope.renderingChart = true
+      $scope.chart.startRendering($q).then ->
+        $scope.renderingChart = false

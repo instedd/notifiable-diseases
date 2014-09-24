@@ -73,7 +73,7 @@
       <div class="col-md-6" ng-repeat="chart in currentReport.charts">
         <!-- CODEREVIEW: Keep all chart pieces into a separate template which includes the necessary directives -->
         <div class='nd-chart-container well' ng-controller="ChartCtrl" ng-init="chart=chart;report=currentReport">
-          <div ng-show="loadingChart && !editingChart" class="chart-loading"></div>
+          <div ng-show="loadingChart() && !editingChart" class="chart-loading"></div>
           <div ng-hide="editingChart">
             <div class="actions">
               <span ng-show="chart.isConfigurable()">
