@@ -101,12 +101,12 @@ class @Charts.Trendline
              when 'compareToDate'
                @getCompareToDateSeries(report, data[0].events)
              when 'compareToLocation'
-               if @getCompareToLocation(report.filters)
+               if data[1] && @getCompareToLocation(report.filters)
                  @getCompareToLocationSeries(report, data[0].events, data[1].events)
                else
                  @getSimpleSeries(data[0].events)
              else
-               throw "Uknknown display: #{@display}"
+               throw "Unknown display: #{@display}"
     series.interval = @grouping
     @extendToDateBounds(report, series)
     series.rows = @fillGaps series
