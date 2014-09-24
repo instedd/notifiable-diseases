@@ -124,7 +124,7 @@ class @Charts.Trendline
 
     rows = series.rows
     cols = series.cols
-    intervalFormat = @intervalFormat(@grouping)
+    intervalFormat = @intervalFormat()
 
     dateFilter = report.findFilter FieldsCollection.fieldNames.date
     if dateFilter
@@ -141,20 +141,20 @@ class @Charts.Trendline
       lastRow = rows[rows.length - 1]
 
       if firstRow
-        firstDate = moment(firstRow[0]).format(intervalFormat)
+        firstDate = @moment(firstRow[0]).format(intervalFormat)
         if firstDate != sinceDate
           rows.splice 0, 0, createRow(sinceDate)
 
-        lastDate = moment(lastRow[0]).format(intervalFormat)
+        lastDate = @moment(lastRow[0]).format(intervalFormat)
         if lastDate != untilDate
           rows.push createRow(untilDate)
     else if rows.length > 0
       now = moment().format(intervalFormat)
 
-      firstRow = rows[0]
-      firstDate = moment(firstRow[0]).format(intervalFormat)
+      lastRow = rows[rows.length - 1]
+      lastDate = @moment(lastRow[0]).format(intervalFormat)
 
-      if firstDate != now
+      if lastDate != now
         rows.push createRow(now)
 
   getSimpleSeries: (data) ->
@@ -253,17 +253,8 @@ class @Charts.Trendline
     rows = []
     for event in data
       date = event.started_at
-      switch @grouping
-        when "day"
-          currentDate = moment(date)
-        when "week"
-          currentDate = moment(date)
-        when "month"
-          currentDate = moment("#{date}-01")
-        when "year"
-          currentDate = moment("#{date}-01-01")
-
-      intervalFormat = @intervalFormat(@grouping)
+      currentDate = @moment(date)
+      intervalFormat = @intervalFormat()
 
       previousDate = moment(currentDate).add(-1, 'years').format(intervalFormat)
       nextDate = moment(currentDate).add(1, 'years').format(intervalFormat)
@@ -298,8 +289,8 @@ class @Charts.Trendline
     rows:
       rows
 
-  intervalFormat: (interval) ->
-    switch interval
+  intervalFormat: ->
+    switch @grouping
       when "day"
         "YYYY-MM-DD"
       when "week"
@@ -308,6 +299,17 @@ class @Charts.Trendline
         "YYYY-MM"
       when "year"
         "YYYY"
+
+  moment: (string) ->
+    switch @grouping
+      when "day"
+        moment(string)
+      when "week"
+        moment(string)
+      when "month"
+        moment("#{string}-01")
+      when "year"
+        moment("#{string}-01-01")
 
   getCompareToLocationSeries: (report, thisLocationEvents, otherLocationEvents) ->
     @sortData thisLocationEvents
