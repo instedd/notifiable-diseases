@@ -63,7 +63,7 @@ class @Charts.Trendline
     desc
 
   applyToQuery: (query, filters) ->
-    date_grouping = "#{@grouping}(started_at)"
+    date_grouping = "#{@grouping}(#{FieldsCollection.fieldNames.date})"
     switch @display
       when 'simple'
         query.group_by = date_grouping
@@ -164,7 +164,7 @@ class @Charts.Trendline
       ["Events"]
     rows:
       _.map data, (value) ->
-        [value.started_at, value.count]
+        [value.start_time, value.count]
 
   getSplitSeries: (report, data) ->
     @sortSplitData data
@@ -186,7 +186,7 @@ class @Charts.Trendline
     while i < len
       item = data[i]
 
-      date = item.started_at
+      date = item.start_time
       row = [date]
 
       # Traverse all items that follow (including this one) as long
@@ -194,7 +194,7 @@ class @Charts.Trendline
       j = i
       while j < len
         other_item = data[j]
-        other_date = other_item.started_at
+        other_date = other_item.start_time
         if other_date != date
           break
 
@@ -235,10 +235,10 @@ class @Charts.Trendline
   getCompareToDateSeries: (report, data) ->
     @sortData data
 
-    # First, index data by started_at
+    # First, index data by start_time
     indexedData = {}
     for event in data
-      indexedData[event.started_at] = event.count
+      indexedData[event.start_time] = event.count
 
     intervalFormat = @intervalFormat()
 
@@ -259,7 +259,7 @@ class @Charts.Trendline
     # previous year and one for the current one
     rows = []
     for event in data
-      date = event.started_at
+      date = event.start_time
       currentDate = @moment(date)
 
       previousDate = moment(currentDate).add(-1, 'years').format(intervalFormat)
@@ -324,7 +324,7 @@ class @Charts.Trendline
     rows = []
 
     # Traverse both lists at the same time, always advancing the one
-    # that has the lowest started_at value (similar to a merge sort).
+    # that has the lowest start_time value (similar to a merge sort).
     thisIndex = 0
     otherIndex = 0
 
@@ -336,24 +336,24 @@ class @Charts.Trendline
         break
 
       if thisData && !otherData
-        rows.push [thisData.started_at, thisData.count, 0]
+        rows.push [thisData.start_time, thisData.count, 0]
         thisIndex += 1
       else if otherData && !thisData
-        rows.push [otherData.started_at, 0, otherData.count]
+        rows.push [otherData.start_time, 0, otherData.count]
         otherIndex += 1
       else
-        thisStartedAt = thisData.started_at
-        otherStartedAt = otherData.started_at
+        thisStartedAt = thisData.start_time
+        otherStartedAt = otherData.start_time
 
         if thisStartedAt == otherStartedAt
-          rows.push [thisData.started_at, thisData.count, otherData.count]
+          rows.push [thisData.start_time, thisData.count, otherData.count]
           thisIndex += 1
           otherIndex += 1
         else if thisStartedAt < otherStartedAt
-          rows.push [thisData.started_at, thisData.count, 0]
+          rows.push [thisData.start_time, thisData.count, 0]
           thisIndex += 1
         else #  thisStartedAt > otherStartedAt
-          rows.push [otherData.started_at, 0, otherData.count]
+          rows.push [otherData.start_time, 0, otherData.count]
           otherIndex += 1
 
     filterLocation = @getFilterLocation(report.filters)
@@ -389,18 +389,18 @@ class @Charts.Trendline
 
   sortData: (data) ->
     data.sort (x, y) =>
-      if x.started_at < y.started_at
+      if x.start_time < y.start_time
         -1
-      else if x.started_at > y.started_at
+      else if x.start_time > y.start_time
         1
       else
         0
 
   sortSplitData: (data) ->
     data.sort (x, y) =>
-      if x.started_at < y.started_at
+      if x.start_time < y.start_time
         -1
-      else if x.started_at > y.started_at
+      else if x.start_time > y.start_time
         1
       else if x[@splitField] < y[@splitField]
         -1
@@ -495,7 +495,7 @@ class @Charts.Trendline
 
     # Easy case: day is less than 28, there's no problem adding one
     if day < 28
-      "#{year}-#{@pad(month)}-#{pad(day + 1)}"
+      "#{year}-#{@pad(month)}-#{@pad(day + 1)}"
     else
       moment().year(year).month(month - 1).date(day).add(1, 'days').format("YYYY-MM-DD")
 
