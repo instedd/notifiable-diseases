@@ -240,13 +240,20 @@ class @Charts.Trendline
     for event in data
       indexedData[event.started_at] = event.count
 
+    intervalFormat = @intervalFormat()
+
     # Now check if there's a date filter. If so, we
     # will skip rows until we are after the "since" date.
-    since = @getDateFilter(report.filters)?.since
+    dateFilter = @getDateFilter(report.filters)
+
+    since = dateFilter?.since
     since = moment(since) if since
 
-    if data.length > 0
-      max = data[data.length - 1].started_at
+    # Get the maximum date we want to display: either the one in
+    # the date filter, or the current date.
+    max = dateFilter?.until
+    max = if max then moment(max) else moment()
+    max = max.format(intervalFormat)
 
     # Next, for each event we create two results, one for the
     # previous year and one for the current one
@@ -254,7 +261,6 @@ class @Charts.Trendline
     for event in data
       date = event.started_at
       currentDate = @moment(date)
-      intervalFormat = @intervalFormat()
 
       previousDate = moment(currentDate).add(-1, 'years').format(intervalFormat)
       nextDate = moment(currentDate).add(1, 'years').format(intervalFormat)
@@ -270,7 +276,7 @@ class @Charts.Trendline
 
       # We also need to check the next year: if there's no data
       # we fill it with this year's value, but only if it's before
-      # the maximum date from the results.
+      # the maximum date (either from the date filter or the current date).
       if nextDate <= max
         nextYearCount = indexedData[nextDate]
         unless nextYearCount
