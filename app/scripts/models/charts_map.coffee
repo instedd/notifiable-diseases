@@ -53,11 +53,12 @@ class @Charts.Map
     rows = []
     rows.push ["Location", "Results"]
     for serie in series
+      serieValue = serie[@mappingField]
       if locationField
-        location = locationField.locations[serie.location]
+        location = locationField.locations[serieValue]
         locationName = locationField.getFullLocationPath(location)
       else
-        locationName = serie.location
+        locationName = serie[serieValue]
       rows.push [locationName, serie.count]
     rows
 
