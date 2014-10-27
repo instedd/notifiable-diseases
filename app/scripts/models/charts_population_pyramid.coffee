@@ -93,9 +93,19 @@ class @Charts.PopulationPyramid
 
   getCSV: (report, series) ->
     rows = []
-    rows.push ["Age", "Male", "Female"]
-    for serie in series
-      rows.push [serie.age, serie.male, serie.female]
+
+    if @values == 'percentage'
+      rows.push ["Age", "Male positive", "Male total", "Female positive", "Female total"]
+      for serie in series
+        console.log serie
+        rows.push [serie.age, serie.male.count || 0, serie.male.total || 0, serie.female.count || 0, serie.female.total || 0]
+
+    else
+      rows.push ["Age", "Male positive", "Female positive"]
+      for serie in series
+        console.log serie
+        rows.push [serie.age, serie.male.count || 0, serie.female.count || 0]
+
     rows
 
   startRendering: (q) -> q.when(true)
