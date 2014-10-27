@@ -25,7 +25,7 @@ angular.module('ndApp')
     httpLikeDeferred = () ->
       deferred = $q.defer()
       deferred.promise.success = (fn) ->
-        deferred.promise.then(fn.data)
+        deferred.promise.then((response) -> fn(response.data))
       deferred.promise.error = (fn) ->
         deferred.promise.then(null, fn)
       deferred
