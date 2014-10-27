@@ -60,7 +60,7 @@ class @Charts.Map
   getCSV: (report, series) ->
     locationField = report.fieldsCollection().find(@mappingField)
     rows = []
-    rows.push ["Location", "Results"]
+    rows.push ["Location", "Positive cases", "Total cases"]
     for serie in series
       serieValue = serie[@mappingField]
       if locationField
@@ -68,7 +68,7 @@ class @Charts.Map
         locationName = locationField.getFullLocationPath(location)
       else
         locationName = serie[serieValue]
-      rows.push [locationName, serie.count]
+      rows.push [locationName, serie.positive, serie.count]
     rows
 
   groupingLevel: (filters) ->
