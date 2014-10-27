@@ -50,7 +50,7 @@ class MapWidget
     , 1000, false))
 
   create_map: (element) ->
-    map = L.map(element, { 
+    map = L.map(element, {
       attributionControl: false,
       zoomControl: false,
       minZoom: 2
@@ -62,7 +62,7 @@ class MapWidget
     map.setView(us_center, 2)
     map.setMaxBounds us_bounds
 
-    map.dragging._draggable.on('predrag', () -> 
+    map.dragging._draggable.on('predrag', () ->
       currentTopLeft = map._initialTopLeftPoint.subtract(@_newPos)
       currentBounds = new L.Bounds(currentTopLeft, currentTopLeft.add(map.getSize()))
       limitedOffset = map._getBoundsOffset(currentBounds, map.options.maxBounds)
@@ -76,7 +76,7 @@ class MapWidget
   beginRendering: (q) ->
     @polygonsRendering = q.defer()
     @contextRendering = q.defer()
-    
+
     # TO-DO: timeout and fail cases?
     q.all([@polygonsRendering, @contextRendering])
      .then => @chart.doneRendering()
@@ -115,13 +115,13 @@ class MapWidget
 
   result_polygons: (full_topojson, results) ->
     field = @chart.mappingField
-    result_count_by_id = _.object(_.map(results, (e) -> [e[field], e.count]))
+    result_counts_by_id = _.object(_.map(results, (e) -> [e[field], e]))
     geometries = @topojson_geometries(full_topojson)
     filtered_geometries = _.reduce(geometries, ((r,o) ->
-      count_for_location = result_count_by_id[o.properties.ID]
-      if count_for_location
+      counts_for_location = result_counts_by_id[o.properties.ID]
+      if counts_for_location
         clone = $.extend(true, {}, o)
-        clone.properties.event_count = count_for_location
+        $.extend(clone.properties, counts_for_location)
         r.push clone
       r
     ), [])
@@ -149,25 +149,25 @@ class MapWidget
       @contextRendering.resolve()
 
   create_icon: (feature) ->
-    count = feature.properties.event_count
+    count = feature.properties.percentage * 100
     if count >= @chart.thresholds.upper
       color = 'red'
     else if count >= @chart.thresholds.lower
       color = 'yellow'
     else
       color = 'green'
-    
+
     L.divIcon { className: "nd-map-marker #{color}" }
 
   on_each_feature: (feature, layer) =>
     layer_center = layer.getBounds().getCenter()
 
     popup_content = "
-    <b>#{feature.properties.NAME}</b>
-    <br>
-    Event count: <em>#{feature.properties.event_count}</em>
+    <b>#{feature.properties.NAME} #{feature.properties.percentage * 100}%</b><br/>
+    Positive events: <em>#{feature.properties.positive}</em><br/>
+    Total events: <em>#{feature.properties.count}</em>
     "
-    
+
     popup = L.popup({closeButton : false, autoPan: false})
              .setLatLng(layer_center)
              .setContent(popup_content)
@@ -179,13 +179,13 @@ class MapWidget
 
   add_polygon_layer: (polygons) ->
     geojson = omnivore.topojson.parse(polygons)
-    
+
     layer_options =
       style: polygon_style
       onEachFeature: @on_each_feature
 
     @polygonLayer = L.geoJson(geojson, layer_options)
-    
+
     @map.fitBounds @polygonLayer.getBounds()
     @polygonLayer.addTo @map
     @polygonsRendering.resolve()

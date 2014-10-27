@@ -1,12 +1,10 @@
 @Charts ?= {}
 
 class @Charts.Map
-  default_thersholds = {
+  default_thresholds = {
     lower: 10
-    upper: 50
+    upper: 40
   }
-
-  default_thersholds_max = default_thersholds.upper + 10
 
   fieldLevels = {}
 
@@ -20,12 +18,11 @@ class @Charts.Map
     @kind = 'Map'
     @fieldsCollection = () -> fieldsCollection
     @mappingField = fieldsCollection.allLocation()[0]?.name
-    @thresholds = default_thersholds
-    @thresholds_max = default_thersholds_max
+    @thresholds = default_thresholds
+    @validResults = _.map fieldsCollection.result_field().validResults(), 'value'
 
   initializeFrom: (data) ->
     @thresholds = _.clone data.thresholds
-    @thresholds_max = data.thresholds_max
     @mappingField = data.mappingField
     @
 
@@ -35,18 +32,30 @@ class @Charts.Map
   isConfigurable: ->
     true
 
+  groupingField: () =>
+    if @mappingField == 'location' then 'admin_level' else "#{@mappingField}_admin_level"
+
   applyToQuery: (query, filters) =>
     drawn_level = @.groupingLevel(filters)
-    grouping_field = if @mappingField == 'location' then 'admin_level' else "#{@mappingField}_admin_level"
     grouping = {}
-    grouping[grouping_field] = drawn_level
+    grouping[@groupingField()] = drawn_level
     query.group_by = [grouping]
-    [query]
+
+    denominator = _.cloneDeep query
+    denominator.result = @validResults
+    [query, denominator]
 
   getSeries: (report, data) =>
     events = data[0].events
-    @updateThresholdsMax(events)
-    events
+    denominators = data[1].events
+
+    denominatorsById = _.indexBy denominators, @groupingField()
+    _.each events, (evt) =>
+      node = denominatorsById[evt[@groupingField()]]
+      node.positive = evt.count
+      node.percentage = evt.count / node.count
+
+    denominators
 
   getCSV: (report, series) ->
     locationField = report.fieldsCollection().find(@mappingField)
@@ -71,17 +80,9 @@ class @Charts.Map
     else
       drawn_level = 1
 
-  updateThresholdsMax: (events) ->
-    # hack :(
-    # values equal to the yellow threshold will show a red marker
-    # if we set max = top_event.count, the top marker will always
-    # be shown in red.
-    top_count = _.max _.map(events, 'count')
-    @thresholds_max = Math.max(default_thersholds_max, top_count + 10)
-
   startRendering: (q) ->
     @renderingDeferred = q.defer()
     @renderingDeferred.promise
-  
+
   doneRendering: (q) ->
     @renderingDeferred.resolve()

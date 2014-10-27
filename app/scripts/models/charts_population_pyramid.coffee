@@ -79,7 +79,6 @@ class @Charts.PopulationPyramid
             groups[age][gender].total =  item.count
 
       series = _.mapValues groups
-      console.log series
 
     _.sortBy series, (group) => parseFloat(@splitIfNecessary(group.age)[0])
 

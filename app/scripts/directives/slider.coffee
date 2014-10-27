@@ -6,6 +6,7 @@ angular.module('ndApp')
         min: '='
         max: '='
         model: '='
+        percentage: '='
       template: '<div class="nd-slider-widget"></div>',
       link: (scope, element) ->
         new SliderWidget(scope, element[0].children[0]).initialize(debounce)
@@ -60,6 +61,6 @@ class SliderWidget
   tooltip_html: (value) ->
     "
       <div class='nd-slider-tooltip'>
-      <strong>#{Math.floor(value)}</strong>
+      <strong>#{Math.floor(value)}#{if @scope.percentage then '%' else ''}</strong>
       </div>
     "
