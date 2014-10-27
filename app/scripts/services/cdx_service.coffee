@@ -1,8 +1,44 @@
 angular.module('ndApp')
-  .service 'Cdx', ($http, settings) ->
-    events: (query) ->
-      $http.post "#{settings.api}/events", query
+  .service 'Cdx', ($http, $q, settings) ->
+    maxQueueSize = 50
+    queryDebounceMillis = 500
 
-    fields: (context = {}) ->
-      $http.get "#{settings.api}/events/schema?#{$.param context}"
+    queue = []
 
+    runQueries =
+      _.debounce () ->
+        [queries, deferreds] = _.zip.apply(_, queue)
+        queue = []
+        $http.post("#{settings.api}/events/multi", queries: queries)
+          .then (response) ->
+              _.each _.zip(response.data, deferreds), ([data, deferred]) ->
+                newresp = angular.copy(response)
+                newresp.data = data
+                deferred.resolve(newresp)
+            , (info) ->
+              _.each deferreds, (deferred) ->
+                deferred.reject(info)
+      , queryDebounceMillis, queue.length >= maxQueueSize
+
+    # Regular promises don't have success/error methods,
+    # so we add them to return promises that behave like $http promises
+    httpLikeDeferred = () ->
+      deferred = $q.defer()
+      deferred.promise.success = (fn) ->
+        deferred.promise.then(fn.data)
+      deferred.promise.error = (fn) ->
+        deferred.promise.then(null, fn)
+      deferred
+
+    service =
+      events: (query) ->
+        if settings.multiQueriesEnabled
+          deferred = httpLikeDeferred()
+          queue.push([query, deferred])
+          runQueries()
+          deferred.promise
+        else
+          $http.post "#{settings.api}/events", query
+
+      fields: (context = {}) ->
+        $http.get "#{settings.api}/events/schema?#{$.param context}"

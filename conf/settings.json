@@ -3,5 +3,6 @@
   "api": "/cdx/v1",
   "store": "/store",
   "useLocalStorage": false,
-  "replaceParentURLHash": false
+  "replaceParentURLHash": false,
+  "multiQueriesEnabled": false
 }

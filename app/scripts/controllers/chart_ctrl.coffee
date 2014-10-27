@@ -3,7 +3,7 @@
 angular.module('ndApp')
   .controller 'ChartCtrl', ($q, $scope, $filter, Cdx) ->
     $scope.editingChart = false
-    
+
     $scope.fetchingData = false
     $scope.renderingChart = false
 
@@ -23,14 +23,9 @@ angular.module('ndApp')
       date = $filter("date")(new Date(), "yyyyMMddHMMss")
       "#{$scope.report.name}_#{$scope.chart.kind}_#{date}".replace(/[^a-zA-Z0-9_]/g, "_")
 
-    queryAll = (queries, index, datas, callback) ->
-      if index < queries.length
-        query = queries[index]
-        Cdx.events(query).success (data) ->
-          datas.push data
-          queryAll(queries, index + 1, datas, callback)
-      else
-        callback(datas)
+    queryAll = (queries, callback) ->
+      $q.all _.map(queries, (query) -> Cdx.events(query))
+        .then (datas) -> callback(_.map(datas, (d) -> d.data))
 
     render = ->
       # CODEREVIEW: Consider adding report as a property to query object
@@ -43,7 +38,6 @@ angular.module('ndApp')
 
       if _.all(queries, (query) -> query.empty)
         datas = _.map queries, (query) -> {events: [], total_count: 0}
-
         $scope.series = $scope.chart.getSeries($scope.report, datas)
       else
         # TO-DO: consider making the data update explicit instead
@@ -53,9 +47,8 @@ angular.module('ndApp')
         startRenderingChart()
         $scope.fetchingData = true
 
-        queryAll queries, 0, [], (datas) ->
+        queryAll queries, (datas) ->
           $scope.series = $scope.chart.getSeries($scope.report, datas)
-          
           $scope.fetchingData = false
 
     $scope.$watch 'report.filters', render, true
