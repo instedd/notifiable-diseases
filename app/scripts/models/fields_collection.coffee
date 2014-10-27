@@ -1,6 +1,4 @@
 class @FieldsCollection
-  constructor: (@fields) ->
-
   @fieldNames:
     age: 'age'
     age_group: 'age_group'
@@ -11,6 +9,10 @@ class @FieldsCollection
     assay_name: 'assay_name'
     location: 'location'
     patient_location: 'patient_location'
+
+  constructor: (@fields) ->
+    _.each FieldsCollection.fieldNames, (value, key) =>
+      @[key + '_field'] = () => @find(value)
 
   all: ->
     _.values @fields

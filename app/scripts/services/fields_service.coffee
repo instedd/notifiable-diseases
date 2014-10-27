@@ -26,6 +26,21 @@ class EnumField extends Field
   @handles: (attrs) ->
     attrs.values?
 
+class ResultField extends EnumField
+  constructor: (field) ->
+    super(field)
+    @allOptions = @options
+    @options = _.filter @options, (opt) -> opt.kind == 'positive'
+
+  validResults: () ->
+    _.filter @allOptions, (opt) -> opt.kind != 'error'
+
+  positiveResults: () ->
+    @options
+
+  @handles: (attrs, name) ->
+    name == FieldsCollection.fieldNames.result
+
 class IntegerField extends Field
   constructor: (field) ->
     @type = 'integer'
@@ -68,7 +83,7 @@ class DateField extends Field
     @resolution
 
 
-FIELD_TYPES = [DateField, LocationField, EnumField, IntegerField]
+FIELD_TYPES = [ResultField, DateField, LocationField, EnumField, IntegerField]
 
 angular.module('ndApp')
   .service 'FieldsService', (Cdx, $q) ->
@@ -97,7 +112,7 @@ angular.module('ndApp')
 
         # Not supported field types are ignored.
         fields = _.inject fields, ((fields, field, name) ->
-            field_type = _.find(FIELD_TYPES, (type) -> type.handles(field))
+            field_type = _.find(FIELD_TYPES, (type) -> type.handles(field, name))
             if field_type
               field.name = name
               fields[name] = new field_type(field)

@@ -2,10 +2,14 @@ angular.module('ndApp')
   .directive 'ndPopulationPyramid', () ->
     {
       restrict: 'E'
+
       scope:
         series: '='
         title: '='
+        values: '='
+
       template: '<div google-chart chart="chart" class="nd-chart"></div>'
+
       link: (scope, element, attrs) ->
         scope.chart =
           type: "BarChart"
@@ -26,23 +30,30 @@ angular.module('ndApp')
               position: 'bottom'
               alignment: 'center'
             hAxis:
-              format: '#,###;#,###'
+              format: (if scope.values == 'percentage' then '##.##%' else '#,###;#,###')
             vAxis:
               direction: -1
             animation:
               duration: 600
               easing: 'out'
 
-        updateChart = (chart, series, title) =>
+        tooltipFor = (data) =>
+          if scope.values == 'percentage'
+            "#{data.value * 100}% (#{data.count} of #{data.total} events)"
+          else
+            "#{data.value} events"
+
+        updateChart = (chart, series, title, isPercentage) =>
           rows = []
           for serie in series
             rows.push c: [
                           {v: serie.age},
-                          {v: -serie.male, f: "#{serie.male} events"},
-                          {v: serie.female, f: "#{serie.female} events"},
+                          {v: -serie.male.value,  f: tooltipFor(serie.male)},
+                          {v: serie.female.value, f: tooltipFor(serie.female)},
                         ]
 
           chart.data.rows = rows
+          chart.options.hAxis.format = (if scope.values == 'percentage' then '##.##%' else '#,###;#,###')
 
         scope.$watchCollection('series', () ->
           if scope.series
