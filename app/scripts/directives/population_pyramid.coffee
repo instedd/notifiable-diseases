@@ -31,6 +31,8 @@ angular.module('ndApp')
               alignment: 'center'
             hAxis:
               format: (if scope.values == 'percentage' then '##.##%' else '#,###;#,###')
+              minValue: -1
+              maxValue: 1
             vAxis:
               direction: -1
             animation:
@@ -43,9 +45,11 @@ angular.module('ndApp')
           else
             "#{data.value} events"
 
-        updateChart = (chart, series, title, isPercentage) =>
+        updateChart = (chart, series, title) =>
           rows = []
+          maxValue = 1
           for serie in series
+            maxValue = _.max([maxValue, serie.male.value, serie.female.value])
             rows.push c: [
                           {v: serie.age},
                           {v: -serie.male.value,  f: tooltipFor(serie.male)},
@@ -54,6 +58,8 @@ angular.module('ndApp')
 
           chart.data.rows = rows
           chart.options.hAxis.format = (if scope.values == 'percentage' then '##.##%' else '#,###;#,###')
+          chart.options.hAxis.minValue = -maxValue
+          chart.options.hAxis.maxValue =  maxValue
 
         scope.$watchCollection('series', () ->
           if scope.series
