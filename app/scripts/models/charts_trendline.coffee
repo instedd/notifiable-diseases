@@ -59,7 +59,7 @@ class @Charts.Trendline extends @Charts.Base
     new klazz(@)
 
   description: (report) ->
-    return @displayStrategy().description()
+    return @displayStrategy().description(report)
 
     # desc = "Events grouped by #{@grouping}"
     # switch @display

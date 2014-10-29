@@ -3,6 +3,7 @@
 class @Charts.Trendline.BaseDisplay
 
   constructor: (@trendline) ->
+    @dateGrouping = "#{@trendline.grouping}(#{FieldsCollection.fieldNames.date})"
 
   getSeries: (report, data) ->
     throw "Subclass responsibility"
@@ -37,9 +38,6 @@ class @Charts.Trendline.BaseDisplay
 
   description: (report) ->
     "Events grouped by #{@trendline.grouping}"
-
-  dateGrouping: () ->
-    "#{@trendline.grouping}(#{FieldsCollection.fieldNames.date})"
 
   extendToDateBounds: (report, series) ->
     createRow = (firstValue) ->

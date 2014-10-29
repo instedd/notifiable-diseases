@@ -2,19 +2,23 @@
 
 class @Charts.Trendline.SplitDisplay extends @Charts.Trendline.BaseDisplay
 
+  constructor: (t) ->
+    super(t)
+    @splitField = t.splitField
+
   description: () ->
-    splitField = @fieldsCollection().find(@trendline.splitField)
+    splitField = @fieldsCollection().find(@splitField)
     "#{super()}, split by #{splitField?.label.toLowerCase()}"
 
   applyToQuery: (query, filters) ->
-    query.group_by = [@dateGrouping, @trendline.splitField]
+    query.group_by = [@dateGrouping, @splitField]
     [query]
 
   getSeries: (report, data) ->
     data = data[0].events
     @sortSplitData data
 
-    options = report.fieldOptionsFor(@trendline.splitField)
+    options = report.fieldOptionsFor(@splitField)
 
     cols = _.map options, (option) -> option.label
     allValues = _.map options, (option) -> option.value
@@ -43,7 +47,7 @@ class @Charts.Trendline.SplitDisplay extends @Charts.Trendline.BaseDisplay
         if other_date != date
           break
 
-        index = _.indexOf allValues, other_item[@trendline.splitField]
+        index = _.indexOf allValues, other_item[@splitField]
 
         # This is a sanity check: the index shouldn't be -1 if all data is correct
         if index != -1
@@ -84,9 +88,9 @@ class @Charts.Trendline.SplitDisplay extends @Charts.Trendline.BaseDisplay
         -1
       else if x.start_time > y.start_time
         1
-      else if x[@trendline.splitField] < y[@trendline.splitField]
+      else if x[@splitField] < y[@splitField]
         -1
-      else if x[@trendline.splitField] > y[@trendline.splitField]
+      else if x[@splitField] > y[@splitField]
         1
       else
         0

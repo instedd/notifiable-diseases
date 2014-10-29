@@ -7,14 +7,14 @@ class @Charts.Trendline.LocationCompareDisplay extends @Charts.Trendline.BaseDis
     @compareToLocation = t.compareToLocation
     @compareToLocationField = t.compareToLocationField
 
-  description: () ->
+  description: (report) ->
     location = @getCompareToLocation(report.filters)
     if location
       compareField = @fieldsCollection().find(@compareToLocationField)
       "#{super()}, compared to #{location.name} from #{compareField.label}"
 
   applyToQuery: (query, filters) ->
-    query.group_by = @dateGrouping()
+    query.group_by = @dateGrouping
     firstQuery = query
     secondQuery = _.cloneDeep firstQuery
     targetLocation = @getCompareToLocation(filters)

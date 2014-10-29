@@ -4,10 +4,8 @@ class @Charts.Trendline.DateCompareDisplay extends @Charts.Trendline.BaseDisplay
 
   constructor: (t) ->
     super(t)
-    throw "Unknown compare to value: #{t.compareToDate}" unless t.compareToDate == 'previous_year'
-
-  compareToDate: () ->
-    @trendline.compareToDate
+    @compareToDate = t.compareToDate
+    throw "Unknown compare to value: #{t.compareToDate}" unless @compareToDate == 'previous_year'
 
   description: () ->
     "#{super()}, compared to previous year"
@@ -16,8 +14,8 @@ class @Charts.Trendline.DateCompareDisplay extends @Charts.Trendline.BaseDisplay
     _.find filters, (filter) -> filter.name == FieldsCollection.fieldNames.date
 
   applyToQuery: (query, filters) ->
-    query.group_by = @dateGrouping()
-    dateFilter = @trendline.getDateFilter filters
+    query.group_by = @dateGrouping
+    dateFilter = @getDateFilter filters
     if dateFilter
       since = moment(dateFilter.since).add(-1, 'years')
       query.since = since.format("YYYY-MM-DD")
@@ -33,11 +31,11 @@ class @Charts.Trendline.DateCompareDisplay extends @Charts.Trendline.BaseDisplay
     for event in data
       indexedData[event.start_time] = event.count
 
-    intervalFormat = @trendline.intervalFormat()
+    intervalFormat = @intervalFormat()
 
     # Now check if there's a date filter. If so, we
     # will skip rows until we are after the "since" date.
-    dateFilter = @trendline.getDateFilter(report.filters)
+    dateFilter = @getDateFilter(report.filters)
 
     since = dateFilter?.since
     since = moment(since) if since
@@ -53,7 +51,7 @@ class @Charts.Trendline.DateCompareDisplay extends @Charts.Trendline.BaseDisplay
     rows = []
     for event in data
       date = event.start_time
-      currentDate = @trendline.moment(date)
+      currentDate = @moment(date)
 
       previousDate = moment(currentDate).add(-1, 'years').format(intervalFormat)
       nextDate = moment(currentDate).add(1, 'years').format(intervalFormat)
