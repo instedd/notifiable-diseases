@@ -9,6 +9,7 @@ class @Charts.Trendline
     @compareToDate = 'previous_year'
     @splitField = fieldsCollection.allEnum()[0]?.name
     @compareToLocationField = fieldsCollection.allLocation()[0]?.name
+    @values = 'count'
 
   initializeFrom: (data) ->
     @display = data.display
@@ -17,6 +18,7 @@ class @Charts.Trendline
     @compareToDate = data.compareToDate
     @compareToLocation = data.compareToLocation
     @compareToLocationField = data.compareToLocationField
+    @values = data.values
     @
 
   toJSON: ->
@@ -28,6 +30,7 @@ class @Charts.Trendline
       compareToDate: @compareToDate
       compareToLocation: @compareToLocation
       compareToLocationField: @compareToLocationField
+      values: @values
     }
 
   isConfigurable: ->
