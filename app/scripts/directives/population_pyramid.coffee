@@ -30,7 +30,7 @@ angular.module('ndApp')
               position: 'bottom'
               alignment: 'center'
             hAxis:
-              format: (if scope.values == 'percentage' then '##.##%' else '#,###;#,###')
+              format: (if scope.values == 'percentage' then '##.##;##.##%' else '#,###;#,###')
               minValue: -1
               maxValue: 1
             vAxis:
@@ -41,7 +41,7 @@ angular.module('ndApp')
 
         tooltipFor = (data) =>
           if scope.values == 'percentage'
-            "#{data.value * 100}% (#{data.count} of #{data.total} events)"
+            "#{(data.value * 100).toFixed(2)}% (#{data.count} of #{data.total} events)"
           else
             "#{data.value} events"
 
@@ -57,7 +57,7 @@ angular.module('ndApp')
                         ]
 
           chart.data.rows = rows
-          chart.options.hAxis.format = (if scope.values == 'percentage' then '##.##%' else '#,###;#,###')
+          chart.options.hAxis.format = (if scope.values == 'percentage' then '##.##;##.##%' else '#,###;#,###')
           chart.options.hAxis.minValue = -maxValue
           chart.options.hAxis.maxValue =  maxValue
 
