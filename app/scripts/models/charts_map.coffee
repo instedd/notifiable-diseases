@@ -1,6 +1,6 @@
 @Charts ?= {}
 
-class @Charts.Map
+class @Charts.Map extends @Charts.Base
   default_thresholds = {
     lower: 10
     upper: 40
@@ -15,11 +15,10 @@ class @Charts.Map
     fieldLevels[field] || 0
 
   constructor: (fieldsCollection) ->
+    super(fieldsCollection)
     @kind = 'Map'
-    @fieldsCollection = () -> fieldsCollection
     @mappingField = fieldsCollection.allLocation()[0]?.name
     @thresholds = default_thresholds
-    @validResults = _.map fieldsCollection.result_field().validResults(), 'value'
 
   initializeFrom: (data) ->
     @thresholds = _.clone data.thresholds
@@ -41,9 +40,7 @@ class @Charts.Map
     grouping[@groupingField()] = drawn_level
     query.group_by = [grouping]
 
-    denominator = _.cloneDeep query
-    denominator.result = @validResults
-    [query, denominator]
+    [query, @denominatorFor(query)]
 
   getSeries: (report, data) =>
     positives = data[0].events

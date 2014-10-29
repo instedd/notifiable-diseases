@@ -1,14 +1,13 @@
 @Charts ?= {}
 
-class @Charts.PopulationPyramid
+class @Charts.PopulationPyramid extends @Charts.Base
   GENDERS = 'M': 'male', 'F': 'female'
 
   constructor: (fieldsCollection) ->
+    super(fieldsCollection)
     @kind = 'PopulationPyramid'
     @ageGroupField = fieldsCollection.age_field() || fieldsCollection.age_group_field()
-    @validResults = _.map fieldsCollection.result_field().validResults(), 'value'
     @values = 'count'
-    @
 
   toJSON: ->
     @
@@ -28,13 +27,7 @@ class @Charts.PopulationPyramid
       age_grouping[@ageGroupField.name] = [[0,0.5], [0.5,2], [2,4], [5,8], [9,17], [18,24], [25,49], [50,64], [65,74], [75,84], [85, null]]
 
     query.group_by = [age_grouping, FieldsCollection.fieldNames.gender]
-
-    if @values == 'percentage'
-      denominator = _.cloneDeep query
-      denominator.result = @validResults
-      [query, denominator]
-    else
-      [query]
+    if @values == 'percentage' then [query, @denominatorFor(query)] else [query]
 
   getFilter: (report) ->
     _.find report.filters, name: @ageGroupField.name
