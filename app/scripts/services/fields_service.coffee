@@ -92,12 +92,6 @@ angular.module('ndApp')
       Cdx.fields(context).success (data) ->
         fields = data.properties
 
-        # Keep only positive results
-        resultField = fields[FieldsCollection.fieldNames.result]
-        if resultField
-          resultField.values = _.pick resultField.values, (option) -> option.kind == "positive"
-          resultField.enum = resultField.values.keys
-
         # Add instructions for known fields
         fields[FieldsCollection.fieldNames.age_group]?.instructions = "Select the age groups of the events you want to filter"
         fields[FieldsCollection.fieldNames.date]?.instructions = "Select the date range of the events you want to filter"

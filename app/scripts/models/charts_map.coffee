@@ -46,14 +46,14 @@ class @Charts.Map
     [query, denominator]
 
   getSeries: (report, data) =>
-    events = data[0].events
+    positives = data[0].events
     denominators = data[1].events
 
-    denominatorsById = _.indexBy denominators, @groupingField()
-    _.each events, (evt) =>
-      node = denominatorsById[evt[@groupingField()]]
-      node.positive = evt.count
-      node.percentage = evt.count / node.count
+    positivesById = _.indexBy positives, @mappingField
+    _.each denominators, (node) =>
+      evt = positivesById[node[@mappingField]]
+      node.positive = (evt?.count || 0)
+      node.percentage = (node.positive) / node.count
 
     denominators
 

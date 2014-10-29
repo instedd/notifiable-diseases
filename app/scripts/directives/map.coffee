@@ -163,7 +163,7 @@ class MapWidget
     layer_center = layer.getBounds().getCenter()
 
     popup_content = "
-    <b>#{feature.properties.NAME} #{feature.properties.percentage * 100}%</b><br/>
+    <b>#{feature.properties.NAME} #{(feature.properties.percentage * 100).toFixed(2)}%</b><br/>
     Positive events: <em>#{feature.properties.positive}</em><br/>
     Total events: <em>#{feature.properties.count}</em>
     "
