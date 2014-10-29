@@ -265,18 +265,22 @@ class @Charts.Trendline
       previousDate = moment(currentDate).add(-1, 'years').format(intervalFormat)
       nextDate = moment(currentDate).add(1, 'years').format(intervalFormat)
 
-      # If we are still behind the "since" date, skip this event
-      if since && currentDate.diff(since) < 0
-        continue
+      # If the current event falls into the user filter, add
+      # a row with the current count and the count for the
+      # previous year (or zero if there were no events)
+      if !since or currentDate.diff(since) >= 0
+        previousYearCount = indexedData[previousDate]
+        previousYearCount ?= 0
 
-      previousYearCount = indexedData[previousDate]
-      previousYearCount ?= 0
+        rows.push [date, event.count, previousYearCount]
 
-      rows.push [date, event.count, previousYearCount]
-
-      # We also need to check the next year: if there's no data
-      # we fill it with this year's value, but only if it's before
-      # the maximum date (either from the date filter or the current date).
+      # If nextDate should be drawn and there are no results
+      # for that period, we add a row so it shows this event's
+      # count in its "last year count" line.
+      #
+      # Note that this could happen regardless of whether the
+      # current event fits in the user filter or it was only
+      # fetched for the "previous year line"
       if nextDate <= max
         nextYearCount = indexedData[nextDate]
         unless nextYearCount
