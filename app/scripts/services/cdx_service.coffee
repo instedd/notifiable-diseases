@@ -7,8 +7,10 @@ angular.module('ndApp')
 
     runQueries =
       _.debounce () ->
-        [queries, deferreds] = _.zip.apply(_, queue)
+        queries = _.pluck(queue, 'q')
+        deferreds = _.pluck(queue, 'd')
         queue = []
+
         $http.post("#{settings.api}/events/multi", queries: queries)
           .then (response) ->
               _.each _.zip(response.data, deferreds), ([data, deferred]) ->
@@ -34,7 +36,7 @@ angular.module('ndApp')
       events: (query) ->
         if settings.multiQueriesEnabled
           deferred = httpLikeDeferred()
-          queue.push([query, deferred])
+          queue.push({q: query, d: deferred})
           runQueries()
           deferred.promise
         else
