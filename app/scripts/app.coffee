@@ -28,16 +28,18 @@ angular
     'daterangepicker',
     'ui.select2',
   ])
-  .config ($httpProvider, settings) ->
+  .factory "HttpAuthInterceptor", ($q, settings) ->
+    response: (response) ->
+      response
+    responseError: (rejection) ->
+      if rejection.status == 401
+        if window.parent != window
+          window.parent.postMessage 'reload-on-auth-failed', (settings.parentURL || '*')
+      $q.reject(rejection)
+
+  .config ($httpProvider) ->
     $httpProvider.defaults.headers.common['X-Requested-With'] = 'AngularXMLHttpRequest'
-    $httpProvider.interceptors.push ($q) ->
-      response: (response) ->
-        response
-      responseError: (rejection) ->
-        if rejection.status == 401
-          if window.parent != window
-            window.parent.postMessage 'reload-on-auth-failed', (settings.parentURL || '*')
-        $q.reject(rejection)
+    $httpProvider.interceptors.push 'HttpAuthInterceptor'
 
   .config ($routeProvider) ->
     # CODEREVIEW: Use resource-like routes to instantiate controller with report with requested id. Rename MainCtrl to ReportsCtrl, and ReportsCtrl to NewReportCtrl. Handle missing reports from here and not from main controller.
