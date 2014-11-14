@@ -37,8 +37,10 @@
       </div>
       <div class="filter" ng-repeat="filter in currentReport.filters" ng-class="{expanded: filterIsExpanded(filter), last: isLastFilter($index), empty: counts[$index] === 0}">
         <div class="filter-title" ng-click="toggleFilter(filter)">
-          <strong ng-class="[filter.name, filter.field().type]">{{filter.label()}}</strong>
-          <span class="selected-desc">{{filter.selectedDescription()}}</span>
+          <span class="filter-full-title">
+            <strong ng-class="[filter.name, filter.field().type]">{{filter.label()}}</strong>
+            <span class="selected-desc">{{filter.selectedDescription()}}</span>
+          </span>
           <span class="count" ng-show="hasCount($index)">{{counts[$index]}}</span>
           <span class="count loading" ng-hide="hasCount($index)"></span>
           <a class="remove" href="javascript:void(0)" ng-click="$parent.removeFilterByIndex($index)" title="Remove filter"></a>

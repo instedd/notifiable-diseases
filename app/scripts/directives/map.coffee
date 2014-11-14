@@ -42,7 +42,12 @@ class MapWidget
     # (beginning to draw a map before a previous one has finished may
     # cause old layers from the 'old' map to be added after the reset
     # call is made)
-    @scope.$watchCollection('series', debounce(() =>
+    #
+    # Use $watch instead of $watchCollection to trigger the rendering
+    # finish events even if the items in the series don't change. This
+    # works because the controller will always replace the series array
+    # instead of mutating it (see ChartCtrl#render).
+    @scope.$watch('series', debounce(() =>
       if @scope.series
         @beginRendering(q)
         admin_level = @scope.chart.groupingLevel(@scope.filters)
