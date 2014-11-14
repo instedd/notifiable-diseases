@@ -31,6 +31,10 @@ class @Charts.Map extends @Charts.Base
   isConfigurable: ->
     true
 
+  description: () =>
+    fieldLabel = @fieldsCollection().find(@mappingField).label
+    "Events by #{fieldLabel}"
+
   groupingField: () =>
     if @mappingField == 'location' then 'admin_level' else "#{@mappingField}_admin_level"
 
