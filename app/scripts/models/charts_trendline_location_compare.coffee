@@ -20,19 +20,24 @@ class @Charts.Trendline.LocationCompareDisplay extends @Charts.Trendline.BaseDis
     targetLocation = @getCompareToLocation(filters)
     if targetLocation
       secondQuery[@compareToLocationField] = targetLocation.id
-      return [firstQuery, secondQuery]
+      queries = [firstQuery, secondQuery]
+      if @values == 'percentage'
+        queries.concat(_.map(queries, (q) => @denominatorFor(q)))
+      else
+        queries
 
   getSeries: (report, data) ->
-    if !(data[1] && @getCompareToLocation(report.filters))
-      return @getSimpleSeries(data[0].events)
+    sortedData = _.map(data, (d) => @sortData(d.events))
+    if sortedData.length > 2
+      thisLocationRates =  @getRates(sortedData[0], sortedData[2])
+      otherLocationRates = @getRates(sortedData[1], sortedData[3])
+      @getLocationCompareSeries(report, thisLocationRates, otherLocationRates)
+    else
+      @getLocationCompareSeries(report, sortedData[0], sortData[1])
 
-    thisLocationEvents = data[0].events
-    otherLocationEvents = data[1].events
-
-    @sortData thisLocationEvents
-    @sortData otherLocationEvents
-
+  getLocationCompareSeries: (report, thisLocationEvents, otherLocationEvents) ->
     rows = []
+    countField = if @values == 'percentage' then 'rate' else 'count'
 
     # Traverse both lists at the same time, always advancing the one
     # that has the lowest start_time value (similar to a merge sort).
@@ -47,24 +52,24 @@ class @Charts.Trendline.LocationCompareDisplay extends @Charts.Trendline.BaseDis
         break
 
       if thisData && !otherData
-        rows.push [thisData.start_time, thisData.count, 0]
+        rows.push [thisData.start_time, thisData[countField], 0]
         thisIndex += 1
       else if otherData && !thisData
-        rows.push [otherData.start_time, 0, otherData.count]
+        rows.push [otherData.start_time, 0, otherData[countField]]
         otherIndex += 1
       else
         thisStartedAt = thisData.start_time
         otherStartedAt = otherData.start_time
 
         if thisStartedAt == otherStartedAt
-          rows.push [thisData.start_time, thisData.count, otherData.count]
+          rows.push [thisData.start_time, thisData[countField], otherData[countField]]
           thisIndex += 1
           otherIndex += 1
         else if thisStartedAt < otherStartedAt
-          rows.push [thisData.start_time, thisData.count, 0]
+          rows.push [thisData.start_time, thisData[countField], 0]
           thisIndex += 1
         else #  thisStartedAt > otherStartedAt
-          rows.push [otherData.start_time, 0, otherData.count]
+          rows.push [otherData.start_time, 0, otherData[countField]]
           otherIndex += 1
 
     filterLocation = @getFilterLocation(report.filters)
