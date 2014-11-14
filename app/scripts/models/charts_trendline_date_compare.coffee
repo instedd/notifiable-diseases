@@ -13,23 +13,36 @@ class @Charts.Trendline.DateCompareDisplay extends @Charts.Trendline.BaseDisplay
   getDateFilter: (filters) ->
     _.find filters, (filter) -> filter.name == FieldsCollection.fieldNames.date
 
+
   applyToQuery: (query, filters) ->
     query.group_by = @dateGrouping
     dateFilter = @getDateFilter filters
+
     if dateFilter
       since = moment(dateFilter.since).add(-1, 'years')
       query.since = since.format("YYYY-MM-DD")
 
-    [query]
+    if @values == 'percentage'
+      [query, @denominatorFor(query)]
+    else
+      [query]
+
 
   getSeries: (report, data) ->
-    data = data[0].events
-    @sortData data
+    datapoints = @sortData(data[0].events)
+    denominators = if @values == 'percentage' and data.length > 0 then @sortData(data[1].events) else null
+
+    positives = if denominators then @getRates(datapoints, denominators) else datapoints
+    @getDateCompareSeries(report, positives)
+
+
+  getDateCompareSeries: (report, data) ->
+    countField = if @values == 'percentage' then 'rate' else 'count'
 
     # First, index data by start_time
     indexedData = {}
     for event in data
-      indexedData[event.start_time] = event.count
+      indexedData[event.start_time] = event[countField]
 
     intervalFormat = @intervalFormat()
 
@@ -56,6 +69,14 @@ class @Charts.Trendline.DateCompareDisplay extends @Charts.Trendline.BaseDisplay
       previousDate = moment(currentDate).add(-1, 'years').format(intervalFormat)
       nextDate = moment(currentDate).add(1, 'years').format(intervalFormat)
 
+      # We need to check the next year: if there's no data
+      # we fill it with this year's value, but only if it's before
+      # the maximum date (either from the date filter or the current date).
+      if nextDate <= max
+        nextYearCount = indexedData[nextDate]
+        unless nextYearCount
+          rows.push [nextDate, 0, event[countField]]
+
       # If we are still behind the "since" date, skip this event
       if since && currentDate.diff(since) < 0
         continue
@@ -63,15 +84,7 @@ class @Charts.Trendline.DateCompareDisplay extends @Charts.Trendline.BaseDisplay
       previousYearCount = indexedData[previousDate]
       previousYearCount ?= 0
 
-      rows.push [date, event.count, previousYearCount]
-
-      # We also need to check the next year: if there's no data
-      # we fill it with this year's value, but only if it's before
-      # the maximum date (either from the date filter or the current date).
-      if nextDate <= max
-        nextYearCount = indexedData[nextDate]
-        unless nextYearCount
-          rows.push [nextDate, 0, event.count]
+      rows.push [date, event[countField], previousYearCount]
 
     rows.sort (x, y) ->
       if x[0] < y[0]
