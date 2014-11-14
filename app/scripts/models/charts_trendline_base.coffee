@@ -39,16 +39,14 @@ class @Charts.Trendline.BaseDisplay
       denominator = denominators[denominatorsIndex]
 
       if not positive? or positive.start_time > denominator.start_time
-        denominator.rate = 0
         denominatorsIndex++
       else if positive.start_time == denominator.start_time
-        denominator.rate = if denominator.count == 0 then 0 else positive.count / denominator.count
+        positive.rate = if denominator.count == 0 then 0 else positive.count / denominator.count
         positivesIndex++
-        denominatorsIndex++
       else if positive.start_time < denominator.start_time
         positivesIndex++
 
-    return denominators
+    return positives
 
 
   fieldsCollection: () ->

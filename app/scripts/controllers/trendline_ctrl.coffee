@@ -65,7 +65,7 @@ angular.module('ndApp')
         $scope.viz.data.cols = $scope.computedInfo.cols
         if $scope.chart.values == 'percentage'
           $scope.viz.options.vAxis.title = 'Event rate'
-          $scope.viz.options.vAxis.format = '#,###%'
+          $scope.viz.options.vAxis.format = '##.##%'
           $scope.viz.options.vAxis.maxValue = null
         else
           $scope.viz.options.vAxis.title = 'Event count'
@@ -77,60 +77,67 @@ angular.module('ndApp')
     $scope.$watch 'chart.description(currentReport)', ->
       $scope.viz.options.title = $scope.chart.description($scope.currentReport)
 
-COLORS = ["#3266CC", "#DC3918", "#FD9927", "#149618", "#991499", "#1899C6", "#DD4477", "#66AA1E", "#B82E2E", "#316395", "#994399", "#22AA99", "#ABAA22", "#6633CC"]
 
-compute = (series) =>
-  return unless series
+    COLORS = ["#3266CC", "#DC3918", "#FD9927", "#149618", "#991499", "#1899C6", "#DD4477", "#66AA1E", "#B82E2E", "#316395", "#994399", "#22AA99", "#ABAA22", "#6633CC"]
 
-  cols = []
-  cols.push id: "date", label: "Date", type: "string"
+    compute = (series) =>
+      return unless series
 
-  # If there are no rows (so, no cols), we return an empty set to avoid
-  # getting an error from Google
-  if series.cols.length == 0
-    cols.push id: "count", label: "Count", type: "number"
+      cols = []
+      cols.push id: "date", label: "Date", type: "string"
 
-    return cols: cols, rows: [], colors: COLORS, total: 0
+      # If there are no rows (so, no cols), we return an empty set to avoid
+      # getting an error from Google
+      if series.cols.length == 0
+        cols.push id: "count", label: "Count", type: "number"
 
-  for col in series.cols
-    cols.push id: col, label: col, type: "number"
+        return cols: cols, rows: [], colors: COLORS, total: 0
 
-  rows = []
-  for row in series.rows
-    c = [v: row[0]]
+      for col in series.cols
+        cols.push id: col, label: col, type: "number"
 
-    i = 0
-    while i < series.cols.length
-      value = row[i + 1]
-      if value
-        c.push
-          v: value
-          f: "#{value} events"
+      rows = []
+      for row in series.rows
+        c = [v: row[0]]
+
+        i = 0
+        while i < series.cols.length
+          value = row[i + 1]
+          if value
+            c.push
+              v: value
+              f: tooltipFor(value)
+          else
+            c.push v: 0
+          i += 1
+
+        rows.push c: c
+
+      if series.indices
+        colors = []
+        for index in series.indices
+          colors.push COLORS[index]
       else
-        c.push v: 0
-      i += 1
+        colors = COLORS
 
-    rows.push c: c
+      cols: cols
+      rows: rows
+      colors: colors
+      total: rows.length
 
-  if series.indices
-    colors = []
-    for index in series.indices
-      colors.push COLORS[index]
-  else
-    colors = COLORS
+    tooltipFor = (value) =>
+      if $scope.chart.values == 'percentage'
+        "#{(value * 100).toFixed(2)}% events"
+      else
+        "#{value} events"
 
-  cols: cols
-  rows: rows
-  colors: colors
-  total: rows.length
+    sliceRows = (rows, offset) ->
+      start = rows.length - offset - 10
+      end = rows.length - offset
 
-sliceRows = (rows, offset) ->
-  start = rows.length - offset - 10
-  end = rows.length - offset
+      start = 0 if start < 0
 
-  start = 0 if start < 0
-
-  if end < 0
-    rows.slice(start)
-  else
-    rows.slice(start, end)
+      if end < 0
+        rows.slice(start)
+      else
+        rows.slice(start, end)

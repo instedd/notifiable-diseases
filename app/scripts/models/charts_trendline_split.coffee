@@ -12,12 +12,24 @@ class @Charts.Trendline.SplitDisplay extends @Charts.Trendline.BaseDisplay
 
   applyToQuery: (query, filters) ->
     query.group_by = [@dateGrouping, @splitField]
-    [query]
+    if @values == 'percentage'
+      denominator = @denominatorFor(query)
+      denominator.group_by = @dateGrouping
+      [query, denominator]
+    else
+      [query]
 
   getSeries: (report, data) ->
-    data = data[0].events
-    @sortSplitData data
+    datapoints = if @values == 'percentage' and data.length > 0
+      positives = @sortSplitData data[0].events
+      denominators = @sortSplitData data[1].events
+      @getRates(positives, denominators)
+    else
+      @sortSplitData data[0].events
 
+    @getSplitSeries(report, datapoints)
+
+  getSplitSeries: (report, data) ->
     options = report.fieldOptionsFor(@splitField)
 
     cols = _.map options, (option) -> option.label
@@ -52,7 +64,7 @@ class @Charts.Trendline.SplitDisplay extends @Charts.Trendline.BaseDisplay
         # This is a sanity check: the index shouldn't be -1 if all data is correct
         if index != -1
           foundIndices[index] = true
-          row[index + 1] = other_item.count
+          row[index + 1] = other_item.rate || other_item.count
 
         j += 1
 
