@@ -61,74 +61,13 @@ class @Charts.Trendline extends @Charts.Base
   description: (report) ->
     return @displayStrategy().description(report)
 
-    # desc = "Events grouped by #{@grouping}"
-    # switch @display
-    #   when 'split'
-    #     splitField = @fieldsCollection().find(@splitField)
-    #     desc += ", split by #{splitField?.label.toLowerCase()}"
-    #   when 'compareToDate'
-    #     switch @compareToDate
-    #       when 'previous_year'
-    #         desc += ", compared to previous year"
-    #       else
-    #         throw "Unknown compare to value: #{@compareToDate}"
-    #   when 'compareToLocation'
-    #     location = @getCompareToLocation(report.filters)
-    #     if location
-    #       compareField = @fieldsCollection().find(@compareToLocationField)
-    #       desc += ", compared to #{location.name} from #{compareField.label}"
-    # desc
 
   applyToQuery: (query, filters) ->
     return @displayStrategy().applyToQuery(query, filters)
 
-    # switch @display
-    #   when 'simple'
-    #     query.group_by = date_grouping
-    #   when 'split'
-    #     query.group_by = [date_grouping, @splitField]
-    #   when 'compareToDate'
-    #     query.group_by = date_grouping
-    #     switch @compareToDate
-    #       when 'previous_year'
-    #         dateFilter = @getDateFilter filters
-    #         if dateFilter
-    #           since = moment(dateFilter.since).add(-1, 'years')
-    #           query.since = since.format("YYYY-MM-DD")
-    #       else
-    #         throw "Unknown compare to value: #{@compareToDate}"
-    #   when 'compareToLocation'
-    #     query.group_by = date_grouping
-    #     firstQuery = query
-    #     secondQuery = _.cloneDeep firstQuery
-    #     targetLocation = @getCompareToLocation(filters)
-    #     if targetLocation
-    #       secondQuery[@compareToLocationField] = targetLocation.id
-    #       return [firstQuery, secondQuery]
-    #   else
-    #     throw "Unknown display: #{@display}"
 
   getSeries: (report, data) ->
-    # series = switch @display
-    #          when 'simple'
-    #            @getSimpleSeries(data[0].events)
-    #          when 'split'
-    #            @getSplitSeries(report, data[0].events)
-    #          when 'compareToDate'
-    #            @getCompareToDateSeries(report, data[0].events)
-    #          when 'compareToLocation'
-    #            if data[1] && @getCompareToLocation(report.filters)
-    #              @getCompareToLocationSeries(report, data[0].events, data[1].events)
-    #            else
-    #              @getSimpleSeries(data[0].events)
-    #          else
-    #            throw "Unknown display: #{@display}"
     @displayStrategy().getExtendedSeries(report, data)
-    # series.interval = @grouping
-    # @extendToDateBounds(report, series)
-    # series.rows = @fillGaps series
-
-    # series
 
 
   getCSV: (report, series) ->
