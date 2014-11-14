@@ -8,7 +8,7 @@ class @Charts.Trendline.SplitDisplay extends @Charts.Trendline.BaseDisplay
 
   description: () ->
     splitField = @fieldsCollection().find(@splitField)
-    "#{super()}, split by #{splitField?.label.toLowerCase()}"
+    "#{super()}, split by #{splitField?.label.toLowerCase()}, stacked"
 
   applyToQuery: (query, filters) ->
     query.group_by = [@dateGrouping, @splitField]
