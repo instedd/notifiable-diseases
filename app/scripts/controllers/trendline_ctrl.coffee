@@ -19,7 +19,6 @@ angular.module('ndApp')
         vAxis:
           title: "Event count"
           minValue: 0
-          maxValue: 4
         hAxis:
           title: "Date"
           maxAlternation: 1
@@ -64,6 +63,14 @@ angular.module('ndApp')
         $scope.viz.options.isStacked = $scope.chart.isStacked()
         $scope.viz.type = $scope.chart.vizType()
         $scope.viz.data.cols = $scope.computedInfo.cols
+        if $scope.chart.values == 'percentage'
+          $scope.viz.options.vAxis.title = 'Event rate'
+          $scope.viz.options.vAxis.format = '#,###%'
+          $scope.viz.options.vAxis.maxValue = null
+        else
+          $scope.viz.options.vAxis.title = 'Event count'
+          $scope.viz.options.vAxis.format = null
+          $scope.viz.options.vAxis.maxValue = 4
         render()
 
     $scope.$watchCollection('series', computeAndRender)

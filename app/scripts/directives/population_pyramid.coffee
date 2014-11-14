@@ -30,7 +30,7 @@ angular.module('ndApp')
               position: 'bottom'
               alignment: 'center'
             hAxis:
-              format: (if scope.values == 'percentage' then '##.##;##.##%' else '#,###;#,###')
+              format: (if scope.values == 'percentage' then '##.##%;##.##%' else '#,###;#,###')
               minValue: -1
               maxValue: 1
             vAxis:

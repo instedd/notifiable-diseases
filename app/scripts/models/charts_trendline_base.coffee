@@ -4,6 +4,8 @@ class @Charts.Trendline.BaseDisplay
 
   constructor: (@trendline) ->
     @dateGrouping = "#{@trendline.grouping}(#{FieldsCollection.fieldNames.date})"
+    @denominatorFor = (q) -> @trendline.denominatorFor(q)
+    @values = @trendline.values
 
   getSeries: (report, data) ->
     throw "Subclass responsibility"
@@ -15,19 +17,45 @@ class @Charts.Trendline.BaseDisplay
     series.rows = @fillGaps series
     series
 
-  getSimpleSeries: (data) ->
+  getSimpleSeries: (data, denominators) ->
     @sortData data
+    @sortData denominators
 
     cols:
       ["Events"]
     rows:
-      _.map data, (value) ->
-        [value.start_time, value.count]
+      _.map @getRates(data, denominators), (value) ->
+        [value.start_time, (if denominators? then value.rate else value.count)]
+
+  getRates: (positives, denominators) ->
+    return positives if not denominators?
+
+    positivesIndex = 0
+    denominatorsIndex = 0
+
+    while positivesIndex < positives.length or denominatorsIndex < denominators.length
+
+      positive = positives[positivesIndex]
+      denominator = denominators[denominatorsIndex]
+
+      if not positive? or positive.start_time > denominator.start_time
+        denominator.rate = 0
+        denominatorsIndex++
+      else if positive.start_time == denominator.start_time
+        denominator.rate = if denominator.count == 0 then 0 else positive.count / denominator.count
+        positivesIndex++
+        denominatorsIndex++
+      else if positive.start_time < denominator.start_time
+        positivesIndex++
+
+    return denominators
+
 
   fieldsCollection: () ->
     @trendline.fieldsCollection()
 
   sortData: (data) ->
+    return null if not data?
     data.sort (x, y) =>
       if x.start_time < y.start_time
         -1
