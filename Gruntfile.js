@@ -292,7 +292,17 @@ module.exports = function (grunt) {
         dest:     '.tmp/scripts/app.templates.js',
         options: {
           usemin: 'scripts/scripts.js',
-          module: 'ndApp'
+          module: 'ndApp',
+          htmlmin: {
+            collapseBooleanAttributes:      true,
+            collapseWhitespace:             true,
+            removeAttributeQuotes:          true,
+            removeComments:                 true, // Only if you don't use comment directives!
+            removeEmptyAttributes:          true,
+            removeRedundantAttributes:      true,
+            removeScriptTypeAttributes:     true,
+            removeStyleLinkTypeAttributes:  true
+          }
         }
       }
     },
@@ -508,6 +518,7 @@ module.exports = function (grunt) {
     'useminPrepare',
     'concurrent:dist',
     'autoprefixer',
+    'ngtemplates',
     'concat',
     'ngmin',
     'copy:dist',

@@ -62,8 +62,8 @@
       </div>
     </div>
     <div class="bottom-actions">
-      <div><a href="javascript:void(0);" ng-click="duplicateReport()"><img src="images/ic-duplicate-black.png">Duplicate this report</a></div>
-      <div><a href="javascript:void(0);" ng-click="deleteReport()"><img src="images/ic-delete-black.png">Delete this report</a></div>
+      <div><a href="javascript:void(0);" ng-click="duplicateReport()" class="duplicate-report">Duplicate this report</a></div>
+      <div><a href="javascript:void(0);" ng-click="deleteReport()" class="delete-report">Delete this report</a></div>
     </div>
   </div>
   <!-- END: Filters panel -->
@@ -79,10 +79,10 @@
           <div ng-hide="editingChart">
             <div class="actions">
               <span ng-show="chart.isConfigurable()">
-                <a href="javascript:void(0)" ng-click="edit()" title="Edit"><img src="images/ic-edit.png"></a>
+                <a href="javascript:void(0)" ng-click="edit()" title="Edit" class="edit-chart"></a>
               </span>
-              <a href="javascript:void(0)" ng-csv="getCSV()" filename="{{getCSVFilename()}}" title="Download CSV"><img src="images/ic-download.png"></a>
-              <a href="javascript:void(0)" ng-click="$parent.removeChartByIndex($index)" title="Delete"><img src="images/ic-delete.png"></a>
+              <a href="javascript:void(0)" ng-csv="getCSV()" filename="{{getCSVFilename()}}" title="Download CSV" class="download-csv"></a>
+              <a href="javascript:void(0)" ng-click="$parent.removeChartByIndex($index)" title="Delete" class="delete-chart"></a>
             </div>
             <div class="content" ng-include src="chartTemplateFor(chart)"></div>
           </div>
