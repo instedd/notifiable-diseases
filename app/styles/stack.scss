@@ -1,0 +1,36 @@
+.stackAreaChart {
+  text {
+    font: 10px sans-serif;
+    fill: #999;
+  }
+
+  .axis path,
+  .axis line {
+    fill: none;
+    stroke: #999;
+    shape-rendering: crispEdges;
+  }
+
+  .last-period .label,
+  .label {
+    fill: #999;
+    dominant-baseline: middle;
+  }
+
+  .data .layer {
+    opacity: 0.6;
+  }
+
+  .reference-data .layer {
+    fill:none;
+    opacity: 0.6;
+    stroke:#000;
+    stroke-width:1px;
+    stroke-dasharray:4,2
+  }
+
+  .reference-data .layer text {
+    fill:#999;
+    stroke:none;
+  }
+}

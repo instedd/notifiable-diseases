@@ -405,6 +405,12 @@ module.exports = function (grunt) {
             }
         }
       },
+      sassStyles: {
+        expand: true,
+        cwd: 'app/styles',
+        dest: '<%= yeoman.sassDir %>',
+        src: ['*.scss']
+      },
       dist: {
         files: [{
           expand: true,
@@ -487,6 +493,7 @@ module.exports = function (grunt) {
     grunt.task.run([
       'clean:server',
       'copy:styleTemplates',
+      'copy:sassStyles',
       'ngconstant',
       'configureProxies',
       'wiredep',
@@ -513,6 +520,7 @@ module.exports = function (grunt) {
   grunt.registerTask('build', [
     'clean:dist',
     'copy:styleTemplates',
+    'copy:sassStyles',
     'ngconstant',
     'wiredep',
     'useminPrepare',

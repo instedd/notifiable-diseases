@@ -1,7 +1,7 @@
 'use strict'
 
 angular.module('ndApp')
-  .controller 'TrendlineCtrl', ($scope, $timeout) ->
+  .controller 'TrendlineCtrl', ($scope, $timeout, $element) ->
     $scope.offset = 0
     $scope.viz =
       type: "AreaChart"
@@ -47,6 +47,12 @@ angular.module('ndApp')
       else
         false
 
+    # container = d3.select($('stack-chart-container', $element)[0])
+    # chart = StackChart().width(500).height(200)
+    # try
+    #   container.call(chart, [], [])
+    # catch e
+
     render = ->
       $scope.viz.data.rows = sliceRows($scope.computedInfo.rows, $scope.offset)
 
@@ -54,6 +60,9 @@ angular.module('ndApp')
       # we force a window reisze to force a redraw.
       $timeout ->
         window.dispatchEvent(new Event('resize'))
+
+      # console.log $scope.computedInfo.rows
+      # chart.redraw($scope.computedInfo.rows, [])
 
     computeAndRender = ->
       if $scope.series
