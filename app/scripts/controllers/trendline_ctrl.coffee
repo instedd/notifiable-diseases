@@ -3,31 +3,8 @@
 angular.module('ndApp')
   .controller 'TrendlineCtrl', ($scope, $timeout, $element) ->
     $scope.offset = 0
-    $scope.viz =
-      type: "AreaChart"
-      data:
-        cols: [
-          {id: "date", label: "Date", type: "string"},
-          {id: "count", label: "Count", type: "number"},
-        ]
-        rows: []
-      options:
-        title: $scope.chart.description($scope.currentReport)
-        isStacked: true
-        width: '100%'
-        height: 320
-        vAxis:
-          title: "Event count"
-          minValue: 0
-        hAxis:
-          title: "Date"
-          maxAlternation: 1
-          slantedText: true
-          textStyle:
-            fontSize: 9
-        animation:
-          duration: 600
-          easing: 'out'
+    $scope.title = $scope.chart.description($scope.currentReport)
+    $scope.chartData = { colors: [], cols: [], rows: [] }
     $scope.computedInfo = null
 
     $scope.moveOffset = (step) ->
@@ -47,45 +24,19 @@ angular.module('ndApp')
       else
         false
 
-    # container = d3.select($('stack-chart-container', $element)[0])
-    # chart = StackChart().width(500).height(200)
-    # try
-    #   container.call(chart, [], [])
-    # catch e
-
-    render = ->
-      $scope.viz.data.rows = sliceRows($scope.computedInfo.rows, $scope.offset)
-
-      # The angular chart directive sometimes doesn't realize data changes, so
-      # we force a window reisze to force a redraw.
-      $timeout ->
-        window.dispatchEvent(new Event('resize'))
-
-      # console.log $scope.computedInfo.rows
-      # chart.redraw($scope.computedInfo.rows, [])
-
-    computeAndRender = ->
+    update = ->
       if $scope.series
         $scope.offset = 0
         $scope.computedInfo = compute $scope.series
-        $scope.viz.options.colors = $scope.computedInfo.colors
-        $scope.viz.options.isStacked = $scope.chart.isStacked()
-        $scope.viz.type = $scope.chart.vizType()
-        $scope.viz.data.cols = $scope.computedInfo.cols
-        if $scope.chart.values == 'percentage'
-          $scope.viz.options.vAxis.title = 'Event rate'
-          $scope.viz.options.vAxis.format = '##.##%'
-          $scope.viz.options.vAxis.maxValue = null
-        else
-          $scope.viz.options.vAxis.title = 'Event count'
-          $scope.viz.options.vAxis.format = null
-          $scope.viz.options.vAxis.maxValue = 4
         render()
 
-    $scope.$watchCollection('series', computeAndRender)
-    $scope.$watch 'chart.description(currentReport)', ->
-      $scope.viz.options.title = $scope.chart.description($scope.currentReport)
-
+    render = ->
+      $scope.chartType = $scope.chart.vizType()
+      $scope.stacked = $scope.chart.isStacked()
+      $scope.chartData =
+        colors: $scope.computedInfo.colors
+        cols: $scope.computedInfo.cols
+        rows: sliceRows($scope.computedInfo.rows, $scope.offset)
 
     COLORS = ["#3266CC", "#DC3918", "#FD9927", "#149618", "#991499", "#1899C6", "#DD4477", "#66AA1E", "#B82E2E", "#316395", "#994399", "#22AA99", "#ABAA22", "#6633CC"]
 
@@ -150,3 +101,8 @@ angular.module('ndApp')
         rows.slice(start)
       else
         rows.slice(start, end)
+
+    $scope.$watchCollection('series', update)
+    $scope.$watch 'chart.description(currentReport)', ->
+      $scope.title = $scope.chart.description($scope.currentReport)
+
