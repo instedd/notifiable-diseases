@@ -5,7 +5,7 @@ function StackChart() {
       outerHeight = 300,
       width = outerWidth - margin.left - margin.right,
       height = outerHeight - margin.top - margin.bottom,
-      refSize = 10;
+      refSize = 10, xValues = null, yValues = 'count';
 
   var my = function(selection, d0, rd0) {
 
@@ -60,23 +60,41 @@ function StackChart() {
     var data, referenceData;
 
     var prefix = function (d) {
-      var prefix = d3.formatPrefix(scaleY.domain()[1], 0);
-      return prefix.scale(d);
+      if (yValues == 'count') {
+        var prefix = d3.formatPrefix(scaleY.domain()[1], 0);
+        return prefix.scale(d);
+      } else {
+        return Math.round(d * 100);
+      }
     }
 
     var drawPath = function(data, container, pathGenerator) {
       var path = container.selectAll("path").data(data);
 
-      path.enter().append("path")
-          .attr("fill", function (d,i) { return color(i);})
-          .attr("class", "layer");
+      try {
+        path.enter().append("path")
+            .attr("fill", function (d,i) { return color(i);})
+            .attr("class", "layer");
 
-      path.transition()
-        .attr("d", pathGenerator);
+        path.transition()
+          .attr("d", pathGenerator);
+
+        path.exit().remove();
+      } catch (e) {
+        console.log(e);
+      }
     };
 
+    function getColumns(data) {
+      if (data.length > 0) {
+        return Object.keys(data[0]).splice(1);
+      } else {
+        return [];
+      }
+    }
+
     var drawReferences = function(data, referenceData) {
-      var columns = Object.keys(data[0]).splice(1);
+      var columns = getColumns(data);
       
       var reference = references.selectAll("g").data(columns);
       
@@ -85,18 +103,22 @@ function StackChart() {
 
       enterReference.append("circle")
           .attr("r", refSize / 2)
-          .attr("cx", refSize / 2)
-          .attr("fill", function(d,i) { return color(i)});
+          .attr("cx", refSize / 2);
 
       enterReference.append("text")
           .attr("class", "label")
-          .attr("x", refSize + 4)
+          .attr("x", refSize + 4);
+
+      reference.select('circle')
+          .attr("fill", function(d,i) { return color(i)});
+
+      reference.select('text')
           .text(function (d) { return d});
 
       var x = margin.left,
           y = refSize;
 
-      enterReference
+      reference
         .attr("transform", function (d,i) {
             var translate = "translate(" + x + "," + y + ")";
             x += this.getBBox().width + refSize;
@@ -105,7 +127,9 @@ function StackChart() {
               y += refSize * 2;
             } 
             return translate;
-          })        
+          });
+
+      reference.exit().remove();
     }
 
     my.redraw = function(d, rd) {
@@ -138,7 +162,7 @@ function StackChart() {
 
       // Draw based on data
 
-      var columns = Object.keys(data[0]).splice(1);
+      var columns = getColumns(data);
 
       var dataLayers = stack(d3.range(columns.length).map(function(i) {
         var key = columns[i];
@@ -156,7 +180,36 @@ function StackChart() {
       scaleY.domain([0, d3.max(dataLayers.concat(lastPeriodLayers || []), function(layer) { return d3.max(layer, function(d) { return d.y0 + d.y; });})])
 
       drawPath(dataLayers, areas, areaGenerator);
-      drawPath([lastPeriodLayers[columns.length - 1]], lines, lineGenerator);
+      if (lastPeriodLayers[columns.length - 1]) {
+        drawPath([lastPeriodLayers[columns.length - 1]], lines, lineGenerator);
+      }
+
+      function xTickFormat() {
+        switch (xValues) {
+          case 'week':
+            return d3.time.format('w%W\'%y');
+          case 'month':
+            return d3.time.format('%b\'%y');
+          case 'year':
+          case 'day':
+          default:
+            return null;
+        }
+      }
+
+      function xTicks() {
+        switch (xValues) {
+          case 'week':
+            return d3.time.weeks;
+          case 'day':
+            return d3.time.day;
+          case 'month':
+            return d3.time.month;
+          case 'year':
+          default:
+            return d3.time.year;
+        }
+      }
 
       axisX.transition()
           .call(d3.svg.axis()
@@ -164,6 +217,8 @@ function StackChart() {
                   .outerTickSize(0)
                   .innerTickSize(4)
                   .tickPadding(5)
+                  .tickFormat(xTickFormat())
+                  .ticks(xTicks(), 1)
                   .orient("bottom"));
 
       axisY.transition()
@@ -175,8 +230,12 @@ function StackChart() {
                   .tickPadding(5)
                   .orient("left"));
 
-      var symbol = d3.formatPrefix(scaleY.domain()[1], 0).symbol;
-      label.text("Quantity" + (symbol.length? " (" + symbol + ")" : ""))
+      if (yValues == 'count') {
+        var symbol = d3.formatPrefix(scaleY.domain()[1], 0).symbol;
+        label.text("Count " + (symbol.length? " (" + symbol + ")" : ""));
+      } else {
+        label.text("Positive cases (%)");
+      }
 
     };
 
@@ -197,6 +256,18 @@ function StackChart() {
     height = outerHeight - margin.top - margin.bottom;
     return my;
   };
+
+  my.xValues = function(_) {
+    if (!arguments.length) return xValues;
+    xValues = _;
+    return my;
+  }
+
+  my.yValues = function(_) {
+    if (!arguments.length) return yValues;
+    yValues = _;
+    return my;
+  }
 
   return my;
 

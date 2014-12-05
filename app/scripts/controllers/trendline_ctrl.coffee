@@ -31,14 +31,11 @@ angular.module('ndApp')
         render()
 
     render = ->
-      $scope.chartType = $scope.chart.vizType()
-      $scope.stacked = $scope.chart.isStacked()
+      $scope.comparison = not $scope.chart.isStacked()
+      $scope.grouping = $scope.chart.grouping
       $scope.chartData =
-        colors: $scope.computedInfo.colors
         cols: $scope.computedInfo.cols
         rows: sliceRows($scope.computedInfo.rows, $scope.offset)
-
-    COLORS = ["#3266CC", "#DC3918", "#FD9927", "#149618", "#991499", "#1899C6", "#DD4477", "#66AA1E", "#B82E2E", "#316395", "#994399", "#22AA99", "#ABAA22", "#6633CC"]
 
     compute = (series) =>
       return unless series
@@ -73,16 +70,8 @@ angular.module('ndApp')
 
         rows.push c: c
 
-      if series.indices
-        colors = []
-        for index in series.indices
-          colors.push COLORS[index]
-      else
-        colors = COLORS
-
       cols: cols
       rows: rows
-      colors: colors
       total: rows.length
 
     tooltipFor = (value) =>

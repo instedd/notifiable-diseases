@@ -1,5 +1,5 @@
 <div ng-controller="TrendlineCtrl">
-  <nd-trendline values='chart.values' stacked='chartStacked' charttype='chartType' title='title' chartdata='chartData'></nd-trendline>
+  <nd-trendline values='chart.values' comparison='comparison' grouping='grouping' title='title' chartdata='chartData'></nd-trendline>
 
   <div class="scrollArrows" ng-show="canMoveOffset(1) || canMoveOffset(-1)">
     <a href="javascript:void(0)" ng-click="moveOffset(10)"  ng-class="{disabled: !canMoveOffset(10)}"  class="leftPage"></a>

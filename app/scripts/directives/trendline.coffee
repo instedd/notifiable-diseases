@@ -1,5 +1,19 @@
 angular.module('ndApp')
   .directive 'ndTrendline', ($window) ->
+    buildWeekParser = ->
+      # FIXME: verify that the week starts on sunday or monday and that it's 0 or 1 based
+      parser = d3.time.format('%Y-W%W-%w')
+      {
+        parse: (d) ->
+          parser.parse(d + '-0')
+      }
+
+    DATE_PARSERS =
+      year: d3.time.format('%Y')
+      month: d3.time.format('%Y-%m')
+      week: buildWeekParser()
+      day: d3.time.format('%Y-%m-%d')
+
     {
       restrict: 'E'
 
@@ -7,58 +21,44 @@ angular.module('ndApp')
         chartdata: '='
         title: '='
         values: '='
-        stacked: '='
-        charttype: '='
+        grouping: '='
+        comparison: '='
 
-      template: '<div google-chart chart="chart" class="nd-chart"></div>'
+      template: '<svg class="nd-chart"></svg>'
 
       link: (scope, element, attrs) ->
-        scope.chart =
-          type: "AreaChart"
-          data:
-            cols: [
-              {id: "date", label: "Date", type: "string"},
-              {id: "count", label: "Count", type: "number"},
-            ]
-            rows: []
-          options:
-            title: scope.title
-            isStacked: true
-            width: '100%'
-            height: 320
-            vAxis:
-              title: "Event count"
-              minValue: 0
-            hAxis:
-              title: "Date"
-              maxAlternation: 1
-              slantedText: true
-              textStyle:
-                fontSize: 9
-            animation:
-              duration: 600
-              easing: 'out'
+        chart = StackChart()
+        container = d3.select(element[0].children[0])
+        container.call(chart, [], [])
 
-        render = ->
+        resize = ->
+          width = element.parent().innerWidth()
+          chart.height(320).width(width).redraw()
+
+        angular.element($window).on 'resize', resize
+        scope.$on "$destroy", -> angular.element($window).off 'resize', resize
+
+        resize()
+
+        scope.$watch 'chartdata', ->
+          data = []
+          rd = []
           if scope.chartdata
-            scope.chart.options.colors = scope.chartdata.colors
-            scope.chart.options.isStacked = scope.stacked
-            scope.chart.type = scope.charttype
-            scope.chart.data.cols = scope.chartdata.cols
-            if scope.values == 'percentage'
-              scope.chart.options.vAxis.title = 'Event rate'
-              scope.chart.options.vAxis.format = '##.##%'
-              scope.chart.options.vAxis.maxValue = null
-            else
-              scope.chart.options.vAxis.title = 'Event count'
-              scope.chart.options.vAxis.format = null
-              scope.chart.options.vAxis.maxValue = 4
+            parser = DATE_PARSERS[scope.grouping]
+            cols = scope.chartdata.cols.slice(1)
+            for row in scope.chartdata.rows
+              item = { date: parser.parse(row.c[0].v) }
+              if scope.comparison
+                item[cols[0].id] = row.c[1].v
+                data.push item
 
-            scope.chart.data.rows = scope.chartdata.rows
+                item = { date: item.date }
+                item[cols[0].id] = row.c[2].v
+                rd.push item
+              else
+                for col, i in cols
+                  item[col.id] = row.c[i + 1].v
+                data.push item
 
-        scope.$watch 'chartdata', render
-        scope.$watch 'stacked', render
-        scope.$watch 'charttype', render
-        scope.$watch 'title', -> scope.chart.options.title = scope.title
-
+            chart.xValues(scope.grouping).yValues(scope.values).redraw(data, rd)
     }
