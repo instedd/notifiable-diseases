@@ -59,8 +59,6 @@ angular.module('ndApp')
                   item[col.id] = row.c[i + 1].v
                 data.push item
 
+            chart.title(scope.title)
             chart.xValues(scope.grouping).yValues(scope.values).redraw(data, rd)
-
-        scope.$watch 'title', ->
-          chart.title(scope.title)
     }
