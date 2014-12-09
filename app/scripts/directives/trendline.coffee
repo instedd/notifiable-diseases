@@ -1,7 +1,6 @@
 angular.module('ndApp')
   .directive 'ndTrendline', ($window) ->
     buildWeekParser = ->
-      # FIXME: verify that the week starts on sunday or monday and that it's 0 or 1 based
       parser = d3.time.format('%Y-W%W-%w')
       {
         parse: (d) ->
@@ -61,4 +60,7 @@ angular.module('ndApp')
                 data.push item
 
             chart.xValues(scope.grouping).yValues(scope.values).redraw(data, rd)
+
+        scope.$watch 'title', ->
+          chart.title(scope.title)
     }

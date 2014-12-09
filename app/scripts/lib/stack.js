@@ -5,14 +5,15 @@ function StackChart() {
       outerHeight = 300,
       width = outerWidth - margin.left - margin.right,
       height = outerHeight - margin.top - margin.bottom,
-      refSize = 10, xValues = null, yValues = 'count';
+      refSize = 10, xValues = null, yValues = 'count',
+      title = null;
 
   var my = function(selection, d0, rd0) {
 
     var color = d3.scale.category20();
 
     var container = selection
-        .attr('class', 'stackAreaChart');
+      .attr('class', 'stackAreaChart');
 
     var chart = container.append("g");
 
@@ -152,7 +153,8 @@ function StackChart() {
 
       container
         .attr("width", width + margin.left + margin.right)
-        .attr("height", height + margin.top + margin.bottom);
+        .attr("height", height + margin.top + margin.bottom)
+        .attr("title", title);
 
       axisX
           .attr("transform", "translate(0," + (height - referencesHeight) + ")");
@@ -266,6 +268,12 @@ function StackChart() {
   my.yValues = function(_) {
     if (!arguments.length) return yValues;
     yValues = _;
+    return my;
+  }
+
+  my.title = function(_) {
+    if (!arguments.length) return title;
+    title = _;
     return my;
   }
 

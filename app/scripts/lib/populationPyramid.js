@@ -7,7 +7,8 @@ function PopulationPyramid() {
       height = outerHeight - margin.top - margin.bottom,
       data,
       lastData,
-      lastScaleY;
+      lastScaleY,
+      values = 'count', title;
 
   var my = function(selection) {
 
@@ -42,8 +43,12 @@ function PopulationPyramid() {
         .attr("dy", "-0.35em");
 
     var prefix = function(d) {
-      var prefix = d3.formatPrefix(scaleX.domain()[1], 0);
-      return d3.round(prefix.scale(d), 1);
+      if (values == 'count') {
+        var prefix = d3.formatPrefix(scaleX.domain()[1], 0);
+        return d3.round(prefix.scale(d), 1);
+      } else {
+        return Math.round(d * 100);
+      }
     }
 
     my.redraw = function(d, rd) {
@@ -61,7 +66,8 @@ function PopulationPyramid() {
 
       container
           .attr("width", width * 2 + margin.left + margin.right + margin.gutter)
-          .attr("height", height + margin.top + margin.bottom);
+          .attr("height", height + margin.top + margin.bottom)
+          .attr("title", title);
 
       maleAxisX.attr("transform", "translate(" + margin.left + "," + (height + margin.top) + ")");
 
@@ -83,7 +89,7 @@ function PopulationPyramid() {
       invertedScaleX = scaleX.copy().range([width, 0]);
 
       var offset = height - d3.extent(scaleY.range())[1] - scaleY.rangeBand(),
-          symbol = d3.formatPrefix(scaleX.domain()[1], 0).symbol,
+          symbol = values == 'count' ? d3.formatPrefix(scaleX.domain()[1], 0).symbol : '%',
           barHeight = scaleY.rangeBand() * (referenceData? .8 : 1);
           referenceBarHeight = scaleY.rangeBand() * (referenceData? .2 : 0);
 
@@ -250,6 +256,18 @@ function PopulationPyramid() {
     height = outerHeight - margin.top - margin.bottom;
     return my;
   };
+
+  my.values = function(_) {
+    if (!arguments.length) return values;
+    values = _;
+    return my;
+  }
+
+  my.title = function(_) {
+    if (!arguments.length) return title;
+    title = _;
+    return my;
+  }
 
   return my;
 };

@@ -37,10 +37,12 @@ angular.module('ndApp')
               age: serie.age,
               male: serie.male.value,
               female: serie.female.value
-          chart.redraw(data)
+          chart.values(scope.values).redraw(data)
 
         scope.$watchCollection('series', () ->
           if scope.series
             updateChart(scope.series, scope.title)
         )
+        scope.$watch 'title', ->
+          chart.title(scope.title)
     }
