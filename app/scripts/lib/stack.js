@@ -41,28 +41,28 @@ function StackChart() {
     container.on("mousemove", function(d,i) {
       var format = d3.format(",");
       var position = d3.mouse(container.node())[0] - margin.left;
-      var ticks = scaleX.ticks();
+      var nearestItem;
       var mouseDate = scaleX.invert(position);
       var visibility = 0 < position && position < width? "visible" : "hidden";
       var nearestDate;
       cursor.attr("visibility", visibility);
       references.selectAll(".value").attr("visibility", visibility);
-      ticks.forEach(function(d) {
-        if(nearestDate == null) {
-          nearestDate = d;
+      my.data.forEach(function(d) {
+        if(nearestItem == null) {
+          nearestItem = d;
         } else {
-          if (Math.abs(d - mouseDate) < Math.abs(nearestDate - mouseDate)) {
-            nearestDate = d;
+          if(Math.abs(d.date - mouseDate) < Math.abs(nearestItem.date - mouseDate)) {
+            nearestItem = d;
           }
         }
       })
       var columns = Object.keys(my.data[0]).splice(1);
-      var row = my.data[ticks.indexOf(nearestDate)];
+      var row = my.data[my.data.indexOf(nearestItem)];
       references.selectAll(".value").text(function(d,i) {
         var key = columns[i];
         return format(row[key]);
       })
-      cursor.attr("transform", "translate("+ scaleX(nearestDate) + ",0)");
+      cursor.attr("transform", "translate("+ scaleX(nearestItem.date) + ",0)");
     });
 
     var scaleX = d3.time.scale();
