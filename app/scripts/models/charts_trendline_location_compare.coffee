@@ -12,28 +12,40 @@ class @Charts.Trendline.LocationCompareDisplay extends @Charts.Trendline.BaseDis
     if location
       compareField = @fieldsCollection().find(@compareToLocationField)
       "#{super()}, compared to #{location.name} from #{compareField.label}"
+    else
+      super()
 
   applyToQuery: (query, filters) ->
     query.group_by = @dateGrouping
     firstQuery = query
     secondQuery = _.cloneDeep firstQuery
     targetLocation = @getCompareToLocation(filters)
-    if targetLocation
+
+    queries = if targetLocation
       secondQuery[@compareToLocationField] = targetLocation.id
-      queries = [firstQuery, secondQuery]
-      if @values == 'percentage'
-        queries.concat(_.map(queries, (q) => @denominatorFor(q)))
-      else
-        queries
+      [firstQuery, secondQuery]
+    else
+      [firstQuery]
+
+    if @values == 'percentage'
+      queries.concat(_.map(queries, (q) => @denominatorFor(q)))
+    else
+      queries
+
 
   getSeries: (report, data) ->
     sortedData = _.map(data, (d) => @sortData(d.events))
-    if sortedData.length > 2
+    if @values == 'percentage' && sortedData.length > 2
       thisLocationRates =  @getRates(sortedData[0], sortedData[2])
       otherLocationRates = @getRates(sortedData[1], sortedData[3])
       @getLocationCompareSeries(report, thisLocationRates, otherLocationRates)
-    else
+    else if @values == 'percentage'
+      @getSimpleSeries(sortedData[0], sortedData[1])
+    else if sortedData.length > 1
       @getLocationCompareSeries(report, sortedData[0], sortedData[1])
+    else
+      @getSimpleSeries(sortedData[0])
+
 
   getLocationCompareSeries: (report, thisLocationEvents, otherLocationEvents) ->
     rows = []
