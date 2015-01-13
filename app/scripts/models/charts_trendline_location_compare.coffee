@@ -33,7 +33,7 @@ class @Charts.Trendline.LocationCompareDisplay extends @Charts.Trendline.BaseDis
       otherLocationRates = @getRates(sortedData[1], sortedData[3])
       @getLocationCompareSeries(report, thisLocationRates, otherLocationRates)
     else
-      @getLocationCompareSeries(report, sortedData[0], sortData[1])
+      @getLocationCompareSeries(report, sortedData[0], sortedData[1])
 
   getLocationCompareSeries: (report, thisLocationEvents, otherLocationEvents) ->
     rows = []
