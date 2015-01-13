@@ -16,6 +16,8 @@ To install generators as well:
 
 Ruby and compass are also required dependencies, so run `gem install compass` in the context of a Ruby interpreter.
 
+Run the server via `grunt serve`.
+
 ## Configuration
 
 Application settings are configured in `conf/settings.json`; these settings are merged with the contents of `conf/settings.local.json`, and are further merged with the contens of a file specified as `--settings=PATH` when running `grunt`.
