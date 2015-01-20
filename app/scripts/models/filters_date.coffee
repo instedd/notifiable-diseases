@@ -3,8 +3,9 @@
 class @Filters.DateFilter
   constructor: (field) ->
     @name = field.name
-    @since = "2014-01-01"
-    @until = "2014-06-01"
+    @since = moment().subtract(30, 'days').format('YYYY-MM-DD')
+    @until = moment().format('YYYY-MM-DD')
+
     @field = () -> field
 
   label: ->
