@@ -4,5 +4,7 @@
   "store": "/store",
   "useLocalStorage": false,
   "replaceParentURLHash": false,
-  "multiQueriesEnabled": false
+  "multiQueriesEnabled": false,
+  "mapCenter": [48.224672, -100.371093],
+  "mapBounds": [[-1.054627, -182.109375],[73.726594, -18.632812]]
 }

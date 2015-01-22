@@ -1,5 +1,5 @@
 angular.module('ndApp')
-  .directive 'ndMap', ($q, PolygonService, debounce) ->
+  .directive 'ndMap', ($q, PolygonService, debounce, settings) ->
     {
       restrict: 'E'
       scope:
@@ -8,7 +8,7 @@ angular.module('ndApp')
         chart: '='
       template: '<div class="nd-map"></div>',
       link: (scope, element) ->
-        new MapWidget(scope, element[0].children[0]).initialize($q, PolygonService, debounce)
+        new MapWidget(scope, element[0].children[0]).initialize($q, PolygonService, debounce, settings)
     }
 
 polygon_style = {
@@ -30,9 +30,9 @@ class MapWidget
     @scope = scope
     @element = element
 
-  initialize: (q, polygon_service, debounce) ->
+  initialize: (q, polygon_service, debounce, settings) ->
 
-    @map = @create_map(@element)
+    @map = @create_map(@element, settings.mapCenter, settings.mapBounds)
     @markers = L.layerGroup([]).addTo @map
     @chart = @scope.chart
 
@@ -54,18 +54,15 @@ class MapWidget
         @draw_results(polygon_service, admin_level, @scope.series)
     , 1000, false))
 
-  create_map: (element) ->
+  create_map: (element, map_center, map_bounds) ->
     map = L.map(element, {
       attributionControl: false,
       zoomControl: false,
       minZoom: 2
     })
 
-    us_center = [48.224672, -100.371093]
-    us_bounds = [[-1.054627, -182.109375],[73.726594, -18.632812]]
-
-    map.setView(us_center, 2)
-    map.setMaxBounds us_bounds
+    map.setView(map_center, 2)
+    map.setMaxBounds map_bounds
 
     map.dragging._draggable.on('predrag', () ->
       currentTopLeft = map._initialTopLeftPoint.subtract(@_newPos)
