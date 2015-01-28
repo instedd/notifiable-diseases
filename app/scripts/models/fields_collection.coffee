@@ -27,6 +27,13 @@ class @FieldsCollection
   find: (name) ->
     @fields[name]
 
+  filterFields: ->
+    filtereableFields = _.reject @fields, (field) -> field.type == 'enum' && field.options.length <= 1
+    _.sortBy filtereableFields, (f) -> f.label.toLowerCase()
+
+  multiValuedEnums: ->
+    _.filter @allEnum(), (field) -> field.options.length > 1
+
   optionsFor: (name) ->
     @fields[name].options
 
