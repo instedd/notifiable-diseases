@@ -1,12 +1,12 @@
 class Field
-  constructor: (field) ->
+  constructor: (field, settings) ->
     @name = field.name
     @label = field.title
     @instructions = field.instructions
     @type ||= 'field'
 
 class EnumField extends Field
-  constructor: (field) ->
+  constructor: (field, settings) ->
     @type = 'enum'
     @options = _.map field.values, (option, value) ->
       option.value = value
@@ -27,10 +27,11 @@ class EnumField extends Field
     attrs.values?
 
 class ResultField extends EnumField
-  constructor: (field) ->
+  constructor: (field, settings) ->
     super(field)
     @allOptions = @options
-    @options = _.filter @options, (opt) -> opt.kind == 'positive'
+    if settings.onlyShowPositiveResults
+      @options = _.filter @options, (opt) -> opt.kind == 'positive'
 
   validResults: () ->
     _.filter @allOptions, (opt) -> opt.kind != 'error'
@@ -42,7 +43,7 @@ class ResultField extends EnumField
     name == FieldsCollection.fieldNames.result
 
 class IntegerField extends Field
-  constructor: (field) ->
+  constructor: (field, settings) ->
     @type = 'integer'
     @minimum = field.minimum
     @maximum = field.maximum
@@ -52,7 +53,7 @@ class IntegerField extends Field
     attrs.type == 'integer' && attrs.minimum? && attrs.maximum?
 
 class LocationField extends Field
-  constructor: (field) ->
+  constructor: (field, settings) ->
     @type = 'location'
     @locations = _.mapValues field.locations, (location, id) ->
       location.id = id
@@ -71,7 +72,7 @@ class LocationField extends Field
       location.name
 
 class DateField extends Field
-  constructor: (field) ->
+  constructor: (field, settings) ->
     @resolution = field.resolution || "day"
     @type = 'date'
     super(field)
@@ -86,7 +87,7 @@ class DateField extends Field
 FIELD_TYPES = [ResultField, DateField, LocationField, EnumField, IntegerField]
 
 angular.module('ndApp')
-  .service 'FieldsService', (Cdx, $q) ->
+  .service 'FieldsService', (Cdx, $q, settings) ->
     loadForContext: (context = {}) ->
       q = $q.defer()
       Cdx.fields(context).success (data) ->
@@ -109,7 +110,7 @@ angular.module('ndApp')
             field_type = _.find(FIELD_TYPES, (type) -> type.handles(field, name))
             if field_type
               field.name = name
-              fields[name] = new field_type(field)
+              fields[name] = new field_type(field, settings)
             fields
           ), {}
 
