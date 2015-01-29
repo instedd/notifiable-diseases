@@ -61,7 +61,9 @@ angular.module('ndApp')
           [$scope.currentReport, currentReportVersion] = ReportsService.deserialize(reportData, fieldsCollection)
           $scope.fieldsInfo =
             fields: fieldsCollection.all()
+            filterFields: fieldsCollection.filterFields()
             enumFields: fieldsCollection.allEnum()
+            multiValuedEnumFields: fieldsCollection.multiValuedEnums()
             datePeriods: fieldsCollection.datePeriods()
 
           $scope.$watch 'currentReport', debounce(saveCurrentReport, 300), true
