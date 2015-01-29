@@ -30,7 +30,7 @@
       </div>
       <div class="filter first">
         <div class="filter-title">
-          <strong class="all">All positive cases</strong>
+          <strong class="all">{{ settings.onlyShowPositiveResults ? 'All positive cases' : 'All cases' }}</strong>
           <span class="count" ng-show="hasCount(-1)">{{counts[-1]}}</span>
           <span class="count loading" ng-hide="hasCount(-1)"></span>
         </div>
