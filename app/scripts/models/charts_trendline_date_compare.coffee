@@ -23,7 +23,7 @@ class @Charts.Trendline.DateCompareDisplay extends @Charts.Trendline.BaseDisplay
       query.since = since.format("YYYY-MM-DD")
 
     if @values == 'percentage'
-      [query, @denominatorFor(query)]
+      [@numeratorFor(query), @denominatorFor(query)]
     else
       [query]
 

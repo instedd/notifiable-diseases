@@ -44,7 +44,7 @@ class @Charts.Map extends @Charts.Base
     grouping[@groupingField()] = drawn_level
     query.group_by = [grouping]
 
-    [query, @denominatorFor(query)]
+    [@numeratorFor(query), @denominatorFor(query)]
 
   getSeries: (report, data) =>
     positives = data[0].events

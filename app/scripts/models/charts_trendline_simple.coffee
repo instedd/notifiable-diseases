@@ -4,7 +4,7 @@ class @Charts.Trendline.SimpleDisplay extends @Charts.Trendline.BaseDisplay
 
   applyToQuery: (query, filters) ->
     query.group_by = @dateGrouping
-    if @values == 'percentage' then [query, @denominatorFor(query)] else [query]
+    if @values == 'percentage' then [@numeratorFor(query), @denominatorFor(query)] else [query]
 
   getSeries: (report, data) ->
     datapoints = data[0].events

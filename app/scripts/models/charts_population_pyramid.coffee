@@ -27,7 +27,7 @@ class @Charts.PopulationPyramid extends @Charts.Base
       age_grouping[@ageGroupField.name] = [[0,0.5], [0.5,2], [2,4], [5,8], [9,17], [18,24], [25,49], [50,64], [65,74], [75,84], [85, null]]
 
     query.group_by = [age_grouping, FieldsCollection.fieldNames.gender]
-    if @values == 'percentage' then [query, @denominatorFor(query)] else [query]
+    if @values == 'percentage' then [@numeratorFor(query), @denominatorFor(query)] else [query]
 
   getFilter: (report) ->
     _.find report.filters, name: @ageGroupField.name

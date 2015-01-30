@@ -4,11 +4,11 @@
   </div>
   <div class="col-md-10">
     <label>
-      <input type="radio" name="display" ng-model="chart.values" value="count"> Number of positive cases
+      <input type="radio" name="display" ng-model="chart.values" value="count"> Number of {{ settings.onlyShowPositiveResults ? 'positive ' : '' }}cases
     </label>
     <br/>
     <label>
-      <input type="radio" name="display" ng-model="chart.values" value="percentage"> Percentage of positive cases
+      <input type="radio" name="display" ng-model="chart.values" value="percentage"> Percentage of {{ settings.onlyShowPositiveResults ? 'positive ' : '' }}cases
     </label>
   </div>
 </div>
