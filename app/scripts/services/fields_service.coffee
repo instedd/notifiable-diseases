@@ -30,17 +30,22 @@ class ResultField extends EnumField
   constructor: (field, settings) ->
     super(field)
     @allOptions = @options
-    @positiveResults = _.filter @options, (opt) -> opt.kind == 'positive'
     @showPositive = settings.onlyShowPositiveResults
+    @positive = _.filter @allOptions, (opt) -> opt.kind == 'positive'
+    @valid = _.filter @allOptions, (opt) -> opt.kind != 'error'
+    @options = if @showPositive then @positive else @valid
 
   validResults: () ->
-    _.filter @allOptions, (opt) -> opt.kind != 'error'
+    @valid
 
   positiveResults: () ->
-    @positiveResults
+    @positive
 
   results: () ->
-    if @showPositive then @positiveResults else @options
+    @options
+
+  allResults: () ->
+    @allOptions
 
   @handles: (attrs, name) ->
     name == FieldsCollection.fieldNames.result
