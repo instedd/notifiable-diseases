@@ -43,11 +43,11 @@
     </div>
     <div class="col-md-10">
       <label>
-        <input type="radio" name="values" ng-model="chart.values" value="count"> Number of positive cases
+        <input type="radio" name="values" ng-model="chart.values" value="count"> {{ settings.onlyShowPositiveResults ? 'Number of positive cases' : 'Number of valid cases' }}
       </label>
       <br/>
       <label>
-        <input type="radio" name="values" ng-model="chart.values" value="percentage"> Percentage of positive cases
+        <input type="radio" name="values" ng-model="chart.values" value="percentage"> {{ settings.onlyShowPositiveResults ? 'Percentage of positive cases' : 'Percentage of valid cases' }}
       </label>
     </div>
 </div>

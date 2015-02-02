@@ -15,7 +15,7 @@ class @Charts.Trendline.SplitDisplay extends @Charts.Trendline.BaseDisplay
     if @values == 'percentage'
       denominator = @denominatorFor(query)
       denominator.group_by = @dateGrouping
-      [query, denominator]
+      [@numeratorFor(query), denominator]
     else
       [query]
 

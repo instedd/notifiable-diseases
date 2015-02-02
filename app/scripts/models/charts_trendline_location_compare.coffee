@@ -28,7 +28,9 @@ class @Charts.Trendline.LocationCompareDisplay extends @Charts.Trendline.BaseDis
       [firstQuery]
 
     if @values == 'percentage'
-      queries.concat(_.map(queries, (q) => @denominatorFor(q)))
+      denominatorQueries = _.map(queries, (q) => @denominatorFor(q))
+      queries = _.map(queries, (q) => @numeratorFor(q))
+      queries.concat(denominatorQueries)
     else
       queries
 

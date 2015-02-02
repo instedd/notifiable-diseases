@@ -32,6 +32,7 @@ class MapWidget
 
   initialize: (q, polygon_service, debounce, settings) ->
 
+    @showPositive = settings.onlyShowPositiveResults
     @map = @create_map(@element, settings.mapCenter, settings.mapBounds)
     @markers = L.layerGroup([]).addTo @map
     @chart = @scope.chart
@@ -166,7 +167,7 @@ class MapWidget
 
     popup_content = "
     <b>#{feature.properties.NAME} #{(feature.properties.percentage * 100).toFixed(2)}%</b><br/>
-    Positive events: <em>#{feature.properties.positive}</em><br/>
+    #{if @showPositive then 'Positive events' else 'Valid events'}: <em>#{feature.properties.positive}</em><br/>
     Total events: <em>#{feature.properties.count}</em>
     "
 

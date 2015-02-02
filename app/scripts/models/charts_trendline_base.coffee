@@ -5,6 +5,7 @@ class @Charts.Trendline.BaseDisplay
   constructor: (@trendline) ->
     @dateGrouping = "#{@trendline.grouping}(#{FieldsCollection.fieldNames.date})"
     @denominatorFor = (q) -> @trendline.denominatorFor(q)
+    @numeratorFor = (q) -> @trendline.numeratorFor(q)
     @values = @trendline.values
 
   getSeries: (report, data) ->
