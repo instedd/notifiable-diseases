@@ -33,7 +33,7 @@ class MapWidget
   initialize: (q, polygon_service, debounce, settings) ->
 
     @showPositive = settings.onlyShowPositiveResults
-    @map = @create_map(@element, settings.mapCenter, settings.mapBounds)
+    @map = @create_map(@element, settings.mapCenter, settings.mapBounds, settings.mapProviderUrl, settings.mapProviderSettings)
     @markers = L.layerGroup([]).addTo @map
     @chart = @scope.chart
 
@@ -55,7 +55,7 @@ class MapWidget
         @draw_results(polygon_service, admin_level, @scope.series)
     , 1000, false))
 
-  create_map: (element, map_center, map_bounds) ->
+  create_map: (element, map_center, map_bounds, map_provider_url, map_provider_settings={}) ->
     map = L.map(element, {
       attributionControl: false,
       zoomControl: false,
@@ -72,7 +72,7 @@ class MapWidget
       @_newPos = @_newPos.subtract(limitedOffset)
     )
 
-    L.tileLayer('http://a{s}.acetate.geoiq.com/tiles/acetate-base/{z}/{x}/{y}.png').addTo map
+    L.tileLayer(map_provider_url, map_provider_settings).addTo map
 
     map
 

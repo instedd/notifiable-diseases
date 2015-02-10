@@ -6,6 +6,7 @@
   "replaceParentURLHash": false,
   "multiQueriesEnabled": false,
   "onlyShowPositiveResults": true,
+  "mapProviderUrl": "http://a{s}.acetate.geoiq.com/tiles/acetate-base/{z}/{x}/{y}.png",
   "mapCenter": [48.224672, -100.371093],
   "mapBounds": [[-1.054627, -182.109375],[73.726594, -18.632812]]
 }
