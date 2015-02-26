@@ -28,7 +28,8 @@ class @FieldsCollection
     @fields[name]
 
   filterFields: ->
-    filtereableFields = _.reject @fields, (field) -> field.type == 'enum' && field.options.length <= 1
+    filtereableFields = _.reject @fields, (field) ->
+      field.searchable == false || (field.type == 'enum' && field.options.length <= 1)
     _.sortBy filtereableFields, (f) -> f.label.toLowerCase()
 
   multiValuedEnums: ->

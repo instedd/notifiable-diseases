@@ -4,6 +4,8 @@ class Field
     @label = field.title
     @instructions = field.instructions
     @type ||= 'field'
+    @searchable = field.searchable
+    @searchable = true if field.searchable is "undefined"
 
 class EnumField extends Field
   constructor: (field, settings) ->
