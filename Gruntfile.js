@@ -267,11 +267,16 @@ module.exports = function (grunt) {
           html: {
             steps: {
               js: ['concat', 'uglifyjs'],
-              css: ['concat', 'cssmin']
+              css: ['cssmin']
             },
             post: {}
           }
         }
+      }
+    },
+    cssmin: {
+      options: {
+        root: '.'
       }
     },
 
