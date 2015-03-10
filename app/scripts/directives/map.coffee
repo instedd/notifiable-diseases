@@ -138,18 +138,18 @@ class MapWidget
   add_context_layer: (polygon_service, polygons, admin_level) ->
     geometries =  polygons.objects.locations.geometries
     if admin_level > 0 and geometries.length > 0
-      parent_id = geometries[0].properties["PARENT_ID"]
+      parent_ids = _.uniq _.map(geometries, (g) -> g.properties["PARENT_ID"])
       polygon_service.fetch_polygon(@chart.mappingField, admin_level - 1).then (topojson) =>
         geometries = @topojson_geometries(topojson)
-        parent = _.find(geometries, (g) -> g.properties["ID"] == parent_id)
-        if parent
-          filtered_topojson = @topojson_restrict(topojson, [parent])
+        parents = _.filter geometries, (g) -> _.include(parent_ids, g.properties["ID"])
+
+        unless _.isEmpty(parents)
+          filtered_topojson = @topojson_restrict(topojson, parents)
           geojson = omnivore.topojson.parse(filtered_topojson)
           @contextLayer = L.geoJson geojson, { style: context_polygon_style }
           @contextLayer.addTo @map
-        @contextRendering.resolve()
-    else
-      @contextRendering.resolve()
+        
+    @contextRendering.resolve()
 
   create_icon: (feature) ->
     count = feature.properties.percentage * 100
