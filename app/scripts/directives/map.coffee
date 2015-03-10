@@ -98,11 +98,11 @@ class MapWidget
         @map.fitBounds @map.options.maxBounds
 
   topojson_geometries: (topojson) ->
-    object = _.values(topojson.objects)[0]
-    if object["type"] == "GeometryCollection"
-      object.geometries
-    else
-      [object]
+    _.flatten _.map(topojson.objects), (o) ->
+      if o["type"] == "GeometryCollection"
+        o.geometries
+      else
+        [o]
 
   # TODO: consider keeping only arcs needed by filtered geometries
   topojson_restrict: (full_topojson, filtered_geometries) ->
