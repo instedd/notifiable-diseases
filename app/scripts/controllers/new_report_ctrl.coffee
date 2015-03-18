@@ -3,6 +3,8 @@ angular.module('ndApp')
     ReportsService.reportsDescriptions().then (reportsDescriptions) ->
       FieldsService.loadForContext().then (fieldsCollection) ->
         mainField = fieldsCollection.find(FieldsCollection.fieldNames[settings.reportMainField])
+        throw "Main report field #{settings.reportMainField} should exist and be of kind enum" if not mainField? or not mainField.type == 'enum'
+
         $scope.reportsDescriptions = reportsDescriptions
         $scope.mainLabel = mainField.label
         $scope.currentReport = null
