@@ -1,12 +1,15 @@
 angular.module('ndApp')
-  .controller 'NewReportCtrl', ($scope, $location, ReportsService, FieldsService, Cdx) ->
+  .controller 'NewReportCtrl', ($scope, $location, ReportsService, FieldsService, Cdx, settings) ->
     ReportsService.reportsDescriptions().then (reportsDescriptions) ->
       FieldsService.loadForContext().then (fieldsCollection) ->
+        mainField = fieldsCollection.find(FieldsCollection.fieldNames[settings.reportMainField])
         $scope.reportsDescriptions = reportsDescriptions
+        $scope.mainLabel = mainField.label
         $scope.currentReport = null
-        $scope.assays = fieldsCollection.optionsFor(FieldsCollection.fieldNames.assay_name)
+        $scope.options = mainField.options
         $scope.report = new Report(fieldsCollection)
-        $scope.report.assay = $scope.assays[0].value
+        $scope.report.mainField = mainField.name
+        $scope.report.mainValue = $scope.options[0].value
         $scope.events = "..."
 
         computeCount = ->
@@ -16,7 +19,7 @@ angular.module('ndApp')
           Cdx.events(query).success (data) ->
             $scope.events = data.total_count
 
-        $scope.$watch 'report.assay', computeCount
+        $scope.$watch 'report.mainValue', computeCount
 
         $scope.createReport = ->
           if $.trim($scope.report.name).length == 0

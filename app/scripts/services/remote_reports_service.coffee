@@ -44,7 +44,7 @@ angular.module('ndApp').service 'RemoteReportsService', (KeyValueStore, FiltersS
     # This returns a JSON-encoded report. You must then invoke
     # deserialize to get the deserialized version.
     #
-    # You also have getAssay, which allows you to get a report's assay
+    # You also have getContext, which allows you to get a report's context
     # without fully deserializing it into an object.
     findById: (id) ->
       q = $q.defer()
@@ -58,8 +58,11 @@ angular.module('ndApp').service 'RemoteReportsService', (KeyValueStore, FiltersS
 
       q.promise
 
-    getAssay: (data) ->
-      JSON.parse(data.value).assay
+    getContext: (data) ->
+      parsed = JSON.parse(data.value)
+      context = {}
+      context[parsed.mainField] = parsed.mainValue
+      context
 
     deserialize: (reportData, fieldsCollection) ->
       data = JSON.parse(reportData.value)

@@ -55,9 +55,9 @@ angular.module('ndApp')
             goToNewReport()
           return
 
-        assay = ReportsService.getAssay(reportData)
+        context = ReportsService.getContext(reportData)
 
-        FieldsService.loadForContext(assay_name: assay).then (fieldsCollection) ->
+        FieldsService.loadForContext(context).then (fieldsCollection) ->
           [$scope.currentReport, currentReportVersion] = ReportsService.deserialize(reportData, fieldsCollection)
           $scope.fieldsInfo =
             fields: fieldsCollection.all()

@@ -14,11 +14,12 @@
         <br/>
         <textarea id="description" rows="3" cols="60" ng-model="report.description"></textarea>
       </div>
+      <br />
       <div>
-        <label for="assay">Assay</label>
+        <label for="mainValue">{{mainLabel}}</label>
         <br/>
-        <select id="assay" ng-model="report.assay">
-          <option ng-repeat="assay in assays" value="{{assay.value}}">{{assay.label}}</option>
+        <select id="mainValue" ng-model="report.mainValue">
+          <option ng-repeat="option in options" value="{{option.value}}">{{option.label}}</option>
         </select>
         (Events: {{events}})
       </div>

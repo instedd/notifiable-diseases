@@ -55,8 +55,10 @@ angular.module('ndApp').service 'LocalReportsService', (localStorageService, set
         else
           callback null
 
-    getAssay: (data) ->
-      data.assay
+    getContext: (data) ->
+      context = {}
+      context[data.mainField] = data.mainValue
+      context
 
     deserialize: (data, fieldsCollection) ->
       data.filters = _.map data.filters, (filterData) -> FiltersService.deserialize(filterData, fieldsCollection)

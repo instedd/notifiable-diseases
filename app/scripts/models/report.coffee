@@ -18,8 +18,9 @@ class @Report
     query
 
   newQuery: ->
-    page_size: 0
-    assay_name: @assay
+    query = {page_size: 0}
+    query[@mainField] = @mainValue
+    query
 
   closeQuery: (query) ->
     # If there's no result specified, restrict result to the valid values
@@ -32,7 +33,8 @@ class @Report
     dup = new Report(@fieldsCollection())
     dup.name = "#{@name} (duplicate)"
     dup.description = @description
-    dup.assay = @assay
+    dup.mainValue = @mainValue
+    dup.mainField = @mainField
     dup.filters = @filters
     dup.charts = @charts
     dup
@@ -119,7 +121,8 @@ class @Report
     @id = data.id
     @name = data.name
     @description = data.description
-    @assay = data.assay
+    @mainField = data.mainField
+    @mainValue = data.mainValue
     @filters = data.filters || []
     @charts = data.charts || []
     @
@@ -129,7 +132,8 @@ class @Report
       id: @id
       name: @name
       description: @description
-      assay: @assay
+      mainValue: @mainValue
+      mainField: @mainField
       filters: _.map @filters, (f) -> f.toJSON()
       charts: _.map @charts, (c) -> c.toJSON()
     }
