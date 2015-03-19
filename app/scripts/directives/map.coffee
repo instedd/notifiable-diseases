@@ -63,14 +63,15 @@ class MapWidget
     })
 
     map.setView(map_center, 2)
-    map.setMaxBounds map_bounds
 
-    map.dragging._draggable.on('predrag', () ->
-      currentTopLeft = map._initialTopLeftPoint.subtract(@_newPos)
-      currentBounds = new L.Bounds(currentTopLeft, currentTopLeft.add(map.getSize()))
-      limitedOffset = map._getBoundsOffset(currentBounds, map.options.maxBounds)
-      @_newPos = @_newPos.subtract(limitedOffset)
-    )
+    if map_bounds?
+      map.setMaxBounds(map_bounds)
+      map.dragging._draggable.on('predrag', () ->
+        currentTopLeft = map._initialTopLeftPoint.subtract(@_newPos)
+        currentBounds = new L.Bounds(currentTopLeft, currentTopLeft.add(map.getSize()))
+        limitedOffset = map._getBoundsOffset(currentBounds, map.options.maxBounds)
+        @_newPos = @_newPos.subtract(limitedOffset)
+      )
 
     L.tileLayer(map_provider_url, map_provider_settings).addTo map
 
@@ -148,7 +149,7 @@ class MapWidget
           geojson = omnivore.topojson.parse(filtered_topojson)
           @contextLayer = L.geoJson geojson, { style: context_polygon_style }
           @contextLayer.addTo @map
-        
+
     @contextRendering.resolve()
 
   create_icon: (feature) ->
