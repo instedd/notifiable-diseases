@@ -61,7 +61,7 @@ class @FieldsCollection
   datePeriods: ->
     resolution = @fields[FieldsCollection.fieldNames.date].dateResolution()
 
-    has_day   =                resolution == "day"
+    has_day   =                resolution == "day" || resolution == "hour" || resolution == "minute" || resolution == "second"
     has_week  = has_day     || resolution == "week"
     has_month = has_week    || resolution == "month"
     has_year  = has_month   || resolution == "year"
