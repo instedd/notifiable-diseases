@@ -2,7 +2,7 @@ angular.module('ndApp')
   .controller 'NewReportCtrl', ($scope, $location, ReportsService, FieldsService, Cdx, settings) ->
     ReportsService.reportsDescriptions().then (reportsDescriptions) ->
       FieldsService.loadForContext().then (fieldsCollection) ->
-        mainField = fieldsCollection.find(FieldsCollection.fieldNames[settings.reportMainField])
+        mainField = fieldsCollection.find(FieldsCollection.fieldNames[settings.reportMainField] || settings.reportMainField)
         throw "Main report field #{settings.reportMainField} should exist and be of kind enum" if not mainField? or not mainField.type == 'enum'
 
         $scope.reportsDescriptions = reportsDescriptions

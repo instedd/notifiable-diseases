@@ -7,6 +7,7 @@ class @FieldsCollection
     gender: 'gender'
     result: 'result'
     assay_name: 'assay_name'
+    condition: 'condition'
     location: 'location'
     patient_location: 'patient_location'
 
