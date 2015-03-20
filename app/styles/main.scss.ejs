@@ -1,3 +1,7 @@
+<% if(yeoman.customStyles) { %>
+@import "<%= yeoman.customStyles %>";
+<% } %>
+
 /* Bootstrap redefined variables */
 $screen-sm:                  730px;
 
@@ -6,7 +10,6 @@ $icon-font-path: "../bower_components/bootstrap-sass-official/assets/fonts/boots
 @import "bootstrap-sass-official/assets/stylesheets/bootstrap.scss";
 // endbower
 
-
 .browsehappy {
   margin: 0.2em 0;
   background: #ccc;
@@ -14,10 +17,13 @@ $icon-font-path: "../bower_components/bootstrap-sass-official/assets/fonts/boots
   padding: 0.2em 0;
 }
 
+/* Custom variables */
+$backcolor: #eaeaea !default;
+
 /* Bootstrap redefined styles */
 
 body {
-  background: #eaeaea;
+  background: $backcolor;
 }
 .navbar {
   background: #ffffff;
@@ -34,7 +40,7 @@ body {
 .nav-tabs > li.active > a:hover,
 .nav-tabs > li.active > a:focus {
   @include box-shadow(0 -1px 1px 1px rgba(0, 0, 0, 0.1));
-  background-color: #eaeaea;
+  background-color: $backcolor;
 }
 
 .nav > li > a {
@@ -232,7 +238,7 @@ a.editable-click {
   @include box-shadow(0px -1px 3px 1px rgba(0, 0, 0, 0.2)inset);
   border-radius: 4px;
   padding: 20px;
-  background: #eaeaea;
+  background: $backcolor;
 
   .add_new {
     display: block;
@@ -243,7 +249,7 @@ a.editable-click {
       content:'';
       display: block;
       background: #aaaaaa;
-      color: #eaeaea;
+      color: $backcolor;
       border-radius:50%;
       height: 50px;
       width: 50px;
@@ -259,7 +265,7 @@ a.editable-click {
       line-height: 50px;
       font-weight: bold;
       display: block;
-      color: #eaeaea;
+      color: $backcolor;
       position: absolute;
       left: 50%;
       top: 50%;
@@ -284,7 +290,7 @@ a.editable-click {
 
     div {
       text-align: center;
-      background: #eaeaea;
+      background: $backcolor;
       font-weight: bold;
 
       .chart_button {
@@ -594,7 +600,7 @@ a.editable-click {
           width: 40px;
           height: 40px;
           border-radius: 4px;
-          border: 1px solid #eaeaea;
+          border: 1px solid $backcolor;
           background-position: center;
           @include filter-icon();
         }
@@ -737,8 +743,3 @@ a.editable-click {
   right: 0;
   text-align: center;
 }
-
-
-<% if(yeoman.customStyles) { %>
-@import "<%= yeoman.customStyles %>";
-<% } %>
