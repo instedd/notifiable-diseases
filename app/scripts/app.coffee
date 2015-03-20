@@ -78,4 +78,4 @@ angular
 
       # Notify parent url of resizes
       $(window).resize ->
-        window.parent.postMessage { name: 'resize', height: $('body').height(), width: $('body').width() }, (settings.parentURL || '*')
+        window.parent.postMessage { name: 'resize', height: $('body').height(), width: $('body').width() }, '*'
