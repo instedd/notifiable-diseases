@@ -1,0 +1,11 @@
+.git
+node_modules
+dist
+.tmp
+.sass-cache
+bower_components
+*.sublime-project
+*.sublime-workspace
+
+conf/settings.local.json
+conf/custom.local.scss
