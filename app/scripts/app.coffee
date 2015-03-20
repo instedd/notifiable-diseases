@@ -76,3 +76,6 @@ angular
         $rootScope.$on '$routeChangeStart', ->
           window.parent.location.hash = window.location.hash
 
+      # Notify parent url of resizes
+      $(window).resize ->
+        window.parent.postMessage { name: 'resize', height: $('body').height(), width: $('body').width() }, (settings.parentURL || '*')
