@@ -429,6 +429,11 @@ module.exports = function (grunt) {
           cwd: '.',
           src: 'bower_components/bootstrap-sass-official/assets/fonts/bootstrap/*',
           dest: '<%= yeoman.dist %>'
+        },{
+          expand: true,
+          cwd: 'bower_components/select2', // only select2 has images
+          src: '{,*/}*.png',
+          dest: '<%= yeoman.dist %>/images/'
         }]
       },
       styles: {
