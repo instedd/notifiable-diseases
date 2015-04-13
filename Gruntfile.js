@@ -432,7 +432,7 @@ module.exports = function (grunt) {
         },{
           expand: true,
           cwd: 'bower_components/select2', // only select2 has images
-          src: '{,*/}*.png',
+          src: '{,*/}*.{png,gif}',
           dest: '<%= yeoman.dist %>/images/'
         }]
       },
@@ -479,6 +479,25 @@ module.exports = function (grunt) {
         }
       },
       build: {}
+    },
+
+    replace: {
+      dist: {
+        options: {
+          patterns: [
+            {
+              match: /url\(select2/ig,
+              replacement: 'url(../images/select2'
+            }
+          ]
+        },
+        files: [{
+          // src: '<%= yeoman.dist %>/styles/vendor.e564ed62.css',
+          // dest: './vendor.map.css',
+          src: '<%= yeoman.dist %>/styles/*.css',
+          dest: './'
+        }]
+      }
     },
   });
 
@@ -532,6 +551,7 @@ module.exports = function (grunt) {
     'uglify',
     'filerev',
     'usemin',
+    'replace:dist',
     'htmlmin'
   ]);
 
