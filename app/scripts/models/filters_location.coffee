@@ -28,8 +28,7 @@ class @Filters.LocationFilter
     if @empty()
       "All"
     else
-      location = @field().locations[@location.id]
-      @field().getFullLocationPath(location)
+      @field().getFullLocationPath(@location)
 
   adminLevel: ->
     @location && @location.level
@@ -38,11 +37,12 @@ class @Filters.LocationFilter
     @selectedDescription()
 
   toJSON: ->
-    {
-      name: @name
-      location: @location?.id
-    }
+    name: @name
+    location: @location
 
   initializeFrom: (data) ->
-    @location = @field().locations[data.location]
-    @
+    @location = if typeof data.location is 'string' or typeof data.location is 'number'
+      @field().getLocation(data.location)
+    else
+      data.location
+    return @
