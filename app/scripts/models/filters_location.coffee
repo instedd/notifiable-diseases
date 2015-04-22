@@ -33,6 +33,9 @@ class @Filters.LocationFilter
   adminLevel: ->
     @location && @location.level
 
+  selectedId: ->
+    @location && @location.id
+
   shortDescription: ->
     @selectedDescription()
 

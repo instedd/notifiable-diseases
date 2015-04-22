@@ -74,12 +74,19 @@ class @Charts.Map extends @Charts.Base
 
   groupingLevel: (filters) ->
     location_filter = _.find(filters, name: @mappingField)
-
-    filtered_level = location_filter && location_filter.adminLevel()
+    filtered_level = (location_filter && location_filter.adminLevel()) || 0
     if (filtered_level)
       drawn_level = Math.min(getMaxPolygonLevel(@mappingField), filtered_level + 1)
     else
-      drawn_level = 1
+      drawn_level = 0
+
+  groupingInfo: (filters) =>
+    location_filter = _.find(filters, name: @mappingField)
+    selected = location_filter?.selectedId()
+
+    field: @groupingField()
+    parents: (if selected then [selected] else [])
+    level: @groupingLevel(filters)
 
   startRendering: (q) ->
     @renderingDeferred = q.defer()

@@ -39,6 +39,7 @@ class @FieldsCollection
   optionsFor: (name) ->
     @fields[name].options
 
+  # Used by trendline
   locationFor: (name, id) ->
     @fields[name].locations[id.toString()]
 

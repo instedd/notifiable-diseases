@@ -27,7 +27,7 @@ angular.module('ndApp')
         results = []
         for id, location of field.locations
           if matchesQuery(location, term)
-            text = fullPath(location)
+            text = field.getFullLocationPath(location)
             results.push id: location.id, text: text, textLower: text.toLowerCase()
 
         results.sort (x, y) ->
