@@ -1,5 +1,5 @@
 angular.module('ndApp')
-  .directive 'ndMap', ($q, StaticPolygonService, debounce, settings) ->
+  .directive 'ndMap', ($q, PolygonServiceProvider, debounce, settings) ->
     {
       restrict: 'E'
       scope:
@@ -8,7 +8,7 @@ angular.module('ndApp')
         chart: '='
       template: '<div class="nd-map"></div>',
       link: (scope, element) ->
-        new MapWidget(scope, element[0].children[0]).initialize($q, StaticPolygonService, debounce, settings)
+        new MapWidget(scope, element[0].children[0]).initialize($q, PolygonServiceProvider, debounce, settings)
     }
 
 
@@ -18,17 +18,26 @@ class MapWidget
     @scope = scope
     @element = element
 
-  initialize: (q, polygon_service, debounce, settings) =>
+  initialize: (q, polygon_service_provider, debounce, settings) =>
+
     @showPositive = settings.onlyShowPositiveResults
-    @map = @create_map(@element, settings.mapCenter, settings.mapBounds, settings.mapProviderUrl, settings.mapProviderSettings)
-    @markers = L.layerGroup([]).addTo @map
+    @showMarkersOnMap = settings.showMarkersOnMap
     @chart = @scope.chart
-    @markersOnMap = settings.showMarkersOnMap
+
+    polygon_service = polygon_service_provider.create_for(@chart.field())
+
+    @map = @create_map @element,
+      settings.mapCenter,
+      settings.mapBounds,
+      settings.mapProviderUrl,
+      settings.mapProviderSettings
+
+    @markers = L.layerGroup([]).addTo @map
 
     @polygon_style = {
       weight: 1,
       fillOpacity: 0.1
-      clickable: !@markersOnMap
+      clickable: !@showMarkersOnMap
     }
 
     @context_polygon_style = {
@@ -93,17 +102,17 @@ class MapWidget
 
 
   draw_results: (polygon_service, grouping, results) =>
-      @clear_map()
-      if results.length > 0
-        field = @chart.mappingField
-        resultsById = _.object(_.map(results, (e) -> [e[field], e]))
-        polygon_service.polygons(@chart.mappingField, grouping, resultsById).then ([polygons, contextPolygons]) =>
-          @add_polygon_layer(polygons, resultsById)
-          @add_context_layer(contextPolygons)
-      else
-        @polygonsRendering.resolve()
-        polygon_service.parent_polygons(@chart.mappingField, grouping).then (contextPolygons) =>
-          @add_context_layer(contextPolygons, true)
+    @clear_map()
+    if results.length > 0
+      field = @chart.mappingField
+      resultsById = _.object(_.map(results, (e) -> [e[field], e]))
+      polygon_service.polygons(@chart.mappingField, grouping, resultsById).then ([polygons, contextPolygons]) =>
+        @add_polygon_layer(polygons, resultsById)
+        @add_context_layer(contextPolygons)
+    else
+      @polygonsRendering.resolve()
+      polygon_service.parent_polygons(@chart.mappingField, grouping).then (contextPolygons) =>
+        @add_context_layer(contextPolygons, true)
 
 
   add_polygon_layer: (polygons, resultsById) =>
@@ -161,7 +170,7 @@ class MapWidget
       else
         color = 'green'
 
-      if @markersOnMap
+      if @showMarkersOnMap
         icon = L.divIcon { className: "nd-map-marker #{color}" }
         marker = L.marker(layer_center, { icon: icon })
         marker.addTo @markers

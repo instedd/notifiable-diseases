@@ -32,8 +32,11 @@ class @Charts.Map extends @Charts.Base
     true
 
   description: () =>
-    fieldLabel = @fieldsCollection().find(@mappingField).label
+    fieldLabel = @field().label
     "Events by #{fieldLabel}"
+
+  field: () =>
+    @fieldsCollection().find(@mappingField)
 
   groupingField: () =>
     if @mappingField == 'location' then 'admin_level' else "#{@mappingField}_admin_level"
@@ -72,13 +75,12 @@ class @Charts.Map extends @Charts.Base
       rows.push [locationName, serie.positive, serie.count]
     rows
 
-  groupingLevel: (filters) ->
+  groupingLevel: (filters) =>
     location_filter = _.find(filters, name: @mappingField)
-    filtered_level = (location_filter && location_filter.adminLevel()) || 0
-    if (filtered_level)
-      drawn_level = Math.min(getMaxPolygonLevel(@mappingField), filtered_level + 1)
+    if location_filter && !location_filter.empty()
+      Math.min(getMaxPolygonLevel(@mappingField), location_filter.adminLevel() + 1)
     else
-      drawn_level = 0
+      0
 
   groupingInfo: (filters) =>
     location_filter = _.find(filters, name: @mappingField)
