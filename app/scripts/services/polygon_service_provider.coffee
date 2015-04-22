@@ -1,22 +1,22 @@
 angular.module('ndApp').service 'PolygonServiceProvider', (StaticPolygonService, RemoteLocationsServiceFactory, $q, settings) ->
 
   class RemoteLocationsPolygonService
-    initialize: (locations) ->
+    constructor: (locations) ->
       @locations = locations
 
-    polygons: (field, grouping, ids) =>
+    polygons: (field, grouping, resultsById) =>
       q = $q.defer()
-      ids = _.keys(ids)
+      ids = _.keys(resultsById)
 
       if grouping.level > 0
-        ids += grouping.parents
+        ids = ids.concat(grouping.parents)
 
       @locations.details(ids,
         ancestors: false
         shapes: true
         simplify: settings.simplifyShapes
       ).success (polygons) ->
-        q.resolve(_.partition(polygons, (p) -> not _.contains(grouping.parents, p.id)))
+        q.resolve(_.partition(polygons, (p) -> resultsById[p.id]?))
       q.promise
 
     parent_polygons: (field, grouping) ->
