@@ -4,7 +4,7 @@ angular.module('ndApp').service 'PolygonServiceProvider', (StaticPolygonService,
     constructor: (locations) ->
       @locations = locations
 
-    polygons: (field, grouping, resultsById) =>
+    polygons: (field, grouping, resultsById) ->
       q = $q.defer()
       ids = _.keys(resultsById)
 

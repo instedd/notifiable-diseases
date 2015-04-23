@@ -75,8 +75,27 @@ class LocationField extends Field
   @handles: (attrs) ->
     attrs.locations?
 
-  getLocation: (id) ->
-    @locations[id]
+  getLocation: (location_or_id) ->
+    if !location_or_id?
+      null
+    else if typeof location_or_id is 'string'
+      @locations[location_or_id]
+    else
+      location_or_id
+
+  getParentLocations: (location_or_id) ->
+    id = location_or_id
+    parentLocations = []
+    while true
+      parentLocation = @getLocation(id)
+      if parentLocation
+        parentLocations.push parentLocation
+        id = parentLocation.parent_id
+        break unless id
+      else
+        break
+    parentLocations.shift()
+    parentLocations
 
   getFullLocationPath: (location) ->
     if location.parent_id && (parent = @locations[location.parent_id])
@@ -95,6 +114,9 @@ class RemoteLocationField extends Field
   @handles: (attrs) ->
     attrs['location-service']?
 
+  getParentLocations: (location) ->
+    location.ancestors or []
+
   getFullLocationPath: (location) ->
     name = location.name
     if location.ancestors and location.ancestors.length > 0
@@ -102,8 +124,13 @@ class RemoteLocationField extends Field
       name += (" (" + ancestorsNames.reverse().join(", ") + ")")
     name
 
-  getLocation: (id) ->
-    @locations.details(id)[0]
+  getLocation: (location_or_id, opts={}) ->
+    if !location_or_id?
+      null
+    else if typeof location_or_id is 'string'
+      @locations.details(location_or_id, opts)[0]
+    else
+      location_or_id
 
 
 class DateField extends Field

@@ -2,8 +2,8 @@
 
 angular.module('ndApp').controller 'TrendlineConfigCtrl', ($scope) ->
   getParentLocations = (filter) ->
-    if filter && locationId = filter.location?.id
-      $scope.currentReport.fieldsCollection().getParentLocations(filter.name, locationId)
+    if filter && filter.location?.id
+      $scope.currentReport.fieldsCollection().find(filter.name).getParentLocations(filter.location)
     else
       []
 
