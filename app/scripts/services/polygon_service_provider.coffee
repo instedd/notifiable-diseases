@@ -14,7 +14,6 @@ angular.module('ndApp').service 'PolygonServiceProvider', (StaticPolygonService,
       @locations.details(ids,
         ancestors: false
         shapes: true
-        simplify: settings.simplifyShapes
       ).success (polygons) ->
         q.resolve(_.partition(polygons, (p) -> resultsById[p.id]?))
       q.promise
@@ -27,7 +26,6 @@ angular.module('ndApp').service 'PolygonServiceProvider', (StaticPolygonService,
         @locations.details(grouping.parents,
           ancestors: false
           shapes: true
-          simplify: settings.simplifyShapes
         ).success (parentPolygons) ->
           q.resolve(parentPolygons)
       q.promise
