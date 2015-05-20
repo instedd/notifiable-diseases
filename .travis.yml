@@ -1,6 +1,10 @@
 language: node_js
 node_js:
   - '0.10'
+script:
+  - grunt build
 before_script:
+  - 'gem install compass'
   - 'npm install -g bower grunt-cli'
   - 'bower install'
+
