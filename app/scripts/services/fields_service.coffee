@@ -75,11 +75,63 @@ class LocationField extends Field
   @handles: (attrs) ->
     attrs.locations?
 
+  getLocation: (location_or_id) ->
+    if !location_or_id?
+      null
+    else if typeof location_or_id is 'string'
+      @locations[location_or_id]
+    else
+      location_or_id
+
+  getParentLocations: (location_or_id) ->
+    id = location_or_id
+    parentLocations = []
+    while true
+      parentLocation = @getLocation(id)
+      if parentLocation
+        parentLocations.push parentLocation
+        id = parentLocation.parent_id
+        break unless id
+      else
+        break
+    parentLocations.shift()
+    parentLocations
+
   getFullLocationPath: (location) ->
     if location.parent_id && (parent = @locations[location.parent_id])
       "#{location.name}, #{@getFullLocationPath(parent)}"
     else
       location.name
+
+
+class RemoteLocationField extends Field
+  constructor: (field, settings, injector) ->
+    @type = 'location'
+    @remote = true
+    @locations = injector.get('RemoteLocationsServiceFactory').createService(field['location-service'])
+    super(field)
+
+  @handles: (attrs) ->
+    attrs['location-service']?
+
+  getParentLocations: (location) ->
+    location.ancestors or []
+
+  getFullLocationPath: (location) ->
+    name = location.name
+    if location.ancestors and location.ancestors.length > 0
+      ancestorsNames = _.pluck(location.ancestors, 'name')
+      name += (" (" + ancestorsNames.reverse().join(", ") + ")")
+    name
+
+  getLocation: (location_or_id, opts={}) ->
+    if !location_or_id?
+      null
+    else if typeof location_or_id is 'string'
+      @locations.details(location_or_id, opts)[0]
+    else
+      location_or_id
+
 
 class DateField extends Field
   constructor: (field, settings) ->
@@ -94,10 +146,10 @@ class DateField extends Field
     @resolution
 
 
-FIELD_TYPES = [ResultField, DateField, LocationField, EnumField, IntegerField]
+FIELD_TYPES = [ResultField, DateField, RemoteLocationField, LocationField, EnumField, IntegerField]
 
 angular.module('ndApp')
-  .service 'FieldsService', (Cdx, $q, settings) ->
+  .service 'FieldsService', (Cdx, $q, settings, $injector) ->
     loadForContext: (context = {}) ->
       q = $q.defer()
       Cdx.fields(context).success (data) ->
@@ -120,7 +172,7 @@ angular.module('ndApp')
             field_type = _.find(FIELD_TYPES, (type) -> type.handles(field, name))
             if field_type
               field.name = name
-              fields[name] = new field_type(field, settings)
+              fields[name] = new field_type(field, settings, $injector)
             fields
           ), {}
 

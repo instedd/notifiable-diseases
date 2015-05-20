@@ -13,7 +13,7 @@
     "angular-touch": "1.2.16",
     "angular-route": "1.2.16",
     "angular-bootstrap": "0.11.0",
-    "lodash": "2.4.1",
+    "lodash": "3.7.0",
     "angular-google-chart": "bouil/angular-google-chart#489161c54d32601b7ba8ef663beece506bb5b47a",
     "angular-local-storage": "0.0.5",
     "ng-debounce": "0.1.4",

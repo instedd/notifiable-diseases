@@ -10,5 +10,6 @@
   "reportMainField": "assay_name",
   "mapProviderUrl": "http://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}",
   "mapCenter": [48.224672, -100.371093],
-  "mapBounds": [[-1.054627, -182.109375],[73.726594, -18.632812]]
+  "mapBounds": [[-1.054627, -182.109375],[73.726594, -18.632812]],
+  "simplifyShapes": 0
 }

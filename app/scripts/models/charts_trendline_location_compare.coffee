@@ -103,9 +103,8 @@ class @Charts.Trendline.LocationCompareDisplay extends @Charts.Trendline.BaseDis
 
   getCompareToLocation: (filters) ->
     locationFilter = @findLocationFilter(filters)
-    locationId = locationFilter?.location?.id
-    if locationId
-      parentLocations = @fieldsCollection().getParentLocations @compareToLocationField, locationId
+    if locationFilter?.location?.id
+      parentLocations = @fieldsCollection().find(@compareToLocationField).getParentLocations(locationFilter.location)
       myLevel = parseInt(@compareToLocation)
       _.find parentLocations, (loc) -> loc.level == myLevel
     else
