@@ -21,11 +21,11 @@ class @Charts.Trendline.SplitDisplay extends @Charts.Trendline.BaseDisplay
 
   getSeries: (report, data) ->
     datapoints = if @values == 'percentage' and data.length > 0
-      positives = @sortSplitData data[0].events
-      denominators = @sortSplitData data[1].events
+      positives = @sortSplitData data[0].tests
+      denominators = @sortSplitData data[1].tests
       @getRates(positives, denominators)
     else
-      @sortSplitData data[0].events
+      @sortSplitData data[0].tests
 
     @getSplitSeries(report, datapoints)
 
@@ -47,7 +47,7 @@ class @Charts.Trendline.SplitDisplay extends @Charts.Trendline.BaseDisplay
     while i < len
       item = data[i]
 
-      date = item.start_time
+      date = item[@timeField]
       row = [date]
 
       # Traverse all items that follow (including this one) as long
@@ -55,7 +55,7 @@ class @Charts.Trendline.SplitDisplay extends @Charts.Trendline.BaseDisplay
       j = i
       while j < len
         other_item = data[j]
-        other_date = other_item.start_time
+        other_date = other_item[@timeField]
         if other_date != date
           break
 
@@ -96,9 +96,9 @@ class @Charts.Trendline.SplitDisplay extends @Charts.Trendline.BaseDisplay
 
   sortSplitData: (data) ->
     data.sort (x, y) =>
-      if x.start_time < y.start_time
+      if x[@timeField] < y[@timeField]
         -1
-      else if x.start_time > y.start_time
+      else if x[@timeField] > y[@timeField]
         1
       else if x[@splitField] < y[@splitField]
         -1
