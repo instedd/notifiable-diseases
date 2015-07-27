@@ -150,10 +150,20 @@ FIELD_TYPES = [ResultField, DateField, RemoteLocationField, LocationField, EnumF
 
 angular.module('ndApp')
   .service 'FieldsService', (Cdx, $q, settings, $injector) ->
+    flattenProperties = (properties, flatten = {}, prefix = "") ->
+      for name, field of properties
+        if field.type == "object"
+          flattenProperties(field.properties, flatten, "#{prefix}#{name}.")
+        else if field.type == "array" and field.items.type == "object"
+          flattenProperties(field.items.properties, flatten, "#{prefix}#{name}.")
+        else
+          flatten["#{prefix}#{name}"] = field
+      flatten
+
     loadForContext: (context = {}) ->
       q = $q.defer()
       Cdx.fields(context).success (data) ->
-        fields = data.properties
+        fields = flattenProperties(data.properties)
 
         # Add instructions for known fields
         fields[FieldsCollection.fieldNames.age_group]?.instructions = "Select the age groups of the events you want to filter"
