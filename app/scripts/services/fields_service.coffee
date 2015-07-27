@@ -59,7 +59,7 @@ class IntegerField extends Field
     super(field)
 
   @handles: (attrs) ->
-    attrs.type == 'integer' && attrs.minimum? && attrs.maximum?
+    attrs.type == 'integer'
 
 class LocationField extends Field
   constructor: (field, settings) ->
