@@ -10,10 +10,9 @@ class Field
 class EnumField extends Field
   constructor: (field, settings) ->
     @type = 'enum'
-    @options = _.map field.values, (option, value) ->
-      option.value = value
-      option.label = option.name
-      option
+    @options = _.map field.enum, (value) ->
+      label: field.values?[value].name || value
+      value: value
     super(field)
 
   values: ->
@@ -26,7 +25,7 @@ class EnumField extends Field
     _.find(@options, value: value)?.label
 
   @handles: (attrs) ->
-    attrs.values?
+    attrs.enum?
 
 class ResultField extends EnumField
   constructor: (field, settings) ->
