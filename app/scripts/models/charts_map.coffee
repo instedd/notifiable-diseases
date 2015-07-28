@@ -6,14 +6,6 @@ class @Charts.Map extends @Charts.Base
     upper: 40
   }
 
-  fieldLevels = {}
-
-  @setAvailablePolygonLevels: (field_levels) ->
-    fieldLevels = field_levels
-
-  getMaxPolygonLevel = (field) ->
-    fieldLevels[field] || 0
-
   constructor: (fieldsCollection) ->
     super(fieldsCollection)
     @kind = 'Map'
@@ -50,8 +42,8 @@ class @Charts.Map extends @Charts.Base
     [@numeratorFor(query), @denominatorFor(query)]
 
   getSeries: (report, data) =>
-    positives = data[0].events
-    denominators = data[1].events
+    positives = data[0].tests
+    denominators = data[1].tests
 
     positivesById = _.indexBy positives, @mappingField
     _.each denominators, (node) =>
@@ -78,7 +70,7 @@ class @Charts.Map extends @Charts.Base
   groupingLevel: (filters) =>
     location_filter = _.find(filters, name: @mappingField)
     if location_filter && !location_filter.empty()
-      Math.min(getMaxPolygonLevel(@mappingField), location_filter.adminLevel() + 1)
+      Math.min(@field().getMaxPolygonLevel(), location_filter.adminLevel() + 1)
     else
       0
 

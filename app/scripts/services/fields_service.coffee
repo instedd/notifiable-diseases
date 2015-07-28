@@ -68,6 +68,8 @@ class LocationField extends Field
       location.id = id
       location.label = location.name
       location
+    @maxPolygonLevel = _.max(_.keys(settings.polygons[field.name]))
+    settings.enableMapChart = true
 
     super(field)
 
@@ -102,12 +104,16 @@ class LocationField extends Field
     else
       location.name
 
+  getMaxPolygonLevel: () ->
+    @maxPolygonLevel
+
 
 class RemoteLocationField extends Field
   constructor: (field, settings, injector) ->
     @type = 'location'
     @remote = true
     @locations = injector.get('RemoteLocationsServiceFactory').createService(field['location-service'])
+    settings.enableMapChart = true
     super(field)
 
   @handles: (attrs) ->
@@ -131,6 +137,9 @@ class RemoteLocationField extends Field
     else
       location_or_id
 
+  # TODO: This value should be obtained from the location service
+  getMaxPolygonLevel: () -> 1
+
 
 class DateField extends Field
   constructor: (field, settings) ->
@@ -151,7 +160,7 @@ angular.module('ndApp')
   .service 'FieldsService', (Cdx, $q, settings, $injector) ->
     flattenProperties = (properties, flatten = {}, prefix = "") ->
       for name, field of properties
-        if field.type == "object"
+        if field.type == "object" and !field['location-service']
           flattenProperties(field.properties, flatten, "#{prefix}#{name}.")
         else if field.type == "array" and field.items.type == "object"
           flattenProperties(field.items.properties, flatten, "#{prefix}#{name}.")
