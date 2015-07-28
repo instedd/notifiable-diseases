@@ -29,8 +29,8 @@ class @Charts.Trendline.DateCompareDisplay extends @Charts.Trendline.BaseDisplay
 
 
   getSeries: (report, data) ->
-    datapoints = @sortData(data[0].events)
-    denominators = if @values == 'percentage' and data.length > 0 then @sortData(data[1].events) else null
+    datapoints = @sortData(data[0].tests)
+    denominators = if @values == 'percentage' and data.length > 0 then @sortData(data[1].tests) else null
 
     positives = if denominators then @getRates(datapoints, denominators) else datapoints
     @getDateCompareSeries(report, positives)
@@ -42,7 +42,7 @@ class @Charts.Trendline.DateCompareDisplay extends @Charts.Trendline.BaseDisplay
     # First, index data by start_time
     indexedData = {}
     for event in data
-      indexedData[event.start_time] = event[countField]
+      indexedData[event[@timeField]] = event[countField]
 
     intervalFormat = @intervalFormat()
 
@@ -63,7 +63,7 @@ class @Charts.Trendline.DateCompareDisplay extends @Charts.Trendline.BaseDisplay
     # previous year and one for the current one
     rows = []
     for event in data
-      date = event.start_time
+      date = event[@timeField]
       currentDate = @moment(date)
 
       previousDate = moment(currentDate).add(-1, 'years').format(intervalFormat)

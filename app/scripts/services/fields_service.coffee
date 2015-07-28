@@ -10,10 +10,9 @@ class Field
 class EnumField extends Field
   constructor: (field, settings) ->
     @type = 'enum'
-    @options = _.map field.values, (option, value) ->
-      option.value = value
-      option.label = option.name
-      option
+    @options = _.map field.enum, (value) ->
+      label: field.values?[value].name || value
+      value: value
     super(field)
 
   values: ->
@@ -26,7 +25,7 @@ class EnumField extends Field
     _.find(@options, value: value)?.label
 
   @handles: (attrs) ->
-    attrs.values?
+    attrs.enum?
 
 class ResultField extends EnumField
   constructor: (field, settings) ->
@@ -60,7 +59,7 @@ class IntegerField extends Field
     super(field)
 
   @handles: (attrs) ->
-    attrs.type == 'integer' && attrs.minimum? && attrs.maximum?
+    attrs.type == 'integer'
 
 class LocationField extends Field
   constructor: (field, settings) ->
@@ -69,6 +68,8 @@ class LocationField extends Field
       location.id = id
       location.label = location.name
       location
+    @maxPolygonLevel = _.max(_.keys(settings.polygons[field.name]))
+    settings.enableMapChart = true
 
     super(field)
 
@@ -103,12 +104,16 @@ class LocationField extends Field
     else
       location.name
 
+  getMaxPolygonLevel: () ->
+    @maxPolygonLevel
+
 
 class RemoteLocationField extends Field
   constructor: (field, settings, injector) ->
     @type = 'location'
     @remote = true
     @locations = injector.get('RemoteLocationsServiceFactory').createService(field['location-service'])
+    settings.enableMapChart = true
     super(field)
 
   @handles: (attrs) ->
@@ -132,6 +137,9 @@ class RemoteLocationField extends Field
     else
       location_or_id
 
+  # TODO: This value should be obtained from the location service
+  getMaxPolygonLevel: () -> 1
+
 
 class DateField extends Field
   constructor: (field, settings) ->
@@ -150,10 +158,20 @@ FIELD_TYPES = [ResultField, DateField, RemoteLocationField, LocationField, EnumF
 
 angular.module('ndApp')
   .service 'FieldsService', (Cdx, $q, settings, $injector) ->
+    flattenProperties = (properties, flatten = {}, prefix = "") ->
+      for name, field of properties
+        if field.type == "object" and !field['location-service']
+          flattenProperties(field.properties, flatten, "#{prefix}#{name}.")
+        else if field.type == "array" and field.items.type == "object"
+          flattenProperties(field.items.properties, flatten, "#{prefix}#{name}.")
+        else
+          flatten["#{prefix}#{name}"] = field
+      flatten
+
     loadForContext: (context = {}) ->
       q = $q.defer()
       Cdx.fields(context).success (data) ->
-        fields = data.properties
+        fields = flattenProperties(data.properties)
 
         # Add instructions for known fields
         fields[FieldsCollection.fieldNames.age_group]?.instructions = "Select the age groups of the events you want to filter"

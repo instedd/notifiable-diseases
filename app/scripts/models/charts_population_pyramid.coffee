@@ -33,7 +33,7 @@ class @Charts.PopulationPyramid extends @Charts.Base
     _.find report.filters, name: @ageGroupField.name
 
   getSeries: (report, datas) ->
-    data = datas[0].events
+    data = datas[0].tests
     field = @ageGroupField
     if !field
       # Convert the flat list of event counts to an array of objects, one for each age group
@@ -65,7 +65,7 @@ class @Charts.PopulationPyramid extends @Charts.Base
 
       # Set denominators for all counts
       if @values == 'percentage' and datas[1]
-        _.forEach datas[1].events, (item) =>
+        _.forEach datas[1].tests, (item) =>
           [age, gender] = @ageGenderFor(item)
           if groups[age] and groups[age][gender] and item.count > 0
             groups[age][gender].value /= item.count
