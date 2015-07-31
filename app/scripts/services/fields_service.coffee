@@ -153,25 +153,36 @@ class DateField extends Field
   dateResolution: () ->
     @resolution
 
+class DurationField extends Field
+  constructor: (field, settings) ->
+    @type = 'duration'
+    field.searchable = false
+    super(field)
 
-FIELD_TYPES = [ResultField, DateField, RemoteLocationField, LocationField, EnumField, IntegerField]
+  @handles: (attrs) ->
+    attrs.class == 'duration'
+
+
+FIELD_TYPES = [ResultField, DateField, RemoteLocationField, LocationField, EnumField, IntegerField, DurationField]
 
 angular.module('ndApp')
   .service 'FieldsService', (Cdx, $q, settings, $injector) ->
-    flattenProperties = (properties, flatten = {}, prefix = "") ->
+    buildProperties = (properties, fields = {}, prefix = "") ->
       for name, field of properties
-        if field.type == "object" and !field['location-service']
-          flattenProperties(field.properties, flatten, "#{prefix}#{name}.")
+        field.name = "#{prefix}#{name}"
+        fieldType = _.find(FIELD_TYPES, (type) -> type.handles(field, field.name))
+        if fieldType
+          fields[field.name] = new fieldType(field, settings, $injector)
+        else if field.type == "object"
+          buildProperties(field.properties, fields, "#{field.name}.")
         else if field.type == "array" and field.items.type == "object"
-          flattenProperties(field.items.properties, flatten, "#{prefix}#{name}.")
-        else
-          flatten["#{prefix}#{name}"] = field
-      flatten
+          buildProperties(field.items.properties, fields, "#{field.name}.")
+      fields
 
     loadForContext: (context = {}) ->
       q = $q.defer()
       Cdx.fields(context).success (data) ->
-        fields = flattenProperties(data.properties)
+        fields = buildProperties(data.properties)
 
         # Add instructions for known fields
         fields[FieldsCollection.fieldNames.age_group]?.instructions = "Select the age groups of the events you want to filter"
@@ -179,20 +190,6 @@ angular.module('ndApp')
         fields[FieldsCollection.fieldNames.ethnicity]?.instructions = "Select the ethnicities of the events you want to filter"
         fields[FieldsCollection.fieldNames.gender]?.instructions = "Select the genders of the events you want to filter"
         fields[FieldsCollection.fieldNames.result]?.instructions = "Select the results of the events you want to filter"
-
-        # fields = _.mapValues fields, (field, name) ->
-        #   field.name = name
-        #   field_type = _.find(FIELD_TYPES, (type) -> type.handles(field)) || Field
-        #   new field_type(field)
-
-        # Not supported field types are ignored.
-        fields = _.inject fields, ((fields, field, name) ->
-            field_type = _.find(FIELD_TYPES, (type) -> type.handles(field, name))
-            if field_type
-              field.name = name
-              fields[name] = new field_type(field, settings, $injector)
-            fields
-          ), {}
 
         q.resolve(new FieldsCollection(fields))
 
