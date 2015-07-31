@@ -58,7 +58,8 @@ class MapWidget
   create_map: (element, map_center, map_bounds, map_provider_url, map_provider_settings={}) ->
     map = L.map(element, {
       attributionControl: false,
-      zoomControl: false,
+      zoomControl: true,
+      scrollWheelZoom: false,
       minZoom: 2
     })
 
