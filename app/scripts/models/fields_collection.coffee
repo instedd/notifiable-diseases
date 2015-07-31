@@ -5,7 +5,7 @@ class @FieldsCollection
     date: 'test.start_time'
     ethnicity: 'race_ethnicity'
     gender: 'patient.gender'
-    result: 'test.assays.qualitative_result'
+    result: 'test.assays.result'
     assay_name: 'test.assays.name'
     condition: 'test.assays.condition'
     location: 'location'
