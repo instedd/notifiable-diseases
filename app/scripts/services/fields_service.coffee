@@ -10,10 +10,9 @@ class Field
 class EnumField extends Field
   constructor: (field, settings) ->
     @type = 'enum'
-    @options = _.map field.values, (option, value) ->
-      option.value = value
-      option.label = option.name
-      option
+    @options = _.map field.enum, (value) ->
+      label: field.values?[value].name || value
+      value: value
     super(field)
 
   values: ->
@@ -26,7 +25,7 @@ class EnumField extends Field
     _.find(@options, value: value)?.label
 
   @handles: (attrs) ->
-    attrs.values?
+    attrs.enum?
 
 class ResultField extends EnumField
   constructor: (field, settings) ->
@@ -60,7 +59,7 @@ class IntegerField extends Field
     super(field)
 
   @handles: (attrs) ->
-    attrs.type == 'integer' && attrs.minimum? && attrs.maximum?
+    attrs.type == 'integer'
 
 class LocationField extends Field
   constructor: (field, settings) ->
@@ -69,6 +68,8 @@ class LocationField extends Field
       location.id = id
       location.label = location.name
       location
+    @maxPolygonLevel = _.max(_.keys(settings.polygons[field.name]))
+    settings.enableMapChart = true
 
     super(field)
 
@@ -103,12 +104,16 @@ class LocationField extends Field
     else
       location.name
 
+  getMaxPolygonLevel: () ->
+    @maxPolygonLevel
+
 
 class RemoteLocationField extends Field
   constructor: (field, settings, injector) ->
     @type = 'location'
     @remote = true
     @locations = injector.get('RemoteLocationsServiceFactory').createService(field['location-service'])
+    settings.enableMapChart = true
     super(field)
 
   @handles: (attrs) ->
@@ -132,6 +137,9 @@ class RemoteLocationField extends Field
     else
       location_or_id
 
+  # TODO: This value should be obtained from the location service
+  getMaxPolygonLevel: () -> 1
+
 
 class DateField extends Field
   constructor: (field, settings) ->
@@ -145,15 +153,36 @@ class DateField extends Field
   dateResolution: () ->
     @resolution
 
+class DurationField extends Field
+  constructor: (field, settings) ->
+    @type = 'duration'
+    field.searchable = false
+    super(field)
 
-FIELD_TYPES = [ResultField, DateField, RemoteLocationField, LocationField, EnumField, IntegerField]
+  @handles: (attrs) ->
+    attrs.class == 'duration'
+
+
+FIELD_TYPES = [ResultField, DateField, RemoteLocationField, LocationField, EnumField, IntegerField, DurationField]
 
 angular.module('ndApp')
   .service 'FieldsService', (Cdx, $q, settings, $injector) ->
+    buildProperties = (properties, fields = {}, prefix = "") ->
+      for name, field of properties
+        field.name = "#{prefix}#{name}"
+        fieldType = _.find(FIELD_TYPES, (type) -> type.handles(field, field.name))
+        if fieldType
+          fields[field.name] = new fieldType(field, settings, $injector)
+        else if field.type == "object"
+          buildProperties(field.properties, fields, "#{field.name}.")
+        else if field.type == "array" and field.items.type == "object"
+          buildProperties(field.items.properties, fields, "#{field.name}.")
+      fields
+
     loadForContext: (context = {}) ->
       q = $q.defer()
       Cdx.fields(context).success (data) ->
-        fields = data.properties
+        fields = buildProperties(data.properties)
 
         # Add instructions for known fields
         fields[FieldsCollection.fieldNames.age_group]?.instructions = "Select the age groups of the events you want to filter"
@@ -161,20 +190,6 @@ angular.module('ndApp')
         fields[FieldsCollection.fieldNames.ethnicity]?.instructions = "Select the ethnicities of the events you want to filter"
         fields[FieldsCollection.fieldNames.gender]?.instructions = "Select the genders of the events you want to filter"
         fields[FieldsCollection.fieldNames.result]?.instructions = "Select the results of the events you want to filter"
-
-        # fields = _.mapValues fields, (field, name) ->
-        #   field.name = name
-        #   field_type = _.find(FIELD_TYPES, (type) -> type.handles(field)) || Field
-        #   new field_type(field)
-
-        # Not supported field types are ignored.
-        fields = _.inject fields, ((fields, field, name) ->
-            field_type = _.find(FIELD_TYPES, (type) -> type.handles(field, name))
-            if field_type
-              field.name = name
-              fields[name] = new field_type(field, settings, $injector)
-            fields
-          ), {}
 
         q.resolve(new FieldsCollection(fields))
 

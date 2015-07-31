@@ -1,13 +1,13 @@
 class @FieldsCollection
   @fieldNames:
-    age: 'age'
+    age: 'test.patient_age'
     age_group: 'age_group'
-    date: 'start_time'
+    date: 'test.start_time'
     ethnicity: 'race_ethnicity'
-    gender: 'gender'
-    result: 'result'
-    assay_name: 'assay_name'
-    condition: 'condition'
+    gender: 'patient.gender'
+    result: 'test.assays.result'
+    assay_name: 'test.assays.name'
+    condition: 'test.assays.condition'
     location: 'location'
     patient_location: 'patient_location'
 

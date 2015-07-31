@@ -8,7 +8,7 @@ angular.module('ndApp')
       $scope.addNewChartIsCollapsed = !$scope.addNewChartIsCollapsed
 
     $scope.showChart = (chart_name) ->
-      chart_name != 'Map' || settings.polygons
+      chart_name != 'Map' || settings.enableMapChart
 
     $scope.addChart = (kind) ->
       chart = ChartsService.create kind, $scope.currentReport.fieldsCollection()
