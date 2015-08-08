@@ -59,10 +59,6 @@ module.exports = function (grunt) {
         files: ['<%= yeoman.app %>/scripts/{,*/}*.{coffee,litcoffee,coffee.md}'],
         tasks: ['newer:coffee:dist']
       },
-      coffeeTest: {
-        files: ['test/spec/{,*/}*.{coffee,litcoffee,coffee.md}'],
-        tasks: ['newer:coffee:test', 'karma']
-      },
       compass: {
         files: ['<%= yeoman.sassDir %>/{,*/}*.{scss,sass}'],
         tasks: ['compass:server', 'autoprefixer']
