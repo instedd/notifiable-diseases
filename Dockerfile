@@ -2,7 +2,7 @@ FROM node:0.12
 
 RUN \
   apt-get update && \
-  apt-get install -y ruby-compass && \
+  apt-get install -y ruby-compass gifsicle && \
   apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 RUN npm install -g bower grunt-cli
