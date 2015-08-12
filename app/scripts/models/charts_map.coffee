@@ -53,19 +53,17 @@ class @Charts.Map extends @Charts.Base
 
     denominators
 
-  getCSV: (report, series) ->
+  getCSV: (report, series, callback) ->
     locationField = report.fieldsCollection().find(@mappingField)
-    rows = []
-    rows.push ["Location", "Positive cases", "Total cases"]
-    for serie in series
-      serieValue = serie[@mappingField]
-      if locationField
-        location = locationField.locations[serieValue]
-        locationName = locationField.getFullLocationPath(location)
-      else
-        locationName = serie[serieValue]
-      rows.push [locationName, serie.positive, serie.count]
-    rows
+    allLocationIds = _.uniq _.map series, (s) => s[@mappingField]
+    locationField.locations.details(allLocationIds, ancestors: true).success (data) =>
+      locations = _.indexBy data, "id"
+      rows = [["Location", "Positive cases", "Total cases"]]
+      for serie in series
+        locationId = serie[@mappingField]
+        locationName = locationField.getFullLocationPath(locations[locationId])
+        rows.push [locationName, serie.positive, serie.count]
+      callback(rows)
 
   groupingLevel: (filters) =>
     location_filter = _.find(filters, name: @mappingField)

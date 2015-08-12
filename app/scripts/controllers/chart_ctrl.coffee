@@ -17,7 +17,12 @@ angular.module('ndApp')
       render()
 
     $scope.getCSV = ->
-      $scope.chart.getCSV($scope.report, $scope.series)
+      q = $q.defer()
+      csv = $scope.chart.getCSV($scope.report, $scope.series, q.resolve)
+      if Array.isArray(csv)
+        csv
+      else
+        q.promise
 
     $scope.getCSVFilename = ->
       date = $filter("date")(new Date(), "yyyyMMddHMMss")
