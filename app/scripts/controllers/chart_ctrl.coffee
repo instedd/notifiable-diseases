@@ -42,7 +42,7 @@ angular.module('ndApp')
         $scope.report.closeQuery(query)
 
       if _.all(queries, (query) -> query.empty)
-        datas = _.map queries, (query) -> {events: [], total_count: 0}
+        datas = _.map queries, (query) -> {tests: [], total_count: 0}
         $scope.series = $scope.chart.getSeries($scope.report, datas)
       else
         # TO-DO: consider making the data update explicit instead
