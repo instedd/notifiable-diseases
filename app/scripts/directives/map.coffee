@@ -60,10 +60,10 @@ class MapWidget
       attributionControl: false,
       zoomControl: true,
       scrollWheelZoom: false,
-      minZoom: 2
+      minZoom: 1
     })
 
-    map.setView(map_center, 2)
+    map.setView(map_center, 1)
 
     if map_bounds?
       map.setMaxBounds(map_bounds)
