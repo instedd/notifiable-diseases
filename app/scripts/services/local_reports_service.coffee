@@ -1,10 +1,18 @@
 angular.module('ndApp').service 'LocalReportsService', (localStorageService, settings, FiltersService, ChartsService) ->
   return unless settings.useLocalStorage
 
-  reports = localStorageService.get("reports") || []
+  # If the reports seralization format changes in a backwards incompatible way,
+  # increment this number and old reports will be automatically discarded.
+  CURRENT_VERSION = 1
+
+  savedData = localStorageService.get("reports")
+  if savedData && savedData.version == CURRENT_VERSION
+    reports = savedData.reports
+  else
+    reports = []
 
   save = ->
-    localStorageService.add "reports", reports
+    localStorageService.set("reports", {version: CURRENT_VERSION, reports: reports})
 
   findReportIndex = (id) ->
     _.findIndex reports, id: id
