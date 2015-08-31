@@ -4,29 +4,32 @@
   <div class="col-md-12">
     <h3>New report</h3>
     <form ng-submit="createReport()">
-      <div>
-        <label for="name">Name</label>
+      <div ng-show="options">
+        <div>
+          <label for="name">Name</label>
+          <br/>
+          <input type="text" id="name" ng-model="report.name" />
+        </div>
+        <div>
+          <label for="description">Description</label>
+          <br/>
+          <textarea id="description" rows="3" cols="60" ng-model="report.description"></textarea>
+        </div>
+        <br />
+        <div>
+          <label for="mainValue">{{mainLabel}}</label>
+          <br/>
+          <select id="mainValue" ng-model="report.mainValue">
+            <option ng-repeat="option in options" value="{{option.value}}">{{option.label}}</option>
+          </select>
+          (Events: {{events}})
+        </div>
         <br/>
-        <input type="text" id="name" ng-model="report.name" />
+        <div>
+          <button type="submit" class="btn btn-primary">Create report</button>
+        </div>
       </div>
-      <div>
-        <label for="description">Description</label>
-        <br/>
-        <textarea id="description" rows="3" cols="60" ng-model="report.description"></textarea>
-      </div>
-      <br />
-      <div>
-        <label for="mainValue">{{mainLabel}}</label>
-        <br/>
-        <select id="mainValue" ng-model="report.mainValue">
-          <option ng-repeat="option in options" value="{{option.value}}">{{option.label}}</option>
-        </select>
-        (Events: {{events}})
-      </div>
-      <br/>
-      <div>
-        <button type="submit" class="btn btn-primary">Create report</button>
-      </div>
+      <div ng-hide="options">Loading...</div>
     </form>
   </div>
 </div>
