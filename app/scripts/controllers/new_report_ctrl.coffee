@@ -11,10 +11,11 @@ angular.module('ndApp')
         $scope.options = mainField.options
         $scope.report = new Report(fieldsCollection)
         $scope.report.mainField = mainField.name
-        $scope.report.mainValue = $scope.options[0].value
+        $scope.report.mainValue = null
         $scope.events = "..."
 
         computeCount = ->
+          return if $scope.report.mainValue == null
           query = $scope.report.newQuery()
           $scope.report.closeQuery(query)
 
