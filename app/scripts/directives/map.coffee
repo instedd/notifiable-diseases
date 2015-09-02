@@ -155,7 +155,8 @@ class MapWidget
       result = resultsById[feature.properties.id]
 
       popup_content = "
-      <b>#{feature.properties.name} #{(result.percentage * 100).toFixed(2)}%</b><br/>
+      <b>#{feature.properties.name}</b><br/>
+      Positivity: #{(result.percentage * 100).toFixed(2)}%<br/>
       #{if @showPositive then 'Positive events' else 'Valid events'}: <em>#{result.positive}</em><br/>
       Total events: <em>#{result.count}</em>"
 
