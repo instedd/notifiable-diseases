@@ -68,3 +68,8 @@ angular.module('ndApp')
 
           $scope.$watch 'currentReport', debounce(saveCurrentReport, 300), true
 
+        FieldsService.loadForContext().then (fieldsCollection) ->
+          mainField = fieldsCollection.fields[$scope.currentReport.mainField]
+          $scope.assay = mainField.labelFor($scope.currentReport.mainValue)
+
+

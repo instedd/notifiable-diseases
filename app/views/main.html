@@ -2,7 +2,11 @@
 
 <div class="row report">
   <div class="col-md-12">
-    <h3>
+    <div class="report-assay">
+      Report for
+      <span>{{ assay }}</span>
+    </div>
+    <h3 id="report-name">
       <a href="#" editable-text="currentReport.name" onbeforesave="validateReportName($data)">{{currentReport.name}}</a>
     </h3>
     <p>
