@@ -57,6 +57,8 @@ angular.module('ndApp')
                         ]
 
           chart.data.rows = rows
+          chart.options.hAxis.gridlines = {}
+          chart.options.hAxis.gridlines.count = 7
           chart.options.hAxis.format = (if scope.values == 'percentage' then '##.##;##.##%' else '#,###;#,###')
           chart.options.hAxis.minValue = -maxValue
           chart.options.hAxis.maxValue =  maxValue
