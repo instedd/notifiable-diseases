@@ -24,6 +24,10 @@ class @Filters.LocationFilter
   allSelected: ->
     false
 
+  hasChildren: ->
+    if @location
+      @location.has_children
+
   selectedDescription: ->
     if @empty()
       "All"

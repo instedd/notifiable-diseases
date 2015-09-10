@@ -68,8 +68,10 @@ class LocationField extends Field
     @locations = _.mapValues field.locations, (location, id) ->
       location.id = id
       location.label = location.name
+      location.has_children = null
+      if field.locations[location.parent_id]
+        field.locations[location.parent_id].has_children = true
       location
-
     super(field)
 
   @handles: (attrs) ->

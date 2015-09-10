@@ -77,7 +77,10 @@ class @Charts.Map extends @Charts.Base
 
     filtered_level = location_filter && location_filter.adminLevel()
     if (filtered_level)
-      drawn_level = Math.min(getMaxPolygonLevel(@mappingField), filtered_level + 1)
+      if location_filter.hasChildren()
+        filtered_level + 1
+      else
+        filtered_level
     else
       drawn_level = 1
 
