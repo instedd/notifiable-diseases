@@ -1,6 +1,7 @@
 'use strict'
 
 angular.module('ndApp').controller 'TrendlineConfigCtrl', ($scope) ->
+  $scope.anyParentLocations = false
   getParentLocations = (filter) ->
     if filter && locationId = filter.location?.id
       $scope.currentReport.fieldsCollection().getParentLocations(filter.name, locationId)
@@ -8,7 +9,11 @@ angular.module('ndApp').controller 'TrendlineConfigCtrl', ($scope) ->
       []
 
   $scope.hasAnyParentLocations = ->
-    _.any getLocationFilters(), (filter) -> getParentLocations(filter).length > 0
+    oldValue = $scope.anyParentLocations
+    $scope.anyParentLocations = _.any getLocationFilters(), (filter) -> getParentLocations(filter).length > 0
+    if !$scope.anyParentLocations && oldValue && $scope.chart.display == 'compareToLocation'
+      $scope.chart.display = 'simple'
+    $scope.anyParentLocations
 
   $scope.parentLocations = (fieldName) ->
     filter = _.find getLocationFilters(), name: fieldName
