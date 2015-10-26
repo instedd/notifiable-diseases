@@ -150,13 +150,16 @@ a.editable-click {
   margin-top:10px;
 }
 
-.new-report {
-  @extend .pull-right;
-  margin-top: -25px;
+.new-report-icon {
   background-image: url('../images/ic-newreport.png');
   background-repeat: no-repeat;
   width: 17px;
   height: 15px;
+  float:left;
+  margin-top:2px;
+}
+.new-report {
+  color:#AAAAAA;
 }
 .duplicate-report {
   background-image: url('../images/ic-duplicate-black.png');
@@ -252,9 +255,32 @@ a.editable-click {
     display: block;
     height: 360px;
     position: relative;
-    background-image: url('../images/add_new.png');
-    background-repeat: no-repeat;
-    background-position: center;
+
+    &:before {
+      content:'';
+      display: block;
+      background: #aaaaaa;
+      color: $backcolor;
+      border-radius:50%;
+      height: 50px;
+      width: 50px;
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      margin: -25px 0 0 -25px;
+    }
+
+    &:after {
+      content:'+';
+      font-size: 50px;
+      font-weight: bold;
+      display: block;
+      color: $backcolor;
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      margin: -40px 0 0 -15px;
+    }
   }
   &:hover {
     background: #e2e2e2;

@@ -2,7 +2,12 @@
   <div class="col-md-12">
     <ul class="nav nav-tabs" role="tablist">
       <li ng-repeat="report in reportsDescriptions" ng-class="{active: currentReport.id == report.id}"><a ng-href="#/reports/{{report.id}}">{{report.name}}</a></li>
+      <li ng-class="{active: currentReport == undefined}">
+        <a href="#/reports/new" class="new-report" title="Create new report">
+          <i class="new-report-icon"></i>
+          Create new report
+        </a>
+      </li>
     </ul>
-    <a href="#/reports/new" class="new-report" title="Create new report"></a>
   </div>
 </div>
