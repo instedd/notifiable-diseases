@@ -179,9 +179,9 @@ angular.module('ndApp')
           buildProperties(field.items.properties, fields, "#{field.name}.")
       fields
 
-    loadForContext: (context = {}) ->
+    loadForContext: (resource, context = {}) ->
       q = $q.defer()
-      Cdx.fields(context).success (data) ->
+      Cdx.fields(resource, context).success (data) ->
         fields = buildProperties(data.properties)
 
         # Add instructions for known fields

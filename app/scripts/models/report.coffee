@@ -1,7 +1,8 @@
 class @Report
-  constructor: (fieldsCollection) ->
+  constructor: (fieldsCollection, resource) ->
     @filters = []
     @charts  = []
+    @resource = resource
     @fieldsCollection = () -> fieldsCollection
 
   addFilter: (filter) ->
@@ -20,17 +21,19 @@ class @Report
   newQuery: ->
     query = {page_size: 0}
     query[@mainField] = @mainValue
+    query.resource = @resource
     query
 
   closeQuery: (query) ->
     # If there's no result specified, restrict result to the valid values
     query.result ?= @fieldsCollection().find(FieldsCollection.fieldNames.result).values()
 
+
   fieldOptionsFor: (fieldName) ->
     @fieldsCollection().optionsFor(fieldName)
 
   duplicate: ->
-    dup = new Report(@fieldsCollection())
+    dup = new Report(@fieldsCollection(), @resource)
     dup.name = "#{@name} (duplicate)"
     dup.description = @description
     dup.mainValue = @mainValue
@@ -41,7 +44,7 @@ class @Report
 
   fullDescription: ->
     if @filters.length == 0
-      return "All cases"
+      return "All #{@resourceTitle()}"
 
     # TODO: other filters is always empty for now, so it's not used
     otherFilters = []
@@ -76,9 +79,9 @@ class @Report
       first = false
 
     if str.length == 0
-      str += "Cases "
+      str += "#{@resourceTitle()} "
     else
-      str += " cases "
+      str += " #{@resourceName()} "
 
     if resultFilter
       str += " of "
@@ -123,9 +126,16 @@ class @Report
     @description = data.description
     @mainField = data.mainField
     @mainValue = data.mainValue
+    @resource = data.resource
     @filters = data.filters || []
     @charts = data.charts || []
     @
+
+  resourceName: () ->
+    @resource
+
+  resourceTitle: () ->
+    _.capitalize(@resourceName())
 
   toJSON: ->
     {
@@ -134,6 +144,7 @@ class @Report
       description: @description
       mainValue: @mainValue
       mainField: @mainField
+      resource: @resource
       filters: _.map @filters, (f) -> f.toJSON()
       charts: _.map @charts, (c) -> c.toJSON()
     }

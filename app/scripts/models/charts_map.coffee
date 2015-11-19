@@ -58,7 +58,7 @@ class @Charts.Map extends @Charts.Base
     allLocationIds = _.uniq _.map series, (s) => s[@mappingField]
     locationField.locations.details(allLocationIds, ancestors: true).success (data) =>
       locations = _.indexBy data, "id"
-      rows = [["Location", "Positive cases", "Total cases"]]
+      rows = [["Location", "Positive #{report.resourceName()}", "Total #{report.resourceName()}"]]
       for serie in series
         locationId = serie[@mappingField]
         locationName = locationField.getFullLocationPath(locations[locationId])

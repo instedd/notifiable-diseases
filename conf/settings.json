@@ -2,6 +2,7 @@
   "brand": "Notifiable Diseases",
   "api": "/cdx/v1",
   "store": "/store",
+  "resources": ["events"],
   "useLocalStorage": false,
   "replaceParentURLHash": false,
   "multiQueriesEnabled": false,

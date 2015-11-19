@@ -64,6 +64,9 @@ angular.module('ndApp').service 'RemoteReportsService', (KeyValueStore, FiltersS
       context[parsed.mainField] = parsed.mainValue
       context
 
+    getResource: (data) ->
+      JSON.parse(data.value).resource
+
     deserialize: (reportData, fieldsCollection) ->
       data = JSON.parse(reportData.value)
       data.filters = _.map data.filters, (filterData) -> FiltersService.deserialize(filterData, fieldsCollection)
