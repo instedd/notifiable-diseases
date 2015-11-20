@@ -1,7 +1,7 @@
 class @FieldsCollection
 
-  constructor: (@fields) ->
-    _.each FieldsNames, (value, key) =>
+  constructor: (@fields, @names) ->
+    _.each @names, (value, key) =>
       @[key + '_field'] = () => @find(value)
 
   all: ->
@@ -49,7 +49,7 @@ class @FieldsCollection
     parentLocations
 
   datePeriods: ->
-    resolution = @fields[FieldsNames.date].dateResolution()
+    resolution = @fields[@names.date].dateResolution()
 
     has_day   =                resolution == "day" || resolution == "hour" || resolution == "minute" || resolution == "second"
     has_week  = has_day     || resolution == "week"
