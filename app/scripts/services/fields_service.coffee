@@ -191,6 +191,11 @@ angular.module('ndApp')
         fields[FieldsCollection.fieldNames.gender]?.instructions = "Select the genders of the events you want to filter"
         fields[FieldsCollection.fieldNames.result]?.instructions = "Select the results of the events you want to filter"
 
+        # Remove blacklisted fields
+        if settings.fieldsWhitelist && settings.fieldsWhitelist[resource]
+          fields = _.pick fields, (field, name) ->
+            _.includes(settings.fieldsWhitelist[resource], name)
+
         q.resolve(new FieldsCollection(fields))
 
       q.promise
