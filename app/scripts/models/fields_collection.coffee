@@ -1,18 +1,7 @@
 class @FieldsCollection
-  @fieldNames:
-    age: 'test.patient_age'
-    age_group: 'age_group'
-    date: 'test.start_time'
-    ethnicity: 'race_ethnicity'
-    gender: 'patient.gender'
-    result: 'test.assays.result'
-    assay_name: 'test.assays.name'
-    condition: 'test.assays.condition'
-    location: 'location'
-    patient_location: 'patient_location'
 
   constructor: (@fields) ->
-    _.each FieldsCollection.fieldNames, (value, key) =>
+    _.each FieldsNames, (value, key) =>
       @[key + '_field'] = () => @find(value)
 
   all: ->
@@ -60,7 +49,7 @@ class @FieldsCollection
     parentLocations
 
   datePeriods: ->
-    resolution = @fields[FieldsCollection.fieldNames.date].dateResolution()
+    resolution = @fields[FieldsNames.date].dateResolution()
 
     has_day   =                resolution == "day" || resolution == "hour" || resolution == "minute" || resolution == "second"
     has_week  = has_day     || resolution == "week"

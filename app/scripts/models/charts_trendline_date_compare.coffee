@@ -11,7 +11,7 @@ class @Charts.Trendline.DateCompareDisplay extends @Charts.Trendline.BaseDisplay
     "#{super()}, compared to previous year"
 
   getDateFilter: (filters) ->
-    _.find filters, (filter) -> filter.name == FieldsCollection.fieldNames.date
+    _.find filters, (filter) -> filter.name == FieldsNames.date
 
 
   applyToQuery: (query, filters) ->

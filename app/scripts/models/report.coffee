@@ -26,7 +26,7 @@ class @Report
 
   closeQuery: (query) ->
     # If there's no result specified, restrict result to the valid values
-    query.result ?= @fieldsCollection().find(FieldsCollection.fieldNames.result).values()
+    query.result ?= @fieldsCollection().find(FieldsNames.result).values()
 
 
   fieldOptionsFor: (fieldName) ->
@@ -51,14 +51,14 @@ class @Report
 
     for filter in @filters when !filter.allSelected()
       switch filter.name
-        when FieldsCollection.fieldNames.age_group        then ageFilter = filter
-        when FieldsCollection.fieldNames.age              then ageFilter = filter
-        when FieldsCollection.fieldNames.date             then dateFilter = filter
-        when FieldsCollection.fieldNames.ethnicity        then ethnicityFilter = filter
-        when FieldsCollection.fieldNames.gender           then genderFilter = filter
-        when FieldsCollection.fieldNames.result           then resultFilter = filter
-        when FieldsCollection.fieldNames.location         then locationFilter = filter
-        when FieldsCollection.fieldNames.patient_location then patientLocationFilter = filter
+        when FieldsNames.age_group        then ageFilter = filter
+        when FieldsNames.age              then ageFilter = filter
+        when FieldsNames.date             then dateFilter = filter
+        when FieldsNames.ethnicity        then ethnicityFilter = filter
+        when FieldsNames.gender           then genderFilter = filter
+        when FieldsNames.result           then resultFilter = filter
+        when FieldsNames.location         then locationFilter = filter
+        when FieldsNames.patient_location then patientLocationFilter = filter
         else                                              otherFilters.push filter
 
     str = ""

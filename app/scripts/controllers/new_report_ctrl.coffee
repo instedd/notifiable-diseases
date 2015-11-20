@@ -3,7 +3,7 @@ angular.module('ndApp')
     ReportsService.reportsDescriptions().then (reportsDescriptions) ->
       # TODO: Allow the user to choose resoruce
       FieldsService.loadForContext(settings.resources[0]).then (fieldsCollection) ->
-        mainField = fieldsCollection.find(FieldsCollection.fieldNames[settings.reportMainField] || settings.reportMainField)
+        mainField = fieldsCollection.find(FieldsNames[settings.reportMainField] || settings.reportMainField)
         throw "Main report field #{settings.reportMainField} should exist and be of kind enum" if not mainField? or not mainField.type == 'enum'
 
         $scope.reportsDescriptions = reportsDescriptions

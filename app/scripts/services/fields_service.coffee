@@ -49,7 +49,7 @@ class ResultField extends EnumField
     @allOptions
 
   @handles: (attrs, name) ->
-    name == FieldsCollection.fieldNames.result
+    name == FieldsNames.result
 
 class IntegerField extends Field
   constructor: (field, settings) ->
@@ -185,11 +185,11 @@ angular.module('ndApp')
         fields = buildProperties(data.properties)
 
         # Add instructions for known fields
-        fields[FieldsCollection.fieldNames.age_group]?.instructions = "Select the age groups of the events you want to filter"
-        fields[FieldsCollection.fieldNames.date]?.instructions = "Select the date range of the events you want to filter"
-        fields[FieldsCollection.fieldNames.ethnicity]?.instructions = "Select the ethnicities of the events you want to filter"
-        fields[FieldsCollection.fieldNames.gender]?.instructions = "Select the genders of the events you want to filter"
-        fields[FieldsCollection.fieldNames.result]?.instructions = "Select the results of the events you want to filter"
+        fields[FieldsNames.age_group]?.instructions = "Select the age groups of the events you want to filter"
+        fields[FieldsNames.date]?.instructions = "Select the date range of the events you want to filter"
+        fields[FieldsNames.ethnicity]?.instructions = "Select the ethnicities of the events you want to filter"
+        fields[FieldsNames.gender]?.instructions = "Select the genders of the events you want to filter"
+        fields[FieldsNames.result]?.instructions = "Select the results of the events you want to filter"
 
         # Remove blacklisted fields
         if settings.fieldsWhitelist && settings.fieldsWhitelist[resource]
