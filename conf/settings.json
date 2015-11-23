@@ -15,13 +15,21 @@
   "resources": ["tests", "encounters"],
   "fieldsWhitelist": {
     "tests": [
-      "test.assays.condition",
       "patient.gender",
       "location",
       "test.assays.result",
       "test.start_time",
       "test.status",
       "test.type"
+    ],
+    "encounters": [
+      "encounter.patient_age",
+      "encounter.age_group",
+      "encounter.start_time",
+      "patient.race_ethnicity",
+      "patient.gender",
+      "encounter.diagnosis.result",
+      "location"
     ]
   },
   "knownFields": {

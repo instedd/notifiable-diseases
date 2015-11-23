@@ -1,6 +1,6 @@
 class @FieldsCollection
 
-  constructor: (@fields, @names) ->
+  constructor: (@fields, @names, @filtersWhitelist) ->
     _.each @names, (value, key) =>
       @[key + '_field'] = () => @find(value)
 
@@ -18,8 +18,9 @@ class @FieldsCollection
     @fields[name]
 
   filterFields: ->
-    filtereableFields = _.reject @fields, (field) ->
-      field.searchable == false || (field.type == 'enum' && field.options.length <= 1)
+    filtereableFields = _.reject @fields, (field) =>
+      field.searchable == false or (field.type == 'enum' && field.options.length <= 1) or
+        (@filtersWhitelist != null and not _.includes(@filtersWhitelist, field.name))
     _.sortBy filtereableFields, (f) -> f.label.toLowerCase()
 
   multiValuedEnums: ->
