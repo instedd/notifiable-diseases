@@ -11,5 +11,51 @@
   "mapProviderUrl": "http://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}",
   "mapCenter": [48.224672, -100.371093],
   "mapBounds": [[-1.054627, -182.109375],[73.726594, -18.632812]],
-  "simplifyShapes": 0
+  "simplifyShapes": 0,
+  "resources": ["tests", "encounters"],
+  "fieldsWhitelist": {
+    "tests": [
+      "patient.gender",
+      "location",
+      "test.assays.result",
+      "test.start_time",
+      "test.status",
+      "test.type"
+    ],
+    "encounters": [
+      "encounter.patient_age",
+      "encounter.age_group",
+      "encounter.start_time",
+      "patient.race_ethnicity",
+      "patient.gender",
+      "encounter.diagnosis.result",
+      "location"
+    ]
+  },
+  "knownFields": {
+    "tests": {
+      "age": "encounter.patient_age",
+      "age_group": "encounter.age_group",
+      "date": "test.start_time",
+      "ethnicity": "patient.race_ethnicity",
+      "gender": "patient.gender",
+      "result": "test.assays.result",
+      "assay_name": "test.assays.name",
+      "condition": "test.assays.condition",
+      "location": "location",
+      "patient_location": "patient.location"
+    },
+    "encounters": {
+      "age": "encounter.patient_age",
+      "age_group": "encounter.age_group",
+      "date": "encounter.start_time",
+      "ethnicity": "patient.race_ethnicity",
+      "gender": "patient.gender",
+      "result": "encounter.diagnosis.result",
+      "assay_name": "encounter.diagnosis.name",
+      "condition": "encounter.diagnosis.condition",
+      "location": "location",
+      "patient_location": "patient.location"
+    }
+  }
 }

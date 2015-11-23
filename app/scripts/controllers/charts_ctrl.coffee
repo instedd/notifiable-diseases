@@ -8,10 +8,16 @@ angular.module('ndApp')
       $scope.addNewChartIsCollapsed = !$scope.addNewChartIsCollapsed
 
     $scope.showChart = (chart_name) ->
-      chart_name != 'Map' || settings.enableMapChart
+      return false unless $scope.currentReport
+      fieldsCollection = $scope.currentReport.fieldsCollection()
+      switch chart_name
+        when 'Map' then settings.enableMapChart && fieldsCollection.allLocation().length > 0
+        when 'Trendline' then true
+        when 'PopulationPyramid' then fieldsCollection.age_field() && fieldsCollection.gender_field()
+        else throw new "Unknown chart type #{chart_name}"
 
     $scope.addChart = (kind) ->
-      chart = ChartsService.create kind, $scope.currentReport.fieldsCollection()
+      chart = ChartsService.create kind, $scope.currentReport.resource, $scope.currentReport.fieldsCollection()
       $scope.currentReport.addChart chart
       $scope.toggleAddNewChart()
 

@@ -15,6 +15,14 @@
         <textarea id="description" rows="3" cols="60" ng-model="report.description"></textarea>
       </div>
       <br />
+      <div ng-show="resourceOptions.length > 1">
+        <label for="resource">Resource</label>
+        <br/>
+        <select id="resource" ng-model="resource">
+          <option ng-repeat="option in resourceOptions" value="{{option.value}}">{{option.label}}</option>
+        </select>
+      </div>
+      <br />
       <div>
         <label for="mainValue">{{mainLabel}}</label>
         <br/>

@@ -56,8 +56,9 @@ angular.module('ndApp')
           return
 
         context = ReportsService.getContext(reportData)
+        resource = ReportsService.getResource(reportData)
 
-        FieldsService.loadForContext(context).then (fieldsCollection) ->
+        FieldsService.loadForContext(resource, context).then (fieldsCollection) ->
           [$scope.currentReport, currentReportVersion] = ReportsService.deserialize(reportData, fieldsCollection)
           $scope.fieldsInfo =
             fields: fieldsCollection.all()

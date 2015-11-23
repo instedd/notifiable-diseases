@@ -11,7 +11,7 @@ class @Charts.Trendline.DateCompareDisplay extends @Charts.Trendline.BaseDisplay
     "#{super()}, compared to previous year"
 
   getDateFilter: (filters) ->
-    _.find filters, (filter) -> filter.name == FieldsCollection.fieldNames.date
+    _.find filters, (filter) -> filter.name == @trendline.fieldsCollection().names.date
 
 
   applyToQuery: (query, filters) ->
@@ -29,8 +29,8 @@ class @Charts.Trendline.DateCompareDisplay extends @Charts.Trendline.BaseDisplay
 
 
   getSeries: (report, data) ->
-    datapoints = @sortData(data[0].tests)
-    denominators = if @values == 'percentage' and data.length > 0 then @sortData(data[1].tests) else null
+    datapoints = @sortData(data[0][@resource])
+    denominators = if @values == 'percentage' and data.length > 0 then @sortData(data[1][@resource]) else null
 
     positives = if denominators then @getRates(datapoints, denominators) else datapoints
     @getDateCompareSeries(report, positives)

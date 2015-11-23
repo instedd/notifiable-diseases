@@ -21,11 +21,11 @@ class @Charts.Trendline.SplitDisplay extends @Charts.Trendline.BaseDisplay
 
   getSeries: (report, data) ->
     datapoints = if @values == 'percentage' and data.length > 0
-      positives = @sortSplitData data[0].tests
-      denominators = @sortSplitData data[1].tests
+      positives = @sortSplitData data[0][@resource]
+      denominators = @sortSplitData data[1][@resource]
       @getRates(positives, denominators)
     else
-      @sortSplitData data[0].tests
+      @sortSplitData data[0][@resource]
 
     @getSplitSeries(report, datapoints)
 

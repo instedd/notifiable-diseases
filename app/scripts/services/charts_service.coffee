@@ -1,9 +1,9 @@
 angular.module('ndApp')
   .service 'ChartsService', (settings) ->
-    create: (klass, fieldsCollection) ->
-      chart = new Charts[klass](fieldsCollection)
+    create: (klass, resource, fieldsCollection) ->
+      chart = new Charts[klass](resource, fieldsCollection)
       chart
 
-    deserialize: (chartData, fieldsCollection) ->
-      new Charts[chartData.kind](fieldsCollection).initializeFrom(chartData)
+    deserialize: (chartData, resource, fieldsCollection) ->
+      new Charts[chartData.kind](resource, fieldsCollection).initializeFrom(chartData)
 

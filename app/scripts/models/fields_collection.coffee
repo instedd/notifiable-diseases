@@ -1,18 +1,7 @@
 class @FieldsCollection
-  @fieldNames:
-    age: 'test.patient_age'
-    age_group: 'age_group'
-    date: 'test.start_time'
-    ethnicity: 'race_ethnicity'
-    gender: 'patient.gender'
-    result: 'test.assays.result'
-    assay_name: 'test.assays.name'
-    condition: 'test.assays.condition'
-    location: 'location'
-    patient_location: 'patient_location'
 
-  constructor: (@fields) ->
-    _.each FieldsCollection.fieldNames, (value, key) =>
+  constructor: (@fields, @names, @filtersWhitelist) ->
+    _.each @names, (value, key) =>
       @[key + '_field'] = () => @find(value)
 
   all: ->
@@ -29,8 +18,9 @@ class @FieldsCollection
     @fields[name]
 
   filterFields: ->
-    filtereableFields = _.reject @fields, (field) ->
-      field.searchable == false || (field.type == 'enum' && field.options.length <= 1)
+    filtereableFields = _.reject @fields, (field) =>
+      field.searchable == false or (field.type == 'enum' && field.options.length <= 1) or
+        (@filtersWhitelist != null and not _.includes(@filtersWhitelist, field.name))
     _.sortBy filtereableFields, (f) -> f.label.toLowerCase()
 
   multiValuedEnums: ->
@@ -60,7 +50,7 @@ class @FieldsCollection
     parentLocations
 
   datePeriods: ->
-    resolution = @fields[FieldsCollection.fieldNames.date].dateResolution()
+    resolution = @fields[@names.date].dateResolution()
 
     has_day   =                resolution == "day" || resolution == "hour" || resolution == "minute" || resolution == "second"
     has_week  = has_day     || resolution == "week"

@@ -68,9 +68,12 @@ angular.module('ndApp').service 'LocalReportsService', (localStorageService, set
       context[data.mainField] = data.mainValue
       context
 
+    getResource: (data) ->
+      data.resource
+
     deserialize: (data, fieldsCollection) ->
       data.filters = _.map data.filters, (filterData) -> FiltersService.deserialize(filterData, fieldsCollection)
-      data.charts = _.map data.charts, (chartData) -> ChartsService.deserialize(chartData, fieldsCollection)
+      data.charts = _.map data.charts, (chartData) -> ChartsService.deserialize(chartData, data.resource, fieldsCollection)
       report = new Report(fieldsCollection).initializeFrom(data)
       [report, null]
 

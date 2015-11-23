@@ -1,7 +1,8 @@
 class @Report
-  constructor: (fieldsCollection) ->
+  constructor: (fieldsCollection, resource) ->
     @filters = []
     @charts  = []
+    @resource = resource
     @fieldsCollection = () -> fieldsCollection
 
   addFilter: (filter) ->
@@ -20,17 +21,19 @@ class @Report
   newQuery: ->
     query = {page_size: 0}
     query[@mainField] = @mainValue
+    query.resource = @resource
     query
 
   closeQuery: (query) ->
     # If there's no result specified, restrict result to the valid values
-    query.result ?= @fieldsCollection().find(FieldsCollection.fieldNames.result).values()
+    resultFieldName = @fieldsCollection().names.result
+    query.result ?= @fieldsCollection().find(resultFieldName).values()
 
   fieldOptionsFor: (fieldName) ->
     @fieldsCollection().optionsFor(fieldName)
 
   duplicate: ->
-    dup = new Report(@fieldsCollection())
+    dup = new Report(@fieldsCollection(), @resource)
     dup.name = "#{@name} (duplicate)"
     dup.description = @description
     dup.mainValue = @mainValue
@@ -41,21 +44,22 @@ class @Report
 
   fullDescription: ->
     if @filters.length == 0
-      return "All cases"
+      return "All #{@resourceTitle()}"
 
     # TODO: other filters is always empty for now, so it's not used
     otherFilters = []
 
+    names = @fieldsCollection().names
     for filter in @filters when !filter.allSelected()
       switch filter.name
-        when FieldsCollection.fieldNames.age_group        then ageFilter = filter
-        when FieldsCollection.fieldNames.age              then ageFilter = filter
-        when FieldsCollection.fieldNames.date             then dateFilter = filter
-        when FieldsCollection.fieldNames.ethnicity        then ethnicityFilter = filter
-        when FieldsCollection.fieldNames.gender           then genderFilter = filter
-        when FieldsCollection.fieldNames.result           then resultFilter = filter
-        when FieldsCollection.fieldNames.location         then locationFilter = filter
-        when FieldsCollection.fieldNames.patient_location then patientLocationFilter = filter
+        when names.age_group        then ageFilter = filter
+        when names.age              then ageFilter = filter
+        when names.date             then dateFilter = filter
+        when names.ethnicity        then ethnicityFilter = filter
+        when names.gender           then genderFilter = filter
+        when names.result           then resultFilter = filter
+        when names.location         then locationFilter = filter
+        when names.patient_location then patientLocationFilter = filter
         else                                              otherFilters.push filter
 
     str = ""
@@ -76,9 +80,9 @@ class @Report
       first = false
 
     if str.length == 0
-      str += "Cases "
+      str += "#{@resourceTitle()} "
     else
-      str += " cases "
+      str += " #{@resourceName()} "
 
     if resultFilter
       str += " of "
@@ -123,9 +127,16 @@ class @Report
     @description = data.description
     @mainField = data.mainField
     @mainValue = data.mainValue
+    @resource = data.resource || 'tests' # Default option for backwards compatibility
     @filters = data.filters || []
     @charts = data.charts || []
     @
+
+  resourceName: () ->
+    @resource
+
+  resourceTitle: () ->
+    _.capitalize(@resourceName())
 
   toJSON: ->
     {
@@ -134,6 +145,7 @@ class @Report
       description: @description
       mainValue: @mainValue
       mainField: @mainField
+      resource: @resource
       filters: _.map @filters, (f) -> f.toJSON()
       charts: _.map @charts, (c) -> c.toJSON()
     }

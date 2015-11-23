@@ -3,8 +3,9 @@
 class @Charts.Trendline.BaseDisplay
 
   constructor: (@trendline) ->
-    @timeField = FieldsCollection.fieldNames.date
-    @dateGrouping = "#{@trendline.grouping}(#{FieldsCollection.fieldNames.date})"
+    @resource = @trendline.resource
+    @timeField = @trendline.fieldsCollection().names.date
+    @dateGrouping = "#{@trendline.grouping}(#{@timeField})"
     @denominatorFor = (q) -> @trendline.denominatorFor(q)
     @numeratorFor = (q) -> @trendline.numeratorFor(q)
     @values = @trendline.values
@@ -80,7 +81,7 @@ class @Charts.Trendline.BaseDisplay
     cols = series.cols
     intervalFormat = @intervalFormat()
 
-    dateFilter = report.findFilter FieldsCollection.fieldNames.date
+    dateFilter = report.findFilter @timeField
     if dateFilter
 
       sinceDate = moment(dateFilter.since).format(intervalFormat)

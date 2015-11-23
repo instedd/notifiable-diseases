@@ -2,7 +2,7 @@
 
 class @Charts.Base
 
-  constructor: (fieldsCollection) ->
+  constructor: (@resource, fieldsCollection) ->
     @fieldsCollection = () -> fieldsCollection
     @validResults = _.map fieldsCollection.result_field().validResults(), 'value'
     @positiveResults = _.map fieldsCollection.result_field().positiveResults(), 'value'
