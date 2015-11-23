@@ -127,7 +127,7 @@ class @Report
     @description = data.description
     @mainField = data.mainField
     @mainValue = data.mainValue
-    @resource = data.resource
+    @resource = data.resource || 'tests' # Default option for backwards compatibility
     @filters = data.filters || []
     @charts = data.charts || []
     @
