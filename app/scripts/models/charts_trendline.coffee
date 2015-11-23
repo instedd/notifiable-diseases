@@ -1,8 +1,8 @@
 @Charts ?= {}
 
 class @Charts.Trendline extends @Charts.Base
-  constructor: (fieldsCollection) ->
-    super(fieldsCollection)
+  constructor: (resource, fieldsCollection) ->
+    super(resource, fieldsCollection)
     @kind = 'Trendline'
     @display = 'simple'
     @grouping = 'year'

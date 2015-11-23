@@ -3,6 +3,7 @@
 class @Charts.Trendline.BaseDisplay
 
   constructor: (@trendline) ->
+    @resource = @trendline.resource
     @timeField = @trendline.fieldsCollection().names.date
     @dateGrouping = "#{@trendline.grouping}(#{@timeField})"
     @denominatorFor = (q) -> @trendline.denominatorFor(q)

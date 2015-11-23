@@ -6,8 +6,8 @@ class @Charts.Map extends @Charts.Base
     upper: 40
   }
 
-  constructor: (fieldsCollection) ->
-    super(fieldsCollection)
+  constructor: (resource, fieldsCollection) ->
+    super(resource, fieldsCollection)
     @kind = 'Map'
     @mappingField = fieldsCollection.allLocation()[0]?.name
     @thresholds = default_thresholds
@@ -42,8 +42,8 @@ class @Charts.Map extends @Charts.Base
     [@numeratorFor(query), @denominatorFor(query)]
 
   getSeries: (report, data) =>
-    positives = data[0].tests
-    denominators = data[1].tests
+    positives = data[0][@resource]
+    denominators = data[1][@resource]
 
     positivesById = _.indexBy positives, @mappingField
     _.each denominators, (node) =>

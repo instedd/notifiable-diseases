@@ -29,8 +29,8 @@ class @Charts.Trendline.DateCompareDisplay extends @Charts.Trendline.BaseDisplay
 
 
   getSeries: (report, data) ->
-    datapoints = @sortData(data[0].tests)
-    denominators = if @values == 'percentage' and data.length > 0 then @sortData(data[1].tests) else null
+    datapoints = @sortData(data[0][@resource])
+    denominators = if @values == 'percentage' and data.length > 0 then @sortData(data[1][@resource]) else null
 
     positives = if denominators then @getRates(datapoints, denominators) else datapoints
     @getDateCompareSeries(report, positives)

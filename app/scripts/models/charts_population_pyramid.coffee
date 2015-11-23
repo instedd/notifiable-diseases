@@ -3,8 +3,8 @@
 class @Charts.PopulationPyramid extends @Charts.Base
   AGE_GROUPS = ["..6mo", "6mo..2y", "2y..4y", "5y..8y", "9y..17y", "18y..24y", "25y..49y", "50y..64y", "65y..74y", "75y..84y", "85y.."]
 
-  constructor: (fieldsCollection) ->
-    super(fieldsCollection)
+  constructor: (resource, fieldsCollection) ->
+    super(resource, fieldsCollection)
     @kind = 'PopulationPyramid'
     @ageField = fieldsCollection.age_field()
     @genderField = fieldsCollection.gender_field()
@@ -30,7 +30,7 @@ class @Charts.PopulationPyramid extends @Charts.Base
     _.find report.filters, name: @ageField.name
 
   getSeries: (report, datas) ->
-    data = datas[0].tests
+    data = datas[0][@resource]
     field = @ageField
 
     # create the age groups from the age_group enumerated options and then
@@ -47,7 +47,7 @@ class @Charts.PopulationPyramid extends @Charts.Base
 
     # Set denominators for all counts
     if @values == 'percentage' and datas[1]
-      _.forEach datas[1].tests, (item) =>
+      _.forEach datas[1][@resource], (item) =>
         [age, gender] = @ageGenderFor(item)
         if groups[age] and groups[age][gender] and item.count > 0
           groups[age][gender].value /= item.count
