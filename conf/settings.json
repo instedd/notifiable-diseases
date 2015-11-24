@@ -1,6 +1,6 @@
 {
   "brand": "Notifiable Diseases",
-  "api": "/cdx/v1",
+  "api": "/api",
   "store": "/store",
   "useLocalStorage": false,
   "replaceParentURLHash": false,

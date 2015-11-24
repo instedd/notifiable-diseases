@@ -8,3 +8,4 @@ bower_components
 
 conf/settings.local.json
 conf/custom.local.scss
+conf/main.local.css

@@ -16,20 +16,14 @@ module.exports = function (grunt) {
   require('time-grunt')(grunt);
 
   // Manually load settings files and merge them
-  var merge = require('merge');
-  var appSettings = merge(
-    grunt.file.readJSON('conf/settings.json'),
-    grunt.file.exists('conf/settings.local.json') ? grunt.file.readJSON('conf/settings.local.json') : {},
-    grunt.option('settings') ? grunt.file.readJSON(grunt.option('settings')) : {}
-  );
+  var appSettings = grunt.file.readJSON(grunt.option('settings') || 'conf/settings.json');
 
   // Configurable paths for the application
   var appConfig = {
     app: require('./bower.json').appPath || 'app',
     dist: require('./bower.json').distPath || 'dist',
     sassDir: '.tmp/.build/styles',
-    customStyles: grunt.option('custom-styles') || appSettings.customStyles,
-    settings: appSettings,
+    customStyles: grunt.option('custom-styles')
   };
 
   // Snippet for proxy configuration
@@ -46,6 +40,14 @@ module.exports = function (grunt) {
       sassTemplates: {
         files: ['<%= yeoman.app %>/styles/{,*/}*.scss.ejs'],
         tasks: ['copy:styleTemplates']
+      },
+      cssOverrides: {
+        files: ['conf/*.css'],
+        tasks: ['copy:cssOverrides']
+      },
+      settingsOverrides: {
+        files: ['conf/settings.*'],
+        tasks: ['copy:settingsOverrides']
       },
       settings: {
         files: ['conf/*.json'],
@@ -87,10 +89,14 @@ module.exports = function (grunt) {
         hostname: 'localhost',
         livereload: 35729
       },
-      proxies: appConfig.settings.proxies,
+      proxies: [{
+        "context": grunt.option('proxy.context') || '/api',
+        "host": grunt.option('proxy.host') || 'localhost',
+        "port": grunt.option('proxy.port') || 3000
+      }],
       livereload: {
         options: {
-          open: true,
+          open: false,
           middleware: function (connect) {
             return [
               connect.static('.tmp'),
@@ -401,6 +407,22 @@ module.exports = function (grunt) {
             }
         }
       },
+      settingsOverrides: {
+        src: 'etc/overrides.tpl.ejs',
+        dest: '<%= (grunt.task.current.args[0] == "dist") ? yeoman.dist : ".tmp" %>/scripts/overrides.js',
+        options: {
+          process: function(content, srcPath) {
+            var overrides = grunt.file.exists('conf/settings.local.json') ? grunt.file.readJSON('conf/settings.local.json') : {};
+            return grunt.template.process(content, {data: {overrides: overrides}, delimiters: 'ngconstant'});
+          }
+        }
+      },
+      cssOverrides: {
+        files:[{
+          src: 'conf/main.local.css',
+          dest: '<%= (grunt.task.current.args[0] == "dist") ? yeoman.dist : ".tmp" %>/styles/overrides.css',
+        }]
+      },
       dist: {
         files: [{
           expand: true,
@@ -440,6 +462,13 @@ module.exports = function (grunt) {
       }
     },
 
+    // Create empty overrides css if main.local.css if not present
+    touch: {
+      cssOverrides: {
+        src: '<%= (grunt.task.current.args[0] == "dist") ? yeoman.dist : ".tmp" %>/styles/overrides.css'
+      }
+    },
+
     // Run some tasks in parallel to speed up the build process
     concurrent: {
       server: [
@@ -470,6 +499,7 @@ module.exports = function (grunt) {
       options: {
         name: 'config',
         dest: '.tmp/scripts/config.js',
+        template: grunt.file.read('etc/constant.overridden.tpl.ejs'),
         constants: {
           settings : appSettings
         }
@@ -499,6 +529,18 @@ module.exports = function (grunt) {
 
   grunt.loadNpmTasks('grunt-ng-constant');
 
+  grunt.registerTask('overrides', [
+    'copy:cssOverrides',
+    'touch:cssOverrides',
+    'copy:settingsOverrides'
+  ]);
+
+  grunt.registerTask('overrides-dist', [
+    'copy:cssOverrides:dist',
+    'touch:cssOverrides:dist',
+    'copy:settingsOverrides:dist'
+  ]);
+
   grunt.registerTask('serve', 'Compile then start a connect web server', function (target) {
     if (target === 'dist') {
       return grunt.task.run(['build', 'connect:dist:keepalive']);
@@ -507,6 +549,7 @@ module.exports = function (grunt) {
     grunt.task.run([
       'clean:server',
       'copy:styleTemplates',
+      'overrides',
       'ngconstant',
       'configureProxies',
       'wiredep',
@@ -545,6 +588,7 @@ module.exports = function (grunt) {
     'cdnify',
     'cssmin',
     'uglify',
+    'overrides-dist',
     'filerev',
     'usemin',
     'replace:dist',

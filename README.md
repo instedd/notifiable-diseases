@@ -87,7 +87,7 @@ Additionally, notifiable diseases can be configured to store user's saved report
 
 ## Configuration
 
-Application settings are configured in `conf/settings.json`; these settings are merged with the contents of `conf/settings.local.json`, and are further merged with the contens of a file specified as `--settings=PATH` when running `grunt`.
+Application settings are configured in `conf/settings.json` or the path specified as `--settings=SETTINGS_JSON_PATH`; these settings are merged with the contents of `conf/settings.local.json`.
 
 * `brand` Title to display in the application
 * `api` Endpoint to the CDX API
@@ -100,9 +100,20 @@ Application settings are configured in `conf/settings.json`; these settings are 
 * `customStyles` Path to an additional SCSS to be appended to the application's, use to customise the app look and feel
 * `proxies` Used in development for proxying requests to the back end server
 
+### Overrides
+
+After NNDD is built, settings and styles can be respectively overridden by injecting files `scripts/overrides.js` and `styles/overrides.css`. The latter is any CSS style to be included after the application main stylesheet, while the former needs to adhere to the following format:
+
+```js
+window.overrides = {
+  brand: "My brand"
+  // etc ...
+};
+```
+
 ### Development configuration
 
-A sample development configuration file is included here, where the API, remote storage and polygons are proxied to a backend server running locally in port 3000, and a set of custom styles is added in `conf/custom.local.scss`.
+A sample development configuration file is included here:
 
 ```json
 {
@@ -116,26 +127,11 @@ A sample development configuration file is included here, where the API, remote 
       "1": "/polygons/states.topo.json",
       "2": "/polygons/counties.topo.json"
     }
-  },
-  "proxies": [
-    {
-      "context": "/cdx/v1",
-      "host": "localhost",
-      "port": 3000
-    },
-    {
-      "context": "/store",
-      "host": "localhost",
-      "port": 3000
-    },
-    {
-      "context": "/polygons",
-      "host": "localhost",
-      "port": 3000
-    }
-  ]
+  }
 }
 ```
+
+By default, grunt development server will proxy all requests to `/api` to `localhost:3000`; you can tune this via the `proxy.context`, `proxy.host` and `proxy.port` grunt options.
 
 ### Map charts
 
