@@ -408,18 +408,14 @@ module.exports = function (grunt) {
         }
       },
       settingsOverrides: {
-        src: 'etc/overrides.tpl.ejs',
-        dest: '<%= (grunt.task.current.args[0] == "dist") ? yeoman.dist : ".tmp" %>/scripts/overrides.js',
-        options: {
-          process: function(content, srcPath) {
-            var overrides = grunt.file.exists('conf/settings.local.json') ? grunt.file.readJSON('conf/settings.local.json') : {};
-            return grunt.template.process(content, {data: {overrides: overrides}, delimiters: 'ngconstant'});
-          }
-        }
+        files:[{
+          src: 'conf/overrides.js',
+          dest: '<%= (grunt.task.current.args[0] == "dist") ? yeoman.dist : ".tmp" %>/scripts/overrides.js',
+        }]
       },
       cssOverrides: {
         files:[{
-          src: 'conf/main.local.css',
+          src: 'conf/overrides.css',
           dest: '<%= (grunt.task.current.args[0] == "dist") ? yeoman.dist : ".tmp" %>/styles/overrides.css',
         }]
       },
@@ -466,6 +462,9 @@ module.exports = function (grunt) {
     touch: {
       cssOverrides: {
         src: '<%= (grunt.task.current.args[0] == "dist") ? yeoman.dist : ".tmp" %>/styles/overrides.css'
+      },
+      settingsOverrides: {
+        src: '<%= (grunt.task.current.args[0] == "dist") ? yeoman.dist : ".tmp" %>/scripts/overrides.js'
       }
     },
 
@@ -532,13 +531,15 @@ module.exports = function (grunt) {
   grunt.registerTask('overrides', [
     'copy:cssOverrides',
     'touch:cssOverrides',
-    'copy:settingsOverrides'
+    'copy:settingsOverrides',
+    'touch:settingsOverrides'
   ]);
 
   grunt.registerTask('overrides-dist', [
     'copy:cssOverrides:dist',
     'touch:cssOverrides:dist',
-    'copy:settingsOverrides:dist'
+    'copy:settingsOverrides:dist',
+    'touch:settingsOverrides:dist'
   ]);
 
   grunt.registerTask('serve', 'Compile then start a connect web server', function (target) {
@@ -588,8 +589,8 @@ module.exports = function (grunt) {
     'cdnify',
     'cssmin',
     'uglify',
-    'overrides-dist',
     'filerev',
+    'overrides-dist',
     'usemin',
     'replace:dist',
     'htmlmin'

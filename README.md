@@ -89,7 +89,7 @@ Additionally, notifiable diseases can be configured to store user's saved report
 
 ## Configuration
 
-Application settings are configured in `conf/settings.json` or the path specified as `--settings=SETTINGS_JSON_PATH`; these settings are merged with the contents of `conf/settings.local.json`.
+Application settings are configured in `conf/settings.json` or the path specified as `--settings=SETTINGS_JSON_PATH`:
 
 * `brand` Title to display in the application
 * `api` Endpoint to the CDX API
@@ -112,6 +112,8 @@ window.overrides = {
   // etc ...
 };
 ```
+
+These overrides work in development mode as well.
 
 ### Development configuration
 
