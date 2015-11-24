@@ -1,5 +1,7 @@
 # Notifiable Diseases
 
+[![Build Status](https://travis-ci.org/instedd/notifiable-diseases.svg?branch=master)](https://travis-ci.org/instedd/notifiable-diseases)
+
 Notifiable diseases is a client-side only dashboard that enables users to create their own reports from a [CDX API](http://dxapi.org/) compatible source.
 
 ## Development setup
