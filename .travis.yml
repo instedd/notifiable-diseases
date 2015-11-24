@@ -18,3 +18,4 @@ deploy:
   on:
     repo: instedd/notifiable-diseases
     tags: true
+    branch: master
