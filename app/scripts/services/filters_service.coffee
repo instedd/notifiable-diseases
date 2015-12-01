@@ -20,5 +20,7 @@ angular.module('ndApp')
             Filters.LocationFilter
           when "integer"
             Filters.IntegerFilter
+          when "duration"
+            Filters.DurationFilter
           else
             throw "Unknown field type: #{type}"

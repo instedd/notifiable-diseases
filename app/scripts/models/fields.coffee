@@ -156,7 +156,6 @@ class @DateField extends Field
 class @DurationField extends Field
   constructor: (field, settings) ->
     @type = 'duration'
-    field.searchable = false
     super(field)
 
   @handles: (attrs) ->
