@@ -57,8 +57,7 @@ angular.module('ndApp')
 
         context = ReportsService.getContext(reportData)
 
-        FieldsService.loadForContext(context)\
-        .then((fieldsCollection) ->
+        FieldsService.loadForContext(context).then((fieldsCollection) ->
           [$scope.currentReport, currentReportVersion] = ReportsService.deserialize(reportData, fieldsCollection)
           $scope.fieldsInfo =
             fields: fieldsCollection.all()
@@ -67,19 +66,8 @@ angular.module('ndApp')
             multiValuedEnumFields: fieldsCollection.multiValuedEnums()
             datePeriods: fieldsCollection.datePeriods()
 
+          $scope.assay = $scope.currentReport.mainValue.label
           $scope.$watch 'currentReport', debounce(saveCurrentReport, 300), true
-        )\
-        .then( ->
-          # 
-          # Get assay label only after $scope.currentReport has been set
-          # 
-          # TO-DO: We shouldn't need to perform a request to the field service
-          # only to get the assay label. It should probably be part of the report
-          # object.
-          #
-          FieldsService.loadForContext().then (fieldsCollection) ->
-            mainField = fieldsCollection.fields[$scope.currentReport.mainField]
-            $scope.assay = mainField.labelFor($scope.currentReport.mainValue)
         )
 
 

@@ -19,7 +19,7 @@ class @Report
 
   newQuery: ->
     query = {page_size: 0}
-    query[@mainField] = @mainValue
+    query[@mainField] = @mainValue.value
     query
 
   closeQuery: (query) ->

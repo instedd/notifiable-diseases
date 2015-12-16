@@ -19,7 +19,7 @@
         <div>
           <label for="mainValue">{{mainLabel}}</label>
           <br/>
-          <select id="mainValue" name="mainValue" ng-model="report.mainValue" ng-options="option.value as option.label for option in options" required>
+          <select id="mainValue" name="mainValue" ng-model="report.mainValue" ng-options="option as option.label for option in options" required>
             <option value="">Select one</option>
           </select>
           (Events: {{events}})
