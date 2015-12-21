@@ -76,13 +76,14 @@ class @Charts.Map extends @Charts.Base
     location_filter = _.find(filters, name: @mappingField)
 
     filtered_level = location_filter && location_filter.adminLevel()
-    if (filtered_level)
+    # Oh, JavaScript, you grew so beautifully brokenly
+    if (filtered_level || filtered_level == 0)
       if location_filter.hasChildren()
         filtered_level + 1
       else
         filtered_level
     else
-      drawn_level = 1
+      drawn_level = 0
 
   startRendering: (q) ->
     @renderingDeferred = q.defer()

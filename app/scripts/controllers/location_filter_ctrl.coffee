@@ -43,6 +43,6 @@ angular.module('ndApp')
         id = $(element).val()
 
         if id != "" && (location = locationById(id))
-          $scope.filter.location = id: location.id, name: location.name, level: location.level
+          $scope.filter.location = location
           callback(id: location.id, text: fullPath(location))
 
