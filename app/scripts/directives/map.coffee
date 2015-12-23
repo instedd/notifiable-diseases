@@ -166,7 +166,10 @@ class MapWidget
     L.divIcon { className: "nd-map-marker #{color}" }
 
   on_each_feature: (feature, layer) =>
-    layer_center = layer.getBounds().getCenter()
+    if feature.properties["CENTER_LNG"] && feature.properties["CENTER_LAT"] 
+      layer_center = L.latLng(feature.properties["CENTER_LAT"], feature.properties["CENTER_LNG"])
+    else    
+      layer_center = layer.getBounds().getCenter()
 
     popup_content = "
     <b>#{feature.properties.NAME} #{(feature.properties.percentage * 100).toFixed(2)}%</b><br/>
