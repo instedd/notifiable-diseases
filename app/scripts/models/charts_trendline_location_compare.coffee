@@ -36,7 +36,7 @@ class @Charts.Trendline.LocationCompareDisplay extends @Charts.Trendline.BaseDis
 
 
   getSeries: (report, data) ->
-    sortedData = _.map(data, (d) => @sortData(d.events))
+    sortedData = _.map(data, (d) => @sortData(d[@resource]))
     if @values == 'percentage' && sortedData.length > 2
       thisLocationRates =  @getRates(sortedData[0], sortedData[2])
       otherLocationRates = @getRates(sortedData[1], sortedData[3])
