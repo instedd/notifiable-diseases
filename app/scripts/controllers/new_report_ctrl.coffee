@@ -17,8 +17,12 @@ angular.module('ndApp')
           $scope.options = mainField.options
           $scope.report = new Report(fieldsCollection, $scope.resource)
           $scope.report.mainField = mainField.name
-          $scope.report.mainValue = $scope.options[0].value
+          # $scope.report.mainOption property is not persisted.
+          # It is added to set the selected value in a friendly ng-options way
+          # and $scope.report.mainValue is in sync with it.
+          $scope.report.mainOption = $scope.options[0]
           $scope.events = "..."
+          computeCount()
 
       computeCount = ->
         return if not $scope.report
@@ -35,4 +39,7 @@ angular.module('ndApp')
 
       $scope.$watch 'resource', resourceSelected
       $scope.$watch 'report.mainValue', computeCount
+      $scope.$watch 'report.mainOption', ->
+        $scope.report.mainValue = $scope.report.mainOption.value
+
 
