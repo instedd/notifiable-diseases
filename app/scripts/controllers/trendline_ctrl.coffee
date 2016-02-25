@@ -15,6 +15,8 @@ angular.module('ndApp')
         title: $scope.chart.description($scope.currentReport)
         isStacked: true
         width: '100%'
+        chartArea:
+          width: '50%'
         height: 320
         vAxis:
           title: "Event count"
