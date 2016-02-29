@@ -40,6 +40,7 @@ angular.module('ndApp')
       $scope.$watch 'resource', resourceSelected
       $scope.$watch 'report.mainValue', computeCount
       $scope.$watch 'report.mainOption', ->
-        $scope.report.mainValue = $scope.report.mainOption.value
+        if $scope.report
+          $scope.report.mainValue = $scope.report.mainOption.value
 
 
