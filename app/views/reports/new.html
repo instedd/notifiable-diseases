@@ -26,7 +26,8 @@
       <div>
         <label for="mainValue">{{mainLabel}}</label>
         <br/>
-        <select id="mainValue" ng-model="report.mainOption" ng-options="option.label for option in options" />
+        <select id="mainValue" ng-model="report.mainOption" ng-options="option.label for option in options">
+        </select>
         (Events: {{events}})
       </div>
       <br/>
