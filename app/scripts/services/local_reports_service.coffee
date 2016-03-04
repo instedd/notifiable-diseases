@@ -57,7 +57,7 @@ angular.module('ndApp').service 'LocalReportsService', (localStorageService, set
 
     getContext: (data) ->
       context = {}
-      context[data.mainField] = data.mainValue
+      context[data.mainField] = data.mainValue.value
       context
 
     deserialize: (data, fieldsCollection) ->
