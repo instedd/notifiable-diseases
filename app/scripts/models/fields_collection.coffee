@@ -2,7 +2,7 @@ class @FieldsCollection
   @fieldNames:
     age: 'age'
     age_group: 'age_group'
-    date: 'start_time'
+    date: 'lab_start_date'
     ethnicity: 'race_ethnicity'
     gender: 'gender'
     result: 'result'
