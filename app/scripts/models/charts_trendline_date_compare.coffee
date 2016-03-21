@@ -42,7 +42,7 @@ class @Charts.Trendline.DateCompareDisplay extends @Charts.Trendline.BaseDisplay
     # First, index data by start_time
     indexedData = {}
     for event in data
-      indexedData[event.start_time] = event[countField]
+      indexedData[@date(event)] = event[countField]
 
     intervalFormat = @intervalFormat()
 
@@ -63,7 +63,7 @@ class @Charts.Trendline.DateCompareDisplay extends @Charts.Trendline.BaseDisplay
     # previous year and one for the current one
     rows = []
     for event in data
-      date = event.start_time
+      date = @date(event)
       currentDate = @moment(date)
 
       previousDate = moment(currentDate).add(-1, 'years').format(intervalFormat)

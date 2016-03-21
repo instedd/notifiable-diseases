@@ -25,8 +25,8 @@ class @Charts.Trendline.BaseDisplay
     cols:
       ["Events"]
     rows:
-      _.map @getRates(data, denominators), (value) ->
-        [value.start_time, (if denominators? then value.rate else value.count)]
+      _.map @getRates(data, denominators), (value) =>
+        [@date(value), (if denominators? then value.rate else value.count)]
 
   getRates: (positives, denominators) ->
     return positives if not denominators?
@@ -39,12 +39,12 @@ class @Charts.Trendline.BaseDisplay
       positive = positives[positivesIndex]
       denominator = denominators[denominatorsIndex]
 
-      if not positive? or positive.start_time > denominator.start_time
+      if not positive? or @date(positive) > @date(denominator)
         denominatorsIndex++
-      else if positive.start_time == denominator.start_time
+      else if @date(positive) == @date(denominator)
         positive.rate = if denominator.count == 0 then 0 else positive.count / denominator.count
         positivesIndex++
-      else if positive.start_time < denominator.start_time
+      else if @date(positive) < @date(denominator)
         positivesIndex++
 
     return positives
@@ -53,12 +53,16 @@ class @Charts.Trendline.BaseDisplay
   fieldsCollection: () ->
     @trendline.fieldsCollection()
 
+  date: (event) ->
+    date_field = @fieldsCollection().date_field()
+    event[date_field.name]
+
   sortData: (data) ->
     return null if not data?
     data.sort (x, y) =>
-      if x.start_time < y.start_time
+      if @date(x) < @date(y)
         -1
-      else if x.start_time > y.start_time
+      else if @date(x) > @date(y)
         1
       else
         0

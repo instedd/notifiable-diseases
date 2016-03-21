@@ -66,24 +66,24 @@ class @Charts.Trendline.LocationCompareDisplay extends @Charts.Trendline.BaseDis
         break
 
       if thisData && !otherData
-        rows.push [thisData.start_time, thisData[countField], 0]
+        rows.push [@date(thisData), thisData[countField], 0]
         thisIndex += 1
       else if otherData && !thisData
-        rows.push [otherData.start_time, 0, otherData[countField]]
+        rows.push [@date(otherData), 0, otherData[countField]]
         otherIndex += 1
       else
-        thisStartedAt = thisData.start_time
-        otherStartedAt = otherData.start_time
+        thisStartedAt = @date(thisData)
+        otherStartedAt = @date(otherData)
 
         if thisStartedAt == otherStartedAt
-          rows.push [thisData.start_time, thisData[countField], otherData[countField]]
+          rows.push [@date(thisData), thisData[countField], otherData[countField]]
           thisIndex += 1
           otherIndex += 1
         else if thisStartedAt < otherStartedAt
-          rows.push [thisData.start_time, thisData[countField], 0]
+          rows.push [@date(thisData), thisData[countField], 0]
           thisIndex += 1
         else #  thisStartedAt > otherStartedAt
-          rows.push [otherData.start_time, 0, otherData[countField]]
+          rows.push [@date(otherData), 0, otherData[countField]]
           otherIndex += 1
 
     filterLocation = @getFilterLocation(report.filters)

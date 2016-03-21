@@ -47,7 +47,7 @@ class @Charts.Trendline.SplitDisplay extends @Charts.Trendline.BaseDisplay
     while i < len
       item = data[i]
 
-      date = item.start_time
+      date = @date(item)
       row = [date]
 
       # Traverse all items that follow (including this one) as long
@@ -55,7 +55,7 @@ class @Charts.Trendline.SplitDisplay extends @Charts.Trendline.BaseDisplay
       j = i
       while j < len
         other_item = data[j]
-        other_date = other_item.start_time
+        other_date = @date(other_item)
         if other_date != date
           break
 
@@ -96,9 +96,9 @@ class @Charts.Trendline.SplitDisplay extends @Charts.Trendline.BaseDisplay
 
   sortSplitData: (data) ->
     data.sort (x, y) =>
-      if x.start_time < y.start_time
+      if @date(x) < @date(y)
         -1
-      else if x.start_time > y.start_time
+      else if @date(x) > @date(y)
         1
       else if x[@splitField] < y[@splitField]
         -1
